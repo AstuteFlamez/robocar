@@ -40,7 +40,7 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | **Raspberry Pi Camera Module 3** | 1 | $25 | Gimbal FPV + vision. | https://www.raspberrypi.com/products/camera-module-3/ | 5 |
 | **Pi 5 CSI cable, 22-pin → 15-pin** (Adafruit #5820, 300 mm) | 1 | $5 | ⚠️ The Pi 5 CSI port is 22-pin; a generic 15-to-15 cable **will not fit**. | https://www.adafruit.com/product/5820 | 5 |
 | **CP2102 USB-UART adapter (3.3 V)** | 1 | $7 | Clean `/dev/ttyUSB0` for the lidar at 230400 baud, 3.3 V TTL; keeps Bluetooth/console free. | https://www.waveshare.com/cp2102-usb-uart-board-type-a.htm | 6 |
-| **MG90S** metal-gear servo (*only if kit lacks LFD-01*) | 2 | $6 | Robust pan/tilt. Don't use SG90. | https://www.adafruit.com/product/1143 | 5 |
+| **MG90S** metal-gear servo (*only if kit lacks LFD-01*) | 2 | $6 | Robust pan/tilt. Don't use SG90. (Adafruit's old #1143 is now the digital **MG90D** — buy a genuine MG90S.) | https://www.amazon.com/s?k=MG90S+metal+gear+micro+servo | 5 |
 
 ---
 
@@ -58,7 +58,7 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | **INA219** current+voltage sensor (Adafruit #904) | 1 | $10 | Self-monitoring + low-voltage cutoff. **Set addr 0x41** (0x40 collides w/ PCA9685). | https://www.adafruit.com/product/904 | 4 |
 | **2S balance-port low-voltage alarm/buzzer** | 1 | $5 | Dumb hardware backstop against over-discharge. Remove between sessions. | https://hobbyking.com/en_us/cell-checker-with-low-voltage-alarm-2s-8s.html | 1 |
 | **XT60 connector pair** + pigtails | 1 set | $5 | Keyed, current-rated main battery connector. | https://www.amazon.com/s?k=xt60+connector+pigtail | 1 |
-| Bulk electrolytics **470–1000 µF, ≥16 V, low-ESR/105 °C** | ~4 | $8 | Absorb motor/servo start & stall transients (di/dt) so rails don't sag. | https://www.adafruit.com/product/4267 | 1 |
+| Bulk electrolytics **470–1000 µF, ≥16 V, low-ESR/105 °C** | ~4 | $8 | Absorb motor/servo start & stall transients (di/dt) so rails don't sag. (No Adafruit SKU meets ≥16 V at this capacitance — source from DigiKey/Mouser, e.g. Nichicon UVZ-series 470 µF/25 V/105 °C.) | https://www.digikey.com/en/products/filter/aluminum-electrolytic-capacitors/58 | 1 |
 | **0.1 µF ceramic caps** | 12 | $3 | Brush-noise suppression at each motor body. | https://www.adafruit.com/product/753 | 1 |
 
 ---
@@ -71,13 +71,13 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 |---|---|---|---|---|---|
 | **Pi Pico screw-terminal carrier board** | 1 | $13 | Move motor/encoder interconnect off the breadboard onto retained terminals. **Never run motor power through a breadboard.** | https://czh-labs.com/products/screw-terminal-block-breakout-module-board-for-raspberry-pi-pico | 2 |
 | **JST-PH 2.0 6-pin pigtail leads** (mate the motors' factory connector) | 4 | $6 | Keyed motor+encoder connection; don't cut the factory plug. | https://www.amazon.com/s?k=jst+ph+2.0+6+pin+pigtail | 1 |
-| **Ferrule kit (22–16 AWG) + ratcheting crimp tool** (IWISS SN-2549 class) | 1 | $25 | Solid, low-resistance terminations; covers JST-PH/XH/Dupont too. | https://www.amazon.com/dp/B09NNFSNDX | 1 |
+| **Ferrule kit + ratcheting ferrule crimp tool** (IWISS HSC8-class, ~23–10 AWG) | 1 | $25 | Solid, low-resistance ferrule terminations on the screw-terminal carrier (bare stranded wire works loose; solder cold-flows under a clamp). *A ferrule crimper does not crimp JST/Dupont pins — those use the pre-made pigtails above.* | https://www.amazon.com/s?k=wire+ferrule+crimping+tool+kit+ratcheting | 1 |
 | **Silicone stranded wire**, 18 AWG (motor/power) + 22 AWG (signal) | 1 set | $12 | 18 AWG carries the ~5.6 A all-stall motor current safely. | https://www.amazon.com/s?k=silicone+wire+18+awg+22+awg+kit | 1 |
-| **Dupont jumper assortment** (M-M, M-F, F-F) | 1 | $8 | Short signal jumps only (I²C/UART), never motor power. | https://www.adafruit.com/product/758 | 1 |
+| **Dupont jumper wires** — M/M (#758) + M/F (#826) + F/F (#266) | 1 set | $8 | Short signal jumps only (I²C/UART), never motor power. Adafruit #758 is **Male/Male only**; add the M/F (#826) and F/F (#266) packs to match your headers. | https://www.adafruit.com/product/758 | 1 |
 | **Full-size breadboard** | 1 | $5 | Phase-1/2 *signal* bring-up only. | https://www.adafruit.com/product/239 | 1 |
 | **M2.5 nylon standoff kit** | 1 | $10 | Pi 5 / STL-19P / breakouts are M2.5 (not M3); nylon = non-conductive + keeps ferrous mass off the magnetometer. | https://www.cytron.io/p-nylon-m2p5-pcb-standoff-kit-for-raspberry-pi-200pcs | 1 |
 | **Heat-shrink tubing** assortment + **wire labels** | 1 | $8 | Motor leads, battery leads, FL/RL/FR/RR labeling. | https://www.amazon.com/s?k=heat+shrink+tubing+assortment | 1 |
-| Cable-tie mounts + zip ties + **3 M VHB foam tape** | 1 set | $10 | Strain relief + vibration damping. **No hot glue** for structural mounting. | https://www.adafruit.com/product/4248 | 5 |
+| Cable-tie mounts + zip ties + **3M VHB foam tape** | 1 set | $10 | Strain relief + vibration damping. **No hot glue** for structural mounting. | https://www.amazon.com/s?k=adhesive+cable+tie+mounts+zip+ties+3M+VHB+foam+tape | 5 |
 | USB-A → micro-USB cable, short (~20 cm), **data-capable** | 1 | $4 | Pi 5 → Pico link (power + serial). | https://www.amazon.com/s?k=usb+a+to+micro+usb+short+data+cable | 3 |
 
 ---
@@ -99,7 +99,7 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | Item | Qty | ~$ | Why | Link | Phase |
 |---|---|---|---|---|---|
 | Adafruit **ICM-20948** 9-DOF IMU (#4554) | 1 | $15 | "Write your own fusion" track — no clock-stretch issue, shares I²C-1. | https://www.adafruit.com/product/4554 | 4 (opt) |
-| STEMMA-QT/Qwiic breakout hub | 1 | $5 | Keyed, reliable I²C fan-out for PCA9685 + INA219. | https://www.adafruit.com/product/4209 | 4–5 (opt) |
+| STEMMA-QT/Qwiic **5-port** hub (Adafruit #5625) | 1 | $5 | Keyed, reliable I²C fan-out for PCA9685 + INA219. (Passive hub — fine here since the two addresses differ.) | https://www.adafruit.com/product/5625 | 4–5 (opt) |
 
 ---
 
@@ -120,7 +120,7 @@ Most of the spend is **one-time tooling and safety** (crimper, logic analyzer, b
 
 ## ⚠️ Verify on YOUR kit before ordering
 1. **Wheels are Mecanum** (angled rollers). If plain wheels → see [engineering_decisions.md](./engineering_decisions.md) for the differential fallback.
-2. **Motors are the JGA27 "310"** (27 mm can, 4 mm-ish shaft, JST-PH 6-pin). Confirms wheel/coupler fit and the encoder pinout.
+2. **Motors are the JGA27 "310"** (27 mm can, 3 mm D-shaped shaft, JST-PH 6-pin). Confirms wheel/coupler fit and the encoder pinout.
 3. **LFD-01 servos + bracket included?** If yes, skip the MG90S line.
 4. **Nuwa depth camera included?** If yes it's a free optional sensor; if no, ignore it entirely.
 5. **Measure, don't trust, `COUNTS_PER_REV`** in Phase 2 (calculated 1040, but verify).
