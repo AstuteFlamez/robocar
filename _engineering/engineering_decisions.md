@@ -165,4 +165,4 @@ These don't block the build; the docs carry sensible defaults + fallbacks, but y
 2. **`COUNTS_PER_REV`** — measure it (calculated 1040; verify in Phase 2).
 3. **LFD-01 servos / depth camera included?** — decides reuse vs buy / use vs ignore.
 4. **INA219 vs INA226 + external shunt** — the INA219's ~3.2 A ceiling clips on stall; fine for monitoring, but an INA226 + shunt captures the full ~12 A transient if seeing stall spikes is a goal.
-5. **Reverse-protection part** — #2815 slide switch (one part) vs rocker + #5381 (separate tactile switch). Use #5381 if you want a distinct master switch or >8 A margin.
+5. **Reverse-protection part** — #2815 slide switch (one part, ~16 A) vs rocker + #5381 (separate tactile switch, 12 A). Use #5381 only if you want a distinct/panel-mount master switch — the ~16 A #2815 already has more current margin than the 12 A #5381.

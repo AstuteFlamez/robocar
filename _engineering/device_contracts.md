@@ -185,7 +185,7 @@
 - **Source:** Adafruit #904.
 
 ### Reverse-polarity + master switch, fuses, e-stop
-- **Reverse-polarity / master:** Pololu **#2815** MOSFET slide switch (~8 A, switch + reverse protection in one) **or** a rocker + Pololu **#5381** LM74500 protector (12 A). The ~8 A #2815 sits in series on the pack feed; robocar's draw is ~5.4 A continuous with a brief ~10 A all-stall + SLAM transient it tolerates. **Prefer #5381 (12 A)** if you want continuous headroom above the 10 A main fuse or a separate master switch.
+- **Reverse-polarity / master:** Pololu **#2815** MOSFET slide switch (~16 A — the "Big MOSFET Slide Switch with Reverse Voltage Protection, **HP**"; switch + reverse protection in one) **or** a rocker + Pololu **#5381** LM74500 protector (12 A). The ~16 A #2815 sits in series on the pack feed; robocar's draw is ~5.4 A continuous with a brief ~10 A all-stall + SLAM transient it tolerates — so **#2815 alone already clears the 10 A main fuse with margin.** Pick the rocker + **#5381** only if you'd rather have a separate, panel-mount master switch. (The ~8 A part is the *MP* sibling, **#2814** — don't confuse the two.)
 - **Fuses (coordinated):** **10 A main** (closest to LiPo +) · **7.5 A motor branch** · **5 A Pi-buck branch**. Inline ATC/ATO blade holders on 18 AWG. **Character: time-delay (slow-blow) on the main + motor branch** (rides the brief all-motor startup/reversal inrush — locked-rotor current + bulk-cap charge); **fast-acting OK on the Pi branch** (no inductive inrush).
 - **E-stop:** 22 mm **latching mushroom, normally-closed**, in series in the **motor power branch only** (kills wheels, keeps the brains alive). NC = a broken wire also trips it (fail-safe).
 - **Source:** Pololu #2815 / #5381; sizing in power_budget.md.
