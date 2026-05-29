@@ -1,0 +1,34 @@
+             Speed PID Control Basics
+The PID speed control can make motor reach a specific speed accurately and
+quickly. The speed information of motor is measured based on the number of
+pulses acquired per unit time (M-method velocimetry is used) and compared
+with the target value to get the control deviation, and then the deviation is
+controlled by proportional (P), integral (I), and differential (D) , aiming to
+minimize the deviation and bring it closer to zero.
+
+The construction diagram of motor speed PID control is shown below:
+
+
+
+
+You can refer to the following formulate:
+
+      PWM+=Kp[e(k)-e(k-1)]+Ki*e(k)+Kd[e(k)-2e(k-1)+e(k-2)]
+
+       e(k): current deviation
+
+       e(k-1): previous deviation
+
+       e(k-2): previous deviation before the last deviation
+
+    PWM represents incremental output
+
+Only PI     control is applied in closed-loop control system for speed control,
+thus PID controller can be simplified to the following equation:
+
+          PWM+=Kp[e(k)-e(k-1)]+Ki*e(k)
+
+
+
+                                            1
+

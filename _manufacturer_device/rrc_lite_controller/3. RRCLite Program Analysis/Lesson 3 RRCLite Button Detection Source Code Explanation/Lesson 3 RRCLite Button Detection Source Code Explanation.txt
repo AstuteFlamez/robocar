@@ -1,0 +1,133 @@
+    Lesson 3 RRCLite Button Detection
+        Source Code Explanation
+1. Program Logic
+This chapter mainly focuses on controlling the buzzer sound through the
+built-in buttons on the STM32 main control board, accompanied by different
+LED status blinking.
+
+
+
+2. Hardware Connection
+The hardware connection diagram is as below:
+
+
+
+
+3. Program Download
+The example for this section is “rosrobotcontrollerm4_key_buzzer”.
+For specific instructions on how to download the program, refer to the
+
+                                        1
+document: “2.STM32 Development Fundamentals/3.Project
+Compilation and Download”.
+
+
+
+4. Program Outcome
+1. Press the K2 button twice at startup, and the buzzer will emit three
+consecutive beeps.
+2. Press the K1 button; upon a single press, the buzzer emits 3 beeps. After
+the first press, the LED turns off; after the second press, the LED turns on;
+after the third press, the LED starts blinking.
+
+
+
+
+         (The effect for the first time the K1 is clicked when power on)
+
+
+
+
+                                           2
+       (The effect for the second time the K1 is clicked when power on)
+
+
+
+
+5. PIN Configuration
+Using the STM32CubeMX software to check the pin information, according to
+the diagram below, it can be seen that the chip pin corresponding to the buzzer
+is PA8. The pin configuration corresponding to the buttons is PE1 and PE0.
+
+
+
+
+6. Source Code Analysis
+The source code for this lesson is located in the same folder as this tutorial
+
+                                          3
+document, primarily analyzing the files Hiwonder/System/app.c and
+Hiwonder/Peripherals/buzzer.c.
+
+6.1 LED State and Buzzer State Change
+
+
+
+
+Above is the App.c file, where button_event_callback() serves as the button
+callback function. The main programming flow is as follows:
+Button event detection;
+Different buzzer sounds for pressing button 1 and button 2;
+Different LED state changes based on the number of times button 1 is
+pressed.
+
+
+
+
+                                        4
+6.2 Buzzer Activation, Deactivation, and Setting of Beep
+
+Duration
+
+
+
+
+Above is the buzzer.c file, where the buzzer_on() function is to turn on the
+buzzer. It initializes the buzzer control structure, sets the buzzer frequency,
+and sets other properties to make the buzzer continuously beep.
+.ticks_off = 0, // Silence time is 0, indicating continuous buzzing
+The buzzer_off() function is to turn off the buzzer.
+.ticks_on = 0, // Beeping time is 0, indicating silence
+The buzzer_didi() function is to set the buzzer's frequency and beep mode. It
+sets the buzzer's frequency, beeping time, silence time, and repeat count:
+4freq, ticks_on, ticks_off, and repeat.
+
+6.3 A Callback Function and Button Status Task are Registered
+
+
+
+
+Above is the app.c file, where the button_register_callback function is used to
+register a callback function, button_event_callback, for specific buttons (here
+buttons[0] and buttons[1]). The callback function is invoked when specific
+events occur, such as pressing or releasing a button. When a button is pressed
+                                          5
+or released, the callback function button_event_callback is executed,
+triggering the corresponding code to run.
+
+
+
+
+Above are the functions in the button.c file, including the callback function for
+registering button events and the default button event callback function.
+
+
+
+
+Above are the functions in the button.c file (partial screenshot omitted). The
+button_task_handler function handles different button states and events,
+including detecting button presses, releases, and long presses, and performs
+                                          6
+corresponding actions as needed.
+
+
+
+
+The button_porting function periodically scans and updates the real-time
+status of the buttons.
+
+
+
+
+                                        7
+

@@ -1,0 +1,2353 @@
+                                Product           Sample &           Technical                      Tools &              Support &
+                                Folder            Buy                Documents                      Software             Community
+
+
+
+                                                                                                    SN65HVD230, SN65HVD231, SN65HVD232
+                                                                                                                   SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+                                      SN65HVD23x 3.3-V CAN Bus Transceivers
+1 Features                                                                          2 Applications
+•
+1     Operates with a single 3.3 V Supply                                           •      Industrial Automation, Control, Sensors and Drive
+•     Compatible With ISO 11898-2 Standard                                                 Systems
+•     Low Power Replacement for the PCA82C250                                       •      Motor and Robotic Control
+      Footprint                                                                     •      Building and Climate Control (HVAC)
+•     Bus Pin ESD Protection Exceeds ±16 kV HBM                                     •      Telecom and Basestation Control and Status
+•     High Input Impedance Allows for Up to 120 Nodes                               •      CAN Bus Standards Such as CANopen,
+      on a Bus                                                                             DeviceNet, and CAN Kingdom
+•     Adjustable Driver Transition Times for Improved
+      Emissions Performance                                                         3 Description
+      – SN65HVD230 and SN65HVD231                                                   The SN65HVD230, SN65HVD231, and SN65HVD232
+•     SN65HVD230: Low Current Standby Mode                                          controller area network (CAN) transceivers are
+                                                                                    compatible to the specifications of the ISO 11898-2
+      – 370 μA Typical                                                              High Speed CAN Physical Layer standard
+•     SN65HVD231: Ultra Low Current Sleep Mode                                      (transceiver). These devices are designed for data
+      – 40 nA Typical                                                               rates up to 1 megabit per second (Mbps), and include
+                                                                                    many protection features providing device and CAN
+•     Designed for Data Rates(1) up to 1 Mbps                                       network robustness. The SN65HVD23x transceivers
+•     Thermal Shutdown Protection                                                   are designed for use with the Texas Instruments 3.3
+•     Open Circuit Fail-Safe Design                                                 V µPs, MCUs and DSPs with CAN controllers, or with
+                                                                                    equivalent protocol controller devices. The devices
+•     Glitch Free Power Up and Power Down Protection
+                                                                                    are intended for use in applications employing the
+      for Hot Plugging Applications                                                 CAN serial communication physical layer in
+(1)
+      The signaling rate of a line is the number of voltage                         accordance with the ISO 11898 standard.
+      transitions that are made per second expressed in the units
+      bps (bits per second).
+                                                                                                                  Device Information(1)
+                                                                                     PART NUMBER                       PACKAGE          BODY SIZE (NOM)
+                                                                                     SN65HVD230
+                                                                                     SN65HVD231                    SOIC (8)             4.90 mm × 3.91 mm
+                                                                                     SN65HVD232
+                                                                                     (1) For all available packages, see the orderable addendum at
+                                                                                         the end of the datasheet.
+
+                                      Equivalent Input and Output Schematic Diagrams
+                                                                        VCC         VREF
+
+                                                                                              VCC
+
+                                                                          VCC / 2                   VCC
+                                                  VCC
+
+                                             D
+                                                                                                      BIAS UNIT
+
+
+
+
+                                                           Thermal
+                                                          Shutdown
+
+
+
+                                                  VCC
+
+                                             RS         SLOPE CONTROL
+                                                           and MODE
+                                                             LOGIC
+
+
+                                            NC
+
+
+                                             R
+
+
+
+                                                                              GND
+
+
+
+
+1
+
+
+
+
+        An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+        intellectual property matters and other important disclaimers. PRODUCTION DATA.
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                                                                       www.ti.com
+
+
+                                                                          Table of Contents
+    1    Features .................................................................. 1                10 Detailed Description ........................................... 19
+    2    Applications ........................................................... 1                          10.1     Overview ............................................................... 19
+    3    Description ............................................................. 1                         10.2     Functional Block Diagram ..................................... 19
+    4    Revision History..................................................... 2                             10.3     Feature Description............................................... 20
+                                                                                                             10.4     Device Functional Modes...................................... 20
+    5    Description (continued)......................................... 4
+    6    Device Comparison Table..................................... 4                               11 Application and Implementation........................ 25
+                                                                                                             11.1 Application Information.......................................... 25
+    7    Pin Configuration and Functions ......................... 5
+                                                                                                             11.2 Typical Application ................................................ 26
+    8    Specifications......................................................... 5
+                                                                                                             11.3 System Example ................................................... 30
+         8.1 Absolute Maximum Ratings ...................................... 5
+                                                                                                      12 Power Supply Recommendations ..................... 32
+         8.2 ESD Ratings.............................................................. 6
+         8.3 Recommended Operating Conditions....................... 6                                13 Layout................................................................... 33
+                                                                                                             13.1 Layout Guidelines ................................................. 33
+         8.4 Thermal Information .................................................. 6
+                                                                                                             13.2 Layout Example .................................................... 34
+         8.5 Electrical Characteristics: Driver ............................... 7
+         8.6 Electrical Characteristics: Receiver .......................... 7                        14 Device and Documentation Support ................. 35
+         8.7 Switching Characteristics: Driver .............................. 8                              14.1     Related Links ........................................................ 35
+         8.8 Switching Characteristics: Receiver.......................... 8                                 14.2     Trademarks ........................................................... 35
+         8.9 Switching Characteristics: Device ............................. 8                               14.3     Electrostatic Discharge Caution ............................ 35
+         8.10 Device Control-Pin Characteristics ......................... 9                                 14.4     Glossary ................................................................ 35
+         8.11 Typical Characteristics .......................................... 10                   15 Mechanical, Packaging, and Orderable
+    9    Parameter Measurement Information ................ 13                                           Information ........................................................... 35
+
+
+
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+
+Changes from Revision M (May 2015) to Revision N                                                                                                                                         Page
+
+•   Changed the data sheet title From; SN65HVD230x 3.3-V CAN Bus Transceivers To: SN65HVD23x 3.3-V CAN Bus
+    Transceivers .......................................................................................................................................................................... 1
+
+
+Changes from Revision L (January 2015) to Revision M                                                                                                                                     Page
+
+•   Changed Figure 44 title From: "Layout Example Schematic" To: "SN65HVD23x Board Layout"........................................ 34
+
+
+Changes from Revision K (February 2011) to Revision L                                                                                                                                    Page
+
+•   Added Pin Configuration and Functions section, ESD Ratings table, Feature Description section, Device Functional
+    Modes, Application and Implementation section, Power Supply Recommendations section, Layout section, Device
+    and Documentation Support section, and Mechanical, Packaging, and Orderable Information section .............................. 1
+•   Changed the list of Features, Applications, and Description.................................................................................................. 1
+•   Added THERMAL SHUTDOWN TEMPERATURE AND HYSTERESIS in the Recommended Operating Conditions table. 6
+•   Added the THERMAL SHUTDOWN paragraph to the Application Information section ....................................................... 20
+•   Added Figure 34 and Figure 35............................................................................................................................................ 25
+•   Added the CAN TERMINATION paragraph to the Application Information section ............................................................. 26
+•   Added the BUS LOADING, LENGTH AND NUMBER OF NODES paragraph to the Application Information section........ 28
+
+
+Changes from Revision J (January 2009) to Revision K                                                                                                                                     Page
+
+•   Replaced the DISSIPATION RATING TABLE with the Thermal Information table................................................................ 6
+
+
+
+
+2        Submit Documentation Feedback                                                                                   Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                                Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                                                SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                                                     SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+
+Changes from Revision I (October 2007) to Revision J                                                                                                                             Page
+
+•   Deleted Low-to-High Propagation Delay Time vs Common-Mode Input Voltage Characteristics ....................................... 12
+•   Deleted Driver Schematic Diagram ...................................................................................................................................... 12
+•   Added Figure 38 ................................................................................................................................................................... 32
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                                                             Submit Documentation Feedback                         3
+                                               Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                           www.ti.com
+
+
+5 Description (continued)
+Designed for operation in especially harsh environments, these devices feature cross wire protection, loss of
+ground and overvoltage protection, overtemperature protection, as well as wide common mode range of
+operation.
+The CAN transceiver is the CAN physical layer and interfaces the single ended host CAN protocol controller with
+the differential CAN bus found in industrial, building automation, and automotive applications. These devices
+operate over a -2 V to 7 V common mode range on the bus, and can withstand common mode transients of ±25
+V.
+The RS pin (pin 8) on the SN65HVD230 and SN65HVD231 provides three different modes of operation: high
+speed mode, slope control mode, and low-power mode. The high speed mode of operation is selected by
+connecting the RS pin to ground, allowing the transmitter output transistors to switch on and off as fast as
+possible with no limitation on the rise and fall slopes. The rise and fall slopes can also be adjusted by connecting
+a resistor in series between the RS pin and ground. The slope will be proportional to the pin's output current. With
+a resistor value of 10 kΩ the device will have a slew rate of ~15 V/μs, and with a resistor value of 100 kΩ the
+device will have a slew rate of ~2 V/μs. See Application Information for more information.
+The SN65HVD230 enters a low current standby mode (listen only) during which the driver is switched off and the
+receiver remains active if a high logic level is applied to the RS pin. This mode provides a lower power
+consumption mode than normal mode while still allowing the CAN controller to monitor the bus for activity
+indicating it should return the transceiver to normal mode or slope control mode. The host controller (MCU, DSP)
+returns the device to a transmitting mode (high speed or slope control) when it wants to transmit a message to
+the bus or if during standby mode it received bus traffic indicating the need to once again be ready to transmit.
+The difference between the SN65HVD230 and the SN65HVD231 is that both the driver and the receiver are
+switched off in the SN65HVD231 when a high logic level is applied to the RS pin. In this sleep mode the device
+will not be able to transmit messages to the bus or receive messages from the bus. The device will remain in
+sleep mode until it is reactivated by applying a low logic level on the RS pin.
+
+6 Device Comparison Table
+
+                                                       INTEGRATED SLOPE
+    PART NUMBER (1)        LOW POWER MODE                                           Vref PIN              TA               MARKED AS:
+                                                           CONTROL
+SN65HVD230                     Standby mode                     Yes                   Yes                             VP230
+SN65HVD231                      Sleep mode                      Yes                   Yes            40°C to 85°C     VP231
+SN65HVD232               No standby or sleep mode                No                   No                              VP232
+
+(1)   For the most current package and ordering information, see Mechanical, Packaging, and Orderable Information, or see the TI web site
+      at www.ti.com.
+
+
+
+
+4        Submit Documentation Feedback                                                      Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                     Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                          SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                       SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+7 Pin Configuration and Functions
+                                                        SN65HVD230D (Marked as VP230)
+                                                        SN65HVD231D (Marked as VP231)
+                                                                 (TOP VIEW)
+
+                                                          D          1       8          RS
+                                                        GND          2       7          CANH
+                                                        VCC          3       6          CANL
+                                                          R          4       5          Vref
+
+
+                                                        SN65HVD232D (Marked as VP232)
+                                                                (TOP VIEW)
+
+                                                          D          1       8          NC
+                                                        GND          2       7          CANH
+                                                        VCC          3       6          CANL
+                                                          R          4       5          NC
+
+                                                          NC – No internal connection
+
+
+                                                                Pin Functions
+          PIN
+                         TYPE                                                     DESCRIPTION
+NAME            NO.
+                                   CAN transmit data input (LOW for dominant and HIGH for recessive bus states), also called TXD, driver
+D                1          I
+                                   input
+GND              2       GND       Ground connection
+VCC              3      Supply     Transceiver 3.3V supply voltage
+                                   CAN receive data output (LOW for dominant and HIGH for recessive bus states), also called RXD, receiver
+R                4         O
+                                   output
+Vref                       O       SN65HVD230 and SN65HVD231: VCC / 2 reference output pin
+                 5
+NC                        NC       SN65HVD232: No Connect
+CANL             6         I/O     Low level CAN bus line
+CANH             7         I/O     High level CAN bus line
+                                   SN65HVD230 and SN65HVD231: Mode select pin: strong pull down to GND = high speed mode, strong
+RS                          I
+                 8                 pull up to VCC = low power mode, 10kΩ to 100kΩ pull down to GND = slope control mode
+NC                          I      SN65HVD232: No Connect
+
+
+8 Specifications
+8.1 Absolute Maximum Ratings
+over operating free-air temperature range (unless otherwise noted) (1) (2)
+                                                                                                 MIN                MAX            UNIT
+Supply voltage, VCC                                                                              –0.3                 6              V
+Voltage at any bus terminal (CANH or CANL)                                                        –4                 16              V
+Voltage input, transient pulse, CANH and CANL, through 100 Ω (see Figure 24)                     –25                 25              V
+Digital Input and Output voltage, VI (D or R)                                                    –0.5             VCC + 0.5          V
+Receiver output current, IO                                                                      –11                 11             mA
+Continuous total power dissipation                                                              See Thermal Information
+Storage temperature, Tstg                                                                        –40                 85             °C
+
+(1)    Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device. These are stress ratings
+       only, and functional operation of the device at these or any other conditions beyond those indicated under Recommended Operating
+       Conditions is not implied. Exposure to absolute-maximum-rated conditions for extended periods may affect device reliability.
+(2)    All voltage values, except differential I/O bus voltages, are with respect to network ground terminal.
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                              Submit Documentation Feedback             5
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                                www.ti.com
+
+
+8.2 ESD Ratings
+                                                                                                                                VALUE       UNIT
+                                   Human body model (HBM), per ANSI/ESDA/JEDEC JS-              CANH, CANL and GND              ±16000
+            Electrostatic          001 (1)
+V(ESD)                                                                                          All pins                        ±4000          V
+            discharge
+                                   Charged-device model (CDM), per JEDEC specification JESD22-C101 (2)                          ±1000
+
+(1)   JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process.
+(2)   JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process.
+
+8.3 Recommended Operating Conditions
+                                                                                                                        MIN NOM MAX UNIT
+Supply voltage, VCC                                                                                                        3             3.6       V
+Voltage at any bus terminal (common mode) VIC                                                                          –2 (1)              7       V
+Voltage at any bus terminal (separately) VI                                                                             –2.5             7.5       V
+High-level input voltage, VIH                                                          D, R                                2                       V
+Low-level input voltage, VIL                                                           D, R                                              0.8       V
+Differential input voltage, VID (see Figure 22)                                                                          –6                6       V
+Input voltage, V(Rs)                                                                                                       0             VCC       V
+Input voltage for standby or sleep, V(Rs)                                                                           0.75 VCC             VCC       V
+Wave-shaping resistance, Rs                                                                                                0             100   kΩ
+                                                                                       Driver                           –40
+High-level output current, IOH                                                                                                                 mA
+                                                                                       Receiver                          –8
+                                                                                       Driver                                             48
+Low-level output current, IOL                                                                                                                  mA
+                                                                                       Receiver                                            8
+Thermal shutdown temperature                                                                                                      165
+Thermal shutdown hysteresis                                                                                                        10              °C
+Operating free-air temperature, TA                                                                                      –40               85
+
+(1)   The algebraic convention, in which the least positive (most negative) limit is designated as minimum is used in this data sheet.
+
+8.4 Thermal Information
+                                                                                 SN65HVD230          SN65HVD231       SN65HVD232
+                               THERMAL METRIC (1)                                                            D                             UNIT
+                                                                                                           8 PINS
+RθJA            Junction-to-ambient thermal resistance                                76.8                 101.5          101.5
+RθJC(top)       Junction-to-case (top) thermal resistance                             33.4                  43.3           43.3
+RθJB            Junction-to-board thermal resistance                                  15.3                  42.2           42.4            °C/W
+ψJT             Junction-to-top characterization parameter                             1.4                  4.8             4.8
+ψJB             Junction-to-board characterization parameter                          14.9                  41.8           41.8
+
+(1)   For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application
+      report (SPRA953).
+
+
+
+
+6        Submit Documentation Feedback                                                        Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                                 SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                                   SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+8.5 Electrical Characteristics: Driver
+over recommended operating conditions (unless otherwise noted)
+                           PARAMETER                                              TEST CONDITIONS                    MIN     TYP (1)   MAX     UNIT
+                                                                     VI = 0 V,                        CANH           2.45              VCC
+VOH                             Dominant                             See Figure 18 and
+                                                                     Figure 20                        CANL            0.5              1.25
+               Bus output
+                                                                                                                                                V
+               voltage                                               VI = 3 V,                        CANH                      2.3
+VOL                             Recessive                            See Figure 18 and
+                                                                     Figure 20                        CANL                      2.3
+                                                                     VI = 0 V,      See Figure 18                     1.5         2      3
+VOD(D)                          Dominant                                                                                                        V
+               Differential                                          VI = 0 V,      See Figure 19                     1.2         2      3
+               output voltage                                        VI = 3 V,      See Figure 18                   –120          0     12     mV
+VOD(R)                          Recessive
+                                                                     VI = 3 V,      No load                          –0.5      –0.2    0.05     V
+IIH            High-level input current                              VI = 2 V                                        –30                       μA
+IIL            Low-level input current                               VI = 0.8 V                                      –30                       μA
+                                                                     VCANH = -2 V                                   –250               250
+IOS            Short-circuit output current                                                                                                    mA
+                                                                     VCANL = 7 V                                    –250               250
+Co             Output capacitance                                    See receiver
+                                Standby        SN65HVD230            V(Rs) = VCC                                                370    600
+                                                                                                                                               μA
+               Supply           Sleep          SN65HVD231            V(Rs) = VCC, D at VCC                                     0.04      1
+ICC
+               current                         Dominant              VI = 0 V,      No load           Dominant                   10     17
+                                All devices                                                                                                    mA
+                                               Recessive             VI = VCC,      No load           Recessive                  10     17
+
+(1)     All typical values are at 25°C and with a 3.3-V supply.
+
+8.6 Electrical Characteristics: Receiver
+over recommended operating conditions (unless otherwise noted)
+                     PARAMETER                                            TEST CONDITIONS                             MIN   TYP (1)    MAX     UNIT
+VIT+      Positive-going input threshold voltage                                                                               750      900     mV
+                                                        See Table 1
+VIT-      Negative-going input threshold voltage                                                                      500      650
+                                                                                                                                                mV
+Vhys      Hysteresis voltage (VIT+ – VIT–)                                                                                     100
+VOH       High-level output voltage                     –6 V ≤ VID ≤ 500 mV, IO = –8 mA, See Figure 22                2.4
+                                                                                                                                                V
+VOL       Low-level output voltage                      900 mV ≤ VID ≤ 6 V, IO = 8 mA, See Figure 22                                     0.4
+                                                        VIH = 7 V                                                     100               250
+                                                                                                                                                μA
+                                                        VIH = 7 V,       VCC = 0 V            Other input at 0 V,     100               350
+II        Bus input current
+                                                        VIH = -2 V                            D=3V                   –200               –30
+                                                                                                                                                μA
+                                                        VIH = -2 V,      VCC = 0 V                                   –100               –20
+                                                        Pin-to-ground,                        V(D) = 3 V,
+CI        CANH, CANL input capacitance                                                                                          32              pF
+                                                        VI = 0.4 sin(4E6πt) + 0.5 V
+                                                        Pin-to-pin,                           V(D) = 3 V,
+CDiff     Differential input capacitance                                                                                        16              pF
+                                                        VI = 0.4 sin(4E6πt) + 0.5 V
+RDiff     Differential input resistance                 Pin-to-pin,      V(D) = 3 V                                    40       70      100     kΩ
+RI        CANH, CANL input resistance                                                                                  20       35       50     kΩ
+ICC       Supply current                                See driver
+
+(1)     All typical values are at 25°C and with a 3.3-V supply.
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                                          Submit Documentation Feedback          7
+                                           Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                                        www.ti.com
+
+
+8.7 Switching Characteristics: Driver
+over recommended operating conditions (unless otherwise noted)
+                                                                                                   TEST
+                                          PARAMETER                                                                   MIN      TYP        MAX      UNIT
+                                                                                                CONDITIONS
+SN65HVD230 AND SN65HVD231
+                                                             V(Rs) = 0 V                                                        35         85
+           Propagation delay time, low-to-high-level
+tPLH                                                         RS with 10 kΩ to ground                                            70        125        ns
+           output
+                                                             RS with 100 kΩ to ground                                          500        870
+                                                             V(Rs) = 0 V                                                        70        120
+           Propagation delay time, high-to-low-level
+tPHL                                                         RS with 10 kΩ to ground                                           130        180        ns
+           output
+                                                             RS with 100 kΩ to ground                                          870        1200
+                                                             V(Rs) = 0 V                                                        35
+                                                                                               CL = 50 pF,
+tsk(p)     Pulse skew (|tPHL - tPLH|)                        RS with 10 kΩ to ground                                            60                   ns
+                                                                                               See Figure 21
+                                                             RS with 100 kΩ to ground                                          370
+tr         Differential output signal rise time                                                                        25       50        100        ns
+                                                             V(Rs) = 0 V
+tf         Differential output signal fall time                                                                        40       55         80        ns
+tr         Differential output signal rise time                                                                        80      120        160        ns
+                                                             RS with 10 kΩ to ground
+tf         Differential output signal fall time                                                                        80      125        150        ns
+tr         Differential output signal rise time                                                                       600      800        1200       ns
+                                                             RS with 100 kΩ to ground
+tf         Differential output signal fall time                                                                       600      825        1000       ns
+SN65HVD232
+tPLH       Propagation delay time, low-to-high-level output                                                                     35         85
+tPHL       Propagation delay time, high-to-low-level output                                                                     70        120
+                                                                                               CL = 50 pF,
+tsk(p)     Pulse skew (|tPHL - tPLH|)                                                                                           35                   ns
+                                                                                               See Figure 21
+tr         Differential output signal rise time                                                                        25       50        100
+tf         Differential output signal fall time                                                                        40       55         80
+
+
+
+8.8 Switching Characteristics: Receiver
+over recommended operating conditions (unless otherwise noted)
+                                   PARAMETER                                             TEST CONDITIONS                 MIN     TYP MAX            UNIT
+tPLH       Propagation delay time, low-to-high-level output                                                                          35      50      ns
+tPHL       Propagation delay time, high-to-low-level output                         See Figure 23                                    35      50      ns
+tsk(p)     Pulse skew (|tPHL - tPLH|)                                                                                                        10      ns
+tr         Output signal rise time                                                                                                1.5                ns
+                                                                                    See Figure 23
+tf         Output signal fall time                                                                                                1.5                ns
+
+
+
+8.9 Switching Characteristics: Device
+over recommended operating conditions (unless otherwise noted)
+                          PARAMETER                                               TEST CONDITIONS                      MIN      TYP        MAX      UNIT
+                                                                   V(Rs) = 0 V,                 See Figure 26                     70        115
+                Total loop delay, driver input to receiver
+t(LOOP1)                                                           RS with 10 kΩ to ground,     See Figure 26                   105         175      ns
+                output, recessive to dominant
+                                                                   RS with 100 kΩ to ground,    See Figure 26                   535         920
+                                                                   V(Rs) = 0 V,                 See Figure 26                   100         135
+                Total loop delay, driver input to receiver
+t(LOOP2)                                                           RS with 10 kΩ to ground,     See Figure 26                   155         185      ns
+                output, dominant to recessive
+                                                                   RS with 100 kΩ to ground,    See Figure 26                   830         990
+
+
+
+
+8          Submit Documentation Feedback                                                            Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                          Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                     SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                   SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+8.10 Device Control-Pin Characteristics
+over recommended operating conditions (unless otherwise noted)
+                              PARAMETER                             TEST CONDITIONS              MIN     TYP (1)      MAX      UNIT
+                SN65HVD230 wake-up time from standby mode
+                                                                                                           0.55         1.5     μs
+                with RS
+t(WAKE)                                                           See Figure 25
+                SN65HVD231 wake-up time from sleep mode
+                                                                                                              3          5      μs
+                with RS
+                                                                  -5 μA < I(Vref) < 5 μA     0.45 VCC              0.55 VCC
+Vref            Reference output voltage                                                                                        V
+                                                                  -50 μA < I(Vref) < 50 μA    0.4 VCC               0.6 VCC
+I(Rs)           Input current for high-speed                      V(Rs) < 1 V                   –450                     0     μA
+
+(1)     All typical values are at 25°C and with a 3.3-V supply.
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                          Submit Documentation Feedback          9
+                                         Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                                                                                                                                                 www.ti.com
+
+
+8.11 Typical Characteristics
+
+                                                            22                                                                                                                           0
+                                                                      VCC = 3.3 V
+                                                            21        60-Ω Load                                                                                                         −2
+              I CC − Supply Current (RMS) − mA
+
+
+
+                                                                      RS at 0 V
+
+
+
+
+                                                                                                                                       I I(L) − Logic Input Current − µ A
+                                                            20
+                                                                                                                                                                                        −4
+
+                                                            19
+                                                                                                                                                                                        −6
+                                                            18
+                                                                                                                                                                                        −8
+                                                            17
+                                                                                                                                                                                       −10
+                                                            16
+
+                                                            15                                                                                                                         −12
+
+                                                            14                                                                                                                         −14
+
+                                                            13
+                                                                  0           250             500            750            1000                                                       −16
+                                                                                                                                                                                             0          0.6     1.1 1.6      2.1    2.6   3.1   3.6
+                                                                                    f − Frequency − kbps                                                                                                         VI − Input Voltage − V
+
+
+
+                               Figure 1. Supply Current (RMS) vs Frequency                                                           Figure 2. Logic Input Current (Pin D) vs Input Voltage
+                                                           400                                                                                                                         160
+
+
+
+
+                                                                                                                                          I OL− Driver Low-Level Output Current − mA
+                                                           300                                                                                                                         140
+            I I − Bus Input Current − µ A
+
+
+
+
+                                                           200                                                                                                                         120
+                                                                                          VCC = 0 V
+                                                           100                                                                                                                         100
+
+                                                             0                                          VCC = 3.6 V                                                                    80
+
+                                                           −100                                                                                                                        60
+
+                                                           −200                                                                                                                        40
+
+                                                           −300                                                                                                                        20
+
+                                                           −400
+                                                                                                                                                                                        0
+                                                               −7 −6 −4 −3 −1 0           1    3    4   6   7     8 10 11    12                                                              0            1           2            3                  4
+                                                                                VI − Bus Input Voltage − V                                                                                          VO(CANL)− Low-Level Output Voltage − V
+
+
+
+
+           Figure 3. Bus Input Current vs Bus Input Voltage                                                                         Figure 4. Driver Low-Level Output Current vs Low-Level
+                                                                                                                                                        Output Voltage
+                                                            120                                                                                                                          3
+                                                                                                                                                                                                    VCC = 3.6 V
+            I OH − Driver High-Level Output Current − mA
+
+
+
+
+                                                            100                                                                                                                        2.5         VCC = 3.3 V
+                                                                                                                                                 VOD− Dominant Voltage − V
+
+
+
+
+                                                                                                                                                                                                   VCC = 3 V
+                                                             80                                                                                                                          2
+
+
+                                                             60                                                                                                                        1.5
+
+
+                                                             40
+                                                                                                                                                                                         1
+
+
+                                                             20                                                                                                                        0.5
+
+
+                                                              0                                                                                                                          0
+                                                                  0     0.5     1        1.5        2       2.5      3       3.5
+                                                                                                                                                                                                  −55    −40       0      25     70       85    125
+                                                                        VO(CANH) − High-Level Output Voltage − V                                                                                              TA − Free-Air Temperature − °C
+
+
+
+       Figure 5. Driver High-Level Output Current vs High-Level                                                                    Figure 6. Dominant Voltage (VOD) vs Free-Air Temperature
+                            Output Voltage
+
+
+
+
+10     Submit Documentation Feedback                                                                                                                                                             Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                                                                               Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                                                                                                                                      SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                                                                                                                                           SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+Typical Characteristics (continued)
+              t PLH − Receiver Low-to-High Propagation Delay Time − ns
+
+
+
+
+                                                                                                                                            t PHL− Receiver High-to-Low Propagation Delay Time − ns
+                                                                         38
+                                                                                                                                                                                                        40
+                                                                              RS = 0
+                                                                                                                                                                                                              RS = 0
+                                                                         37
+                                                                                                                                                                                                        39
+                                                                         36
+                                                                                             VCC = 3 V                                                                                                                      VCC = 3 V
+                                                                         35                                                                                                                             38
+
+                                                                                              VCC = 3.3 V
+                                                                         34                                                                                                                                                      VCC = 3.3 V
+                                                                                                                                                                                                        37
+                                                                                                VCC = 3.6 V
+                                                                         33
+                                                                                                                                                                                                        36                           VCC = 3.6 V
+                                                                         32
+
+                                                                         31                                                                                                                             35
+
+
+                                                                         30                                                                                                                             34
+                                                                              −55      −40     0        25       70    85   125                                                                              −55      −40        0       25        70      85    125
+                                                                                       TA − Free-Air Temperature − °C                                                                                                  TA − Free-Air Temperature − °C
+
+
+
+       Figure 7. Receiver Low-to-High Propagation Delay Time vs                                                                        Figure 8. Receiver High-to-Low Propagation Delay Time vs
+                          Free-Air Temperature                                                                                                            Free-Air Temperature
+              t PLH − Driver Low-to-High Propagation Delay Time − ns
+
+
+
+
+                                                                                                                                            t PHL− Driver High-to-Low Propagation Delay Time − ns
+                                                                         55                                                                                                                             90
+                                                                              RS = 0
+                                                                                                    VCC = 3 V                                                                                                                                              RS = 0
+                                                                         50                                                                                                                             85             VCC = 3.6 V
+
+                                                                         45
+                                                                                                                                                                                                        80
+                                                                         40                        VCC = 3.3 V
+                                                                                                                                                                                                        75   VCC = 3.3 V
+                                                                         35
+                                                                                                   VCC = 3.6 V                                                                                          70
+                                                                         30                                                                                                                                        VCC = 3 V
+                                                                                                                                                                                                        65
+                                                                         25
+                                                                                                                                                                                                        60
+                                                                         20
+
+                                                                         15                                                                                                                             55
+
+                                                                         10                                                                                                                             50
+                                                                              −55      −40     0        25       70    85   125                                                                              −55      −40        0       25        70      85    125
+                                                                                        TA − Free-Air Temperature − °C                                                                                                  TA − Free-Air Temperature − °C
+
+
+
+
+        Figure 9. Driver Low-to-High Propagation Delay Time vs                                                                          Figure 10. Driver High-to-Low Propagation Delay Time vs
+                          Free-Air Temperature                                                                                                            Free-Air Temperature
+               t PLH − Driver Low-to-High Propagation Delay Time − ns
+
+
+
+
+                                                                                                                                             t PHL − Driver High-to-Low Propagation Delay Time − ns
+
+
+
+
+                                                                         90                                                                                                                           150
+                                                                              RS = 10 kΩ                                                                                                                                                                RS = 10 kΩ
+                                                                                                                                                                                                                     VCC = 3.6 V
+                                                                         80
+                                                                                                                                                                                                      140
+                                                                                VCC = 3 V
+                                                                         70                                                                                                                                        VCC = 3.3 V
+                                                                                                                                                                                                      130
+                                                                         60                                  VCC = 3.3 V
+                                                                                                                                                                                                              VCC = 3 V
+                                                                               VCC = 3.6 V
+                                                                         50                                                                                                                           120
+
+                                                                         40                                                                                                                            110
+
+                                                                         30
+                                                                                                                                                                                                      100
+                                                                         20
+                                                                                                                                                                                                       90
+                                                                         10
+
+                                                                          0                                                                                                                            80
+                                                                              −55      −40     0        25       70    85   125                                                                              −55      −40        0       25        70      85    125
+                                                                                         TA − Free-Air Temperature − °C                                                                                                TA − Free-Air Temperature − °C
+
+
+
+
+        Figure 11. Driver Low-to-High Propagation Delay Time vs                                                                         Figure 12. Driver High-to-Low Propagation Delay Time vs
+                          Free-Air Temperature                                                                                                            Free-Air Temperature
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                                                                                                                                                    Submit Documentation Feedback                 11
+                                                                                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                                                                                                                                                                                                                    www.ti.com
+
+
+Typical Characteristics (continued)
+            t PLH − Driver Low-to-High Propagation Delay Time − ns
+
+
+
+
+                                                                                                                                                                                                  t PHL− Driver High-to-Low Propagation Delay Time − ns
+                                                                     800                                                                                                                                                                                  1000
+                                                                              RS = 100 kΩ                                                                                                                                                                               RS = 100 kΩ
+
+                                                                     700                    VCC = 3 V
+                                                                                                                                                                                                                                                           950                         VCC = 3.6 V
+
+                                                                     600
+                                                                                    VCC = 3.3 V                                                                                                                                                                               VCC = 3.3 V
+                                                                                                                                                                                                                                                           900
+                                                                     500
+
+
+                                                                     400            VCC = 3.6 V                                                                                                                                                            850
+                                                                                                                                                                                                                                                                              VCC = 3 V
+                                                                     300
+                                                                                                                                                                                                                                                           800
+
+                                                                     200
+                                                                                                                                                                                                                                                           750
+                                                                     100
+
+                                                                      0                                                                                                                                                                                    700
+                                                                              −55     −40         0     25    70       85                               125                                                                                                             −55    −40        0    25       70     85      125
+
+                                                                                      TA − Free-Air Temperature − °C                                                                                                                                                            TA − Free-Air Temperature − °C
+
+
+
+
+       Figure 13. Driver Low-to-High Propagation Delay Time vs                                                                                                                              Figure 14. Driver High-to-Low Propagation Delay Time vs
+                         Free-Air Temperature                                                                                                                                                                 Free-Air Temperature
+                                                                     50                                                                                                                                                                                   1.50
+
+
+
+
+                                                                                                                                                                                                  µs
+                                                                                                                                                                                                                                                          1.40
+
+
+
+
+                                                                                                                                                                                                         t f − Differential Driver Output Fall Time −
+                                                                                                                                                                                                                                                          1.30                                          VCC = 3.3 V
+                                                                     40                                                                                                                                                                                   1.20
+            I O − Driver Output Current − mA
+
+
+
+
+                                                                                                                                                                                                                                                          1.10                            VCC = 3.6 V
+                                                                                                                                                                                                                                                          1.00
+                                                                     30                                                                                                                                                                                   0.90
+                                                                                                                                                                                                                                                          0.80
+                                                                                                                                                                                                                                                          0.70
+                                                                     20                                                                                                                                                                                   0.60
+                                                                                                                                                                                                                                                                                               VCC = 3 V
+                                                                                                                                                                                                                                                          0.50
+                                                                                                                                                                                                                                                          0.40
+                                                                     10                                                                                                                                                                                   0.30
+                                                                                                                                                                                                                                                          0.20
+                                                                                                                                                                                                                                                          0.10
+                                                                      0                                                                                                                                                                                        0
+                                                                          1         1.5       2         2.5    3                            3.5               4                                                                                                    0             50           100            150      200
+                                                                                            VCC − Supply Voltage − V                                                                                                                                                            Rs − Source Resistance − kΩ
+
+
+
+
+          Figure 15. Driver Output Current vs Supply Voltage                                                                                                                                Figure 16. Differential Driver Output Fall Time vs Source
+                                                                                                                                                                                                                 Resistance (Rs)
+                                                                                                                                                        3
+
+
+                                                                                                                                                       2.5
+                                                                                                                       V ref − Reference Voltage − V
+
+
+
+
+                                                                                                                                                        2                  VCC = 3.6 V
+
+
+                                                                                                                                                       1.5
+                                                                                                                                                                                VCC = 3 V
+
+                                                                                                                                                        1
+
+
+                                                                                                                                                       0.5
+
+
+                                                                                                                                                        0
+                                                                                                                                                                  −50         −5            5                                                             50
+
+                                                                                                                                                                        Iref − Reference Current − µA
+
+
+
+
+                                                                                                                   Figure 17. Reference Voltage vs Reference Current
+
+
+
+
+12     Submit Documentation Feedback                                                                                                                                                                                                                                   Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                                                                                        Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                       SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                      SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+9 Parameter Measurement Information
+                             VCC
+                                               IO
+             II
+                       D
+                                                        VOD         0 V or 3 V                               60 Ω
+                                               IO                                                                       CANH
+
+                  VI
+                                                                                                                 CANL
+
+
+
+
+                                        Figure 18. Driver Voltage and Current Definitions
+
+                                                                            167 Ω
+
+
+                             0V                               VOD    60 Ω
+                                                                            167 Ω
+                                                                                           ±   –2 V ≤ VTEST ≤ 7 V
+
+
+
+
+                                                          Figure 19. Driver VOD
+
+                                                         Dominant
+                                           CANH                                  ≈3V              VOH     CANH
+
+                              Recessive
+                                                                                 ≈ 2.3 V          VOL
+
+
+                                            CANL                                 ≈1V              VOH     CANL
+
+                                           Figure 20. Driver Output Voltage Definitions
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                              Submit Documentation Feedback      13
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                             www.ti.com
+
+
+                                   Parameter Measurement Information (continued)
+
+
+                                                                            RL = 60 Ω             CL = 50 pF       VO
+                                                                                                 (see Note B)
+                          Signal
+                                         50 Ω
+                        Generator
+                       (see Note A)                           RS = 0 Ω to 100 kΩ for SN65HVD230 and SN65HVD231
+                                                                  N/A for SN65HVD232
+
+
+
+
+                                                                                                     3V
+
+                           Input                                                                     1.5 V
+
+                                                                                                      0V
+
+                                        tPLH                                         tPHL
+
+                                                                                                                   VOD(D)
+                                                                                            90%
+                                                                                              0.9 V
+                         Output
+                                                                                                   0.5 V
+                                                                                                      10%
+                                                                                                                   VOD(R)
+                                                tr                                       tf
+      A.   The input pulse is supplied by a generator having the following characteristics: PRR ≤ 500 kHz, 50% duty cycle, tr ≤ 6
+           ns, tf ≤ 6 ns, Zo = 50 Ω.
+      B.   CL includes probe and jig capacitance.
+
+                                   Figure 21. Driver Test Circuit and Voltage Waveforms
+
+
+                                                                                                              IO
+
+                                                                             VID
+
+
+                              V     )V                      VCANH
+                         VIC + CANH    CANL                                                                         VO
+                                    2
+                                                                  VCANL
+
+
+
+
+                                   Figure 22. Receiver Voltage and Current Definitions
+
+
+
+
+14     Submit Documentation Feedback                                                          Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                    Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                      SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                         SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+                                       Parameter Measurement Information (continued)
+
+
+                                                                                       Output
+                                   Signal
+                                                   50 Ω
+                                 Generator
+                                                             1.5 V                                   CL = 15 pF
+                                (see Note A)
+                                                                                                    (see Note B)
+
+
+
+
+                                                                                                     2.9 V
+
+                               Input                                                                 2.2 V
+
+                                                                                                       1.5 V
+
+                                           tPLH                                       tPHL
+
+                                                                                                               VOH
+                                                                                             90%
+                            Output                                                             1.3 V
+                                                                                                   10%
+                                                                                                                VOL
+                                                        tr                                tf
+       A.   The input pulse is supplied by a generator having the following characteristics: PRR ≤ 500 kHz, 50% duty cycle, tr ≤ 6
+            ns, tf ≤ 6 ns, Zo = 50 Ω.
+       B.   CL includes probe and jig capacitance.
+
+                                  Figure 23. Receiver Test Circuit and Voltage Waveforms
+
+
+
+
+                                                   100 Ω
+
+
+
+                                                  Pulse Generator,
+                                                   15 µs Duration,
+                                                   1% Duty Cycle
+
+
+
+
+                                                  Figure 24. Overvoltage Protection
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                                  Submit Documentation Feedback     15
+                                        Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                            www.ti.com
+
+
+                                Parameter Measurement Information (continued)
+                      Table 1. Receiver Characteristics Over Common Mode With V(Rs) = 1.2 V
+          VIC                         VID                   VCANH            VCANL                        R OUTPUT
+          -2 V                   900 mV                    -1.55 V          -2.45 V                   L
+          7V                     900 mV                     8.45 V           6.55 V                   L
+                                                                                                                       VOL
+          1V                          6V                     4V               -2 V                    L
+          4V                          6V                     7V               1V                      L
+          -2 V                   500 mV                    -1.75 V          -2.25 V                   H
+          7V                     500 mV                     7.25 V           6.75 V                   H
+          1V                          -6 V                   -2 V             4V                      H               VOH
+          4V                          -6 V                   1V               7V                      H
+           X                           X                    Open             Open                     H
+
+                                                                                                          VCC
+
+                                                                                                             10 kΩ
+                                                     D                                   R       Output
+                                             0V                      60 Ω
+                                                                                                  CL = 15 pF
+                                                           RS
+             Generator
+           PRR = 150 kHz                                     +
+                                Signal
+           50% Duty Cycle                     50 Ω       V(Rs)
+                               Generator
+             tr, tf < 6 ns                                   –
+              Zo = 50 Ω
+
+
+
+
+                                                                                         VCC
+
+                              V(Rs)                                                      1.5 V
+
+                                                                                         0V
+
+                                                           t(WAKE)
+
+
+
+
+                         R Output                                              1.3 V
+
+
+
+                               Figure 25. t(WAKE) Test Circuit and Voltage Waveforms
+
+
+
+
+16     Submit Documentation Feedback                                         Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                  Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                             SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                             SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+
+                                                 0 Ω, 10 kΩ or
+                                                 100 kΩ ±5%       RS               DUT
+                                                                                                    CANH
+
+                                                                  D                                   60 Ω ±1%
+                                                             VI
+
+                                                                                                    CANL
+
+
+                                                                  R
+                                                  +
+                                            VO          15 pF ±20%
+
+
+
+
+                                                                                                           VCC
+                                       VI             50%              50%
+                                                                                                           0V
+                                     t(LOOP2)                                            t(LOOP1)
+                                                                                                           VOH
+                                      VO                    50%              50%
+                                                                                                           VOL
+       A.   All VI input pulses are supplied by a generator having the following characteristics: tr or tf ≤ 6 ns, Pulse Repetition
+            Rate (PRR) = 125 kHz, 50% duty cycle.
+
+                                    Figure 26. t(LOOP) Test Circuit and Voltage Waveforms
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                                      Submit Documentation Feedback     17
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                              www.ti.com
+
+
+
+                          CANH and CANL Inputs                                               D Input
+
+
+                                                          VCC
+
+                                                                                                                            VCC
+       16 V               110 kΩ              9 kΩ
+                                                                                       100 kΩ
+                            45 kΩ
+  Input                                                                         1 kΩ
+                                                                   Input
+
+              20 V              9 kΩ
+                                                                                 9V
+
+
+
+
+                      CANH and CANL Outputs                                                     R Output
+
+
+                VCC
+                                                                     VCC
+
+                                              16 V
+
+
+                                                                                                       5Ω
+                                                     Output                                                          Output
+
+
+                                                                                                                     9V
+                                       20 V
+
+
+
+
+                            Figure 27. Equivalent Input and Output Schematic Diagrams
+
+
+
+
+18        Submit Documentation Feedback                                        Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                    Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                       SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                       SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+10 Detailed Description
+
+10.1 Overview
+ISO 11898 family of standards are the international standard for high speed serial communication using the
+controller area network (CAN) bus protocol and physical layers (transceivers). It supports multimaster operation,
+real time control, programmable data rates up to 1 Mbps, and powerful redundant error checking procedures that
+provide reliable data transmission. It is suited for networking intelligent devices as well as sensors and actuators
+within the rugged electrical environment of a machine chassis or factory floor. The SN65HVD23x family of 3.3 V
+CAN transceivers implement the lowest layers of the ISO/OSI reference model, the ISO11898-2 standard. This is
+the interface with the physical signaling output of the CAN controller of the Texas Instruments µPs, MCUs and
+DSPs, such as TMS320Lx240x 3.3 V DSPs, as illustrated in Figure 28.
+
+                                             ISO 11898 Specification                         Implementation
+
+
+
+
+                                                                                            TMS320Lx2403/6/7
+                                          Application Specific Layer                             3.3-V
+                                                                                                 DSP
+
+
+                                                            Logic Link Control
+                                 Data-Link
+                                                                                                Embedded
+                                  Layer
+                                                        Medium Access Control                     CAN
+                                                                                                Controller
+
+                                                            Physical Signaling
+
+
+                                 Physical           Physical Medium Attachment
+                                  Layer                                                        SN65HVD230
+
+                                                    Medium Dependent Interface
+
+                                                                                              CAN Bus-Line
+
+
+                                       Figure 28. Layered ISO 11898 Standard Architecture
+
+
+10.2 Functional Block Diagram
+                             SN65HVD230, SN65HVD231                                      SN65HVD232
+                            Logic Diagram (Positive Logic)                       Logic Diagram (Positive Logic)
+
+                                   3                        5
+                           VCC                                  Vref
+                                                                                      1
+                                                                                  D
+                                   1
+                             D
+                                                                                                        7
+                                   8                                                  4                      CANH
+                            RS                                                    R                     6
+                                                                                                             CANL
+                                                        7
+                                   4                            CANH
+                             R                          6
+                                                                CANL
+
+                                              Figure 29. Logic Diagram (Positive Logic)
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                              Submit Documentation Feedback       19
+                                        Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                            www.ti.com
+
+
+10.3 Feature Description
+
+The SN65HVD230/231/232 are pin-compatible (but not functionally identical) with one another and, depending
+upon the application, may be used with identical circuit boards.
+These transceivers feature single 3.3 V supply operation and standard compatibility with signaling rates up to 1
+Mbps, ±16 kV HBM ESD protection on the bus pins, thermal shutdown protection, bus fault protection, and open-
+circuit receiver failsafe. The fail-safe design of the receiver assures a logic high at the receiver output if the bus
+wires become open circuited.
+The bus pins are also maintained in a high-impedance state during low VCC conditions to ensure glitch-free
+power-up and power-down bus protection for hot-plugging applications. This high-impedance condition also
+means that an unpowered node does not disturb the bus. Transceivers without this feature usually have a very
+low output impedance. This results in a high current demand when the transceiver is unpowered, a condition that
+could affect the entire bus.
+
+10.3.1 Vref Voltage Reference
+The Vref pin (pin 5) on the SN65HVD230 and SN65HVD231 is available as a VCC/2 voltage reference. This pin
+can be connected to the common mode point of a split termination to help further stabilize the common mode
+voltage of the bus. If the Vref pin is not used it may be left floating.
+
+10.3.2 Thermal Shutdown
+If a high ambient temperature or excessive output currents result in thermal shutdown, the driver will be disabled
+and the bus pins become high impedance. During thermal shutdown the D pin to bus transmission path is
+blocked and the CAN bus pins are high impedance and biased to a recessive level. Once the thermal shutdown
+condition is cleared and the junction temperature drops below the thermal shutdown temperature the driver will
+be reactivated and resume normal operation. During a thermal shutdown the receiver to R pin path remains
+operational.
+
+10.4 Device Functional Modes
+The RS pin (Pin 8) of the SN65HVD230 and SN65HVD231 provides three different modes of operation: high-
+speed mode, slope-control mode, and low-power mode.
+
+10.4.1 High-Speed Mode
+The high-speed mode can be selected by applying a logic low to the RS pin (pin 8). The high-speed mode of
+operation is commonly employed in industrial applications. High-speed allows the output to switch as fast as
+possible with no internal limitation on the output rise and fall slopes. If the high speed transitions are a concern
+for emissions performance slope control mode can be used.
+If both high speed mode and the low-power standby mode is to be used in the application, direct connection to a
+µP, MCU or DSP general purpose output pin can be used to switch between a logic-low level (< 1.2 V) for high
+speed operation, and the logic-high level (> 0.75 VCC) for standby. Figure 30 shows a typical DSP connection,
+and Figure 31 shows the HVD230 driver output signal in high-speed mode on the CAN bus.
+                                                RS               IOPF6
+                           D      1         8
+                                                                               TMS320LF2406
+                         GND      2         7   CANH
+                                                                                    or
+                         VCC      3         6   CANL                           TMS320LF2407
+                           R      4         5   Vref
+
+         Figure 30. RS (Pin 8) Connection to a TMS320LF2406/07 for High Speed/Standby Operation
+
+
+
+
+20     Submit Documentation Feedback                                         Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                  Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                     SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                 SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+Device Functional Modes (continued)
+
+
+
+
+                                                                1 Mbps
+                                                             Driver Output
+                                                               NRZ Data
+
+
+
+
+                    1
+
+
+
+
+                  Figure 31. Typical High Speed SN65HVD230 Output Waveform into a 60-Ω Load
+
+10.4.2 Slope Control Mode
+Electromagnetic compatibility is essential in many applications while still making use of unshielded twisted pair
+bus cable to reduce system cost. Slope control mode was added to the SN65HVD230 and SN65HVD231
+devices to reduce the electromagnetic interference produced by the rise and fall times of the driver and resulting
+harmonics. These rise and fall slopes of the driver outputs can be adjusted by connecting a resistor from RS (pin
+8) to ground or to a logic low voltage, as shown in Figure 32. The slope of the driver output signal is proportional
+to the pin's output current. This slope control is implemented with an external resistor value of 10 kΩ to achieve a
+~15 V/μs slew rate, and up to 100 kΩ to achieve a ~2.0 V/μs slew rate as displayed in Figure 33.
+                                                                  10 kΩ
+                                                                    to
+                                                        RS        100 kΩ
+                                                                             IOPF6
+                               D       1        8
+                                                                                         TMS320LF2406
+                             GND       2        7       CANH
+                                                                                              or
+                             VCC       3        6       CANL                             TMS320LF2407
+                               R       4        5       Vref
+
+                                   Figure 32. Slope Control/Standby Connection to a DSP
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                        Submit Documentation Feedback       21
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                                                www.ti.com
+
+
+Device Functional Modes (continued)
+
+                                                                      25
+
+
+
+                                                                      20
+
+
+
+
+                                  Driver Outout Signal Slop – V/ ms
+                                                                      15
+
+
+
+                                                                      10
+
+
+
+                                                                      5
+
+
+
+                                                                      0
+                                                                           0   10
+                                                                               4.7   20   30
+                                                                                     6.8 10    40
+                                                                                               15 22 50 3360 47 70   80
+                                                                                                                     68   90
+                                                                                                                          100
+                                                                                     Slope Control Resistance – kW
+
+              Figure 33. HVD230 Driver Output Signal Slope vs Slope Control Resistance Value
+
+10.4.3 Standby Mode (Listen Only Mode) of the HVD230
+If a logic high (> 0.75 VCC) is applied to RS (pin 8) in Figure 30 and Figure 32, the circuit of the SN65HVD230
+enters a low-current, listen only standby mode, during which the driver is switched off and the receiver remains
+active. In this listen only state, the transceiver is completely passive to the bus. It makes no difference if a slope
+control resistor is in place as shown in Figure 32. The µP can reverse this low-power standby mode when the
+rising edge of a dominant state (bus differential voltage > 900 mV typical) occurs on the bus. The µP, sensing
+bus activity, reactivates the driver circuit by placing a logic low (< 1.2 V) on RS (pin 8).
+
+10.4.4 The Babbling Idiot Protection of the HVD230
+Occasionally, a runaway CAN controller unintentionally sends messages that completely tie up the bus (what is
+referred to in CAN jargon as a babbling idiot). When this occurs, the µP, MCU or DSP can engage the listen-only
+standby mode of the transceiver to disable the driver and release the bus, even when access to the CAN
+controller has been lost. When the driver circuit is deactivated, its outputs default to a high-impedance state
+(recessive).
+
+10.4.5 Sleep Mode of the HVD231
+The unique difference between the SN65HVD230 and the SN65HVD231 is that both driver and receiver are
+switched off in the SN65HVD231 when a logic high is applied to RS (pin 8). The device remains in a very low
+power-sleep mode until the circuit is reactivated with a logic low applied to RS (pin 8). While in this sleep mode,
+the bus-pins are in a high-impedance state, while the D and R pins default to a logic high.
+
+10.4.6 Summary of Device Operating Modes
+Table 2 shows a summary of the operating modes for the SN65HVD230 and SN65HVD231. Please note that the
+SN65HVD232 is a basic CAN transceiver has only the normal high speed mode of operation; pins 5 and 8 are no
+connection (NC).
+
+
+
+
+22     Submit Documentation Feedback                                                                             Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                  Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                             SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                            SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+Device Functional Modes (continued)
+                                      Table 2. SN65HVD230 and SN65HVD231 Operating Modes
+             RS Pin                                  MODE                               DRIVER              RECEIVER                 RXD Pin
+ LOW, V(Rs) < 1.2 V, strong                    High Speed Mode                    Enabled (ON) High        Enabled (ON)         Mirrors Bus State (1)
+    pull down to GND                                                                   Speed
+ LOW, V(Rs) < 1.2 V, 10 kΩ                    Slope Control Mode                  Enabled (ON) with        Enabled (ON)          Mirrors Bus State
+  to 100 kΩ pull down to                                                            Slope Control
+          GND
+      HIGH, V(Rs) > 0.75 VCC       Low Current SN65HVD230: Standby                  Disabled (OFF)         Enabled (ON)          Mirrors Bus State
+                                      Mode     Mode
+                                                   SN65HVD231: Sleep Mode                                  Disabled (OFF)               High
+
+(1)    Mirrors bus state: low if CAN bus is dominant, high if CAN bus is recessive.
+
+                                      Table 3. SN65HVD230 and SN65HVD231 Driver Functions
+                                                      DRIVER (SN65HVD230, SN65HVD231) (1)
+                                                                                        OUTPUTS
+            INPUT D                           RS                                                                                BUS STATE
+                                                                          CANH                        CANL
+               L                  V(Rs) < 1.2 V (including 10                H                         L                          Dominant
+                                  kΩ to 100 kΩ pull down to
+               H                             GND)                            Z                         Z                         Recessive
+             Open                             X                              Z                         Z                         Recessive
+               X                       V(Rs) > 0.75 VCC                      Z                         Z                         Recessive
+
+(1)    H = high level; L = low level; X = irrelevant; ? = indeterminate; Z = high impedance
+
+                                                   Table 4. SN65HVD230 Receiver Functions
+                                                                RECEIVER (SN65HVD230) (1)
+             DIFFERENTIAL INPUTS                                            RS                                        OUTPUT R
+                    VID ≥ 0.9 V                                              X                                              L
+                0.5 V < VID < 0.9 V                                          X                                              ?
+                    VID ≤ 0.5 V                                              X                                              H
+                       Open                                                  X                                              H
+
+(1)    H = high level; L = low level; X = irrelevant; ? = indeterminate
+
+                                                   Table 5. SN65HVD231 Receiver Functions
+                                                                RECEIVER (SN65HVD231) (1)
+             DIFFERENTIAL INPUTS                                            RS                                        OUTPUT R
+                    VID ≥ 0.9 V                                                                                             L
+                                                      V(Rs) < 1.2 V (including 10 kΩ to 100 kΩ pull
+                0.5 V < VID < 0.9 V                                                                                         ?
+                                                                      down to GND)
+                    VID ≤ 0.5 V                                                                                             H
+                         X                                           V(Rs) > 0.75 VCC                                       H
+                         X                                        1.2 V < V(Rs) < 0.75 VCC                                  ?
+                       Open                                                  X                                              H
+
+(1)    H = high level; L = low level; X = irrelevant; ? = indeterminate
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                                      Submit Documentation Feedback             23
+                                          Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                            www.ti.com
+
+
+                                              Table 6. SN65HVD232 Receiver Functions
+                                                           RECEIVER (SN65HVD232) (1)
+                        DIFFERENTIAL INPUTS                                                           OUTPUT R
+                               VID ≥ 0.9 V                                                                 L
+                           0.5 V < VID < 0.9 V                                                             ?
+                               VID ≤ 0.5 V                                                                 H
+                                  Open                                                                     H
+
+(1)   H = high level; L = low level; X = irrelevant; ? = indeterminate
+
+                                                 Table 7. SN65HVD232 Driver Functions
+                                                            DRIVER (SN65HVD232) (1)
+                                                                     OUTPUTS
+              INPUT D                                                                                                   BUS STATE
+                                                    CANH                              CANL
+                  L                                    H                               L                                  Dominant
+                  H                                    Z                               Z                                 Recessive
+                Open                                   Z                               Z                                 Recessive
+
+(1)   H = high level; L = low level; Z = high impedance
+
+
+
+
+24       Submit Documentation Feedback                                                       Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                                   SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                                   SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+11 Application and Implementation
+
+                                                           NOTE
+               Information in the following applications sections is not part of the TI component
+               specification, and TI does not warrant its accuracy or completeness. TI’s customers are
+               responsible for determining suitability of components for their purposes. Customers should
+               validate and test their design implementation to confirm system functionality.
+
+
+11.1 Application Information
+This application section provides information concerning the implementation of the physical medium attachment
+layer in a CAN network according to the ISO 11898 standard. It presents a typical application circuit and test
+results, as well as discussions on slope control, total loop delay, and interoperability in 5-V CAN systems.
+
+11.1.1 CAN Bus States
+The CAN bus has two states during powered operation of the device; dominant and recessive. A dominant bus
+state is when the bus is driven differentially, corresponding to a logic low on the D and R pin. A recessive bus
+state is when the bus is biased to VCC / 2 via the high-resistance internal resistors RI and RDiff of the receiver,
+corresponding to a logic high on the D and R pins. See Figure 34 and Figure 35.
+                                                        4
+                                 Typical Bus Voltage (V)
+
+
+
+
+                                                                    CANH
+                                                3
+
+
+
+
+                                                                                   Vdiff(D)
+                                        2
+
+
+
+
+                                                                                                  Vdiff(R)
+                                                                     CANL
+                                1
+
+
+
+
+                                                                                                                 Time, t
+                                                               Recessive       Dominant       Recessive
+                                                                Logic H         Logic L        Logic H
+                                        Figure 34. CAN Bus States (Physical Bit Representation)
+
+
+
+                              CANH
+
+                                                                 VCC/2                                               RXD
+
+
+                                CANL
+
+                           Figure 35. Simplified Recessive Common Mode Bias and Receiver
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                                          Submit Documentation Feedback       25
+                                                            Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                          www.ti.com
+
+
+11.2 Typical Application
+Figure 36 illustrates a typical application of the SN65HVD23x family. The output of the host µP's CAN controller
+(TXD) is connected to the transceivers driver input, pin D, and the transceivers receiver output, pin R, is
+connected to the input of the CAN controller (RXD). The transceiver is attached to the differential bus lines at
+pins CANH and CANL. Typically, the bus is a twisted pair of wires with a characteristic impedance of 120 Ω, in
+the standard half-duplex multipoint topology of Figure 37. Each end of the bus is terminated with 120 Ω resistors
+in compliance with the standard to minimize signal reflections on the bus.
+
+                                                    Electronic Control Unit (ECU)
+
+
+
+                                                          TMS320Lx2403/6/7
+
+
+
+                                                              CAN-Controller
+
+
+                                                   CANTX/IOPC6        CANRX/IOPC7
+
+
+                                                          D                    R
+                                                              SN65HVD230
+
+
+
+
+                                                   CANH                            CANL
+
+
+
+                                                                                   CAN Bus Line
+
+
+                                       Figure 36. Details of a Typical CAN Node
+
+
+
+                               ECU                        ECU                                       ECU
+                                1                          2                                         n
+
+                                            CANH
+
+
+                   120 Ω                                                   CAN Bus Line                            120 Ω
+
+                                            CANL
+
+                                             Figure 37. Typical CAN Network
+
+11.2.1 Design Requirements
+
+11.2.1.1 CAN Termination
+The ISO11898 standard specifies the interconnect to be a single twisted pair cable (shielded or unshielded) with
+120 Ω characteristic impedance (ZO). Resistors equal to the characteristic impedance of the line should be used
+to terminate both ends of the cable to prevent signal reflections. Unterminated drop lines (stubs) connecting
+nodes to the bus should be kept as short as possible to minimize signal reflections. The termination may be on
+the cable or in a node, but if nodes may be removed from the bus the termination must be carefully placed so
+that it is not removed from the bus.
+
+
+
+
+26     Submit Documentation Feedback                                                       Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                  Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                   SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                     SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+Typical Application (continued)
+
+                                                                                                                     Node n
+                  Node 1                          Node 2                 Node 3                                (with termination)
+                                                                                                                  MCU or DSP
+                 MCU or DSP                    MCU or DSP              MCU or DSP
+
+                                                                                                                     CAN
+                    CAN                            CAN                    CAN                                      Controller
+                  Controller                     Controller             Controller
+
+                                                                                                                     CAN
+                    CAN                            CAN                     CAN                                    Transceiver
+                 Transceiver                    Transceiver             Transceiver
+                                                                                                                     RTERM
+
+
+
+         RTERM
+
+
+
+
+                                                        Figure 38. Typical CAN Bus
+
+Termination is typically a 120 Ω resistor at each end of the bus. If filtering and stabilization of the common mode
+voltage of the bus is desired, then split termination may be used (see Figure 39). Split termination utilizes two
+60Ω resistors with a capacitor in the middle of these resistors to ground. Split termination improves the
+electromagnetic emissions behavior of the network by eliminating fluctuations in the bus common mode voltages
+at the start and end of message transmissions.
+Care should be taken in the power ratings of the termination resistors used. Typically the worst case condition
+would be if the system power supply was shorted across the termination resistance to ground. In most cases the
+current flow through the resistor in this condition would be much higher than the transceiver's current limit.
+
+                 Standard Termination                                          Split Termination
+
+                        CANH                                                          CANH
+
+
+                                                                                                   RTERM/2
+                  CAN                                                             CAN
+                                         RTERM
+             Transceiver                                                    Transceiver
+                                                                                                                       CSPLIT
+                                                                                                    RTERM/2
+
+
+                        CANL                                                            CANL
+
+
+                                            Figure 39. CAN Bus Termination Concepts
+
+11.2.1.2 Loop Propagation Delay
+Transceiver loop delay is a measure of the overall device propagation delay, consisting of the delay from the
+driver input (D pin) to the differential outputs (CANH and CANL pins), plus the delay from the receiver inputs
+(CANH and CANL) to its output (R pin).
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                            Submit Documentation Feedback       27
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                            www.ti.com
+
+
+Typical Application (continued)
+A typical loop delay for the SN65HVD230 transceiver is displayed in Figure 40. This loop delay will increase as
+the slope of the driver output is slowed during slope control mode. This increased loop delay means that there is
+a tradeoff between the total bus length able to be used and the driver's output slope used via the slope control
+pin of the device. For example, the loop delay for a 10-kΩ resistor from the RS pin to ground is ~100 ns, and the
+loop delay for a 100-kΩ resistor is ~500 ns. Therefore, if we use the following rule-of-thumb that the propagation
+delay of typical twisted pair bus cable is 5 ns/m, we can calculate an approximate cable length trade-off between
+normal high-speed mode and slope control mode with a 100-kΩ resistor. Using typical values, the loop delay for
+a recessive to dominant bit with RS tied directly to ground is 70ns, and with a 100-kΩ resistor is 535 ns. At 5ns/m
+of propagation delay, which you have to count in both directions the difference is 46.5 meters (535-70)/(2*5).
+Another option to improving the elctromagnetic emissions of the device besides slowing down the edge rates of
+the driver in slope control mode is using quality shielded bus cabling.
+
+
+
+
+                                                    (    )
+
+
+
+
+                         Figure 40. 70.7-ns Loop Delay Through the HVD230 With RS = 0
+
+11.2.1.3 Bus Loading, Length and Number of Nodes
+The ISO11898 Standard specifies up to 1 Mbps data rate, maximum bus length of 40 meters, maximum drop line
+(stub) length of 0.3 meters and a maximum of 30 nodes. However, with careful network design, the system may
+have longer cables, longer stub lengths, and many more nodes. Many CAN organizations and standards have
+scaled the use of CAN for applications outside the original ISO11898 standard. They have made system level
+trade-offs for data rate, cable length, and parasitic loading of the bus. Examples of some of these specifications
+are ARINC825, CANopen, CAN Kingdom, DeviceNet and NMEA200.
+A high number of nodes requires a transceiver with high input impedance and wide common mode range such
+as the SN65HVD23x CAN family. ISO11898-2 specifies the driver differential output with a 60 Ω load (two 120 Ω
+termination resistors in parallel) and the differential output must be greater than 1.5 V. The SN65HVD23x devices
+are specified to meet the 1.5 V requirement with a 60 Ω load, and additionally specified with a differential output
+voltage minimum of 1.2 V across a common mode range of –2 V to 7 V via a 167 Ω coupling network. This
+network represents the bus loading of 120 SN65HVD23x transceivers based on their minimum differential input
+resistance of 40 kΩ. Therefore, the SN65HVD23x supports up to 120 transceivers on a single bus segment with
+margin to the 1.2 V minimum differential input voltage requirement at each node. For CAN network design,
+
+
+28     Submit Documentation Feedback                                         Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                  Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                              SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                             SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+Typical Application (continued)
+margin must be given for signal loss across the system and cabling, parasitic loadings, network imbalances,
+ground offsets and signal integrity thus a practical maximum number of nodes may be lower. Bus length may
+also be extended beyond the original ISO11898 standard of 40 meters by careful system design and data rate
+tradeoffs. For example, CANopen network design guidelines allow the network to be up to 1 km with changes in
+the termination resistance, cabling, less than 64 nodes and significantly lowered data rate.
+This flexibility in CAN network design is one of the key strengths of the various extensions and additional
+standards that have been built on the original ISO11898 CAN standard. In using this flexibility comes the
+responsibility of good network design.
+
+11.2.2 Detailed Design Procedure
+The following system level considerations should be looked at when designing your application. There are trade-
+offs between the total number of nodes, the length of the bus, and the slope of the driver output that need to be
+evaluated when building up a system
+
+11.2.2.1 Transient Protection
+Typical applications that use CAN will sometime require some form of ESD, burst, or surge protection
+performance at the system level. If these requirements are higher than those of the device some form of external
+protection may be needed to shield the transceiver against these high power transients that can cause damage.
+Transient voltage suppressor (TVS) are very commonly used and can help clamp the amount of energy that
+reaches the transceiver.
+
+11.2.2.2 Transient Voltage Suppressors
+Transient voltage suppressors are the preferred protection components for CAN bus applications due to their low
+capacitance, fast response times and high peak power dissipation limits. The low bus capacitance allows these
+devices to be used at many, if not all, nodes on the network without having to reduce the data rate. The quick
+response times in the order of a few picoseconds enable these devices to clamp the energy of very fast
+transients like ESD and EFT. Lastly, the high peak power ratings enable these devices to handle high energy
+surge pulses without being damaged.
+
+11.2.3 Application Curve
+Typical driver output waveforms from a pulse input signal with different slope control resistances are displayed in
+Figure 41. The top waveform show the typical differential signal when transitioning from a recessive level to a
+dominant level on the CAN bus with RS tied to GND through a zero ohm resistor. The second waveform shows
+the same signal for the condition with a 10k ohm resistor tied from RS to ground. The bottom waveform shows
+the typical differential signal for the case where a 100k ohm resistor is tied from the RS pin to ground.
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                    Submit Documentation Feedback       29
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                            www.ti.com
+
+
+Typical Application (continued)
+
+
+
+
+                                     RS = 0 Ω
+
+
+
+
+                                    RS = 10 kΩ
+
+
+
+                                    RS = 100 kΩ
+
+
+
+
+           Figure 41. Typical SN65HVD230 250-kbps Output Pulse Waveforms With Slope Control
+
+
+11.3 System Example
+11.3.1 ISO 11898 Compliance of SN65HVD23x Family of 3.3 V CAN Transceivers
+
+11.3.1.1 Introduction
+Many users value the low power consumption of operating their CAN transceivers from a 3.3 V supply. However,
+some are concerned about the interoperability with 5 V supplied transceivers on the same bus. This report
+analyzes this situation to address those concerns.
+
+11.3.1.2 Differential Signal
+CAN is a differential bus where complementary signals are sent over two wires and the voltage difference
+between the two wires defines the logical state of the bus. The differential CAN receiver monitors this voltage
+difference and outputs the bus state with a single-ended output signal.
+
+
+
+
+30     Submit Documentation Feedback                                         Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                  Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                              SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                             SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+System Example (continued)
+
+
+
+
+                                                                                  NOISE MARGIN
+
+
+
+
+                                                                                                 900 mV Threshold
+                                          RECEIVER DETECTION WINDOW      75% SAMPLE POINT
+                                                                                                 500 mV Threshold
+                                                                                  NOISE MARGIN
+
+
+
+
+                         Figure 42. Typical SN65HVD230 Differential Output Voltage Waveform
+
+The CAN driver creates the differential voltage between CANH and CANL in the dominant state. The dominant
+differential output of the SN65HVD23x is greater than 1.5 V and less than 3 V across a 60 ohm load as defined
+by the ISO 11898 standard. These are the same limiting values for 5 V supplied CAN transceivers. Typically, the
+bus termination resistors drive the bus back to the recessive bus state and not the CAN driver.
+A CAN receiver is required to output a recessive state when less than 500 mV of differential voltage exists on the
+bus, and a dominant state when more than 900 mV of differential voltage exists on the bus. The CAN receiver
+must do this with common-mode input voltages from -2 V to 7 volts per the ISO 11898-2 standard. The
+SN65HVD23x family receivers meet these same input specifications as 5 V supplied receivers.
+
+11.3.1.2.1 Common Mode Signal
+A common-mode signal is an average voltage of the two signal wires that the differential receiver rejects. The
+common-mode signal comes from the CAN driver, ground noise, and coupled bus noise. Since the bias voltage
+of the recessive state of the device is dependent on VCC, any noise present or variation of VCC will have an effect
+on this bias voltage seen by the bus. The SN65HVD23x family has the recessive bias voltage set higher than
+0.5*VCC to comply with the ISO 11898-2 CAN standard which states that the recessive bias voltage must be
+between 2 V and 3 V. The caveat to this is that the common mode voltage will drop by a couple hundred
+millivolts when driving a dominant bit on the bus. This means that there is a common mode shift between the
+dominant bit and recessive bit states of the device. While this is not ideal, this small variation in the driver
+common-mode output is rejected by differential receivers and does not effect data, signal noise margins or error
+rates.
+
+11.3.1.3 Interoperability of 3.3-V CAN in 5-V CAN Systems
+The 3.3 V supplied SN65HVD23x family of CAN transceivers are fully compatible with 5 V CAN transceivers. The
+differential output voltage is the same, the recessive common mode output bias is the same, and the receivers
+have the same input specifications. The only difference is in the dominant common mode output voltage is lower
+in 3.3 V CAN transceivers than with 5 V supplied transceiver (by a few hundred millivolts).
+To help ensure the widest interoperability possible, the SN65HVD23x family has successfully passed the
+internationally recognized GIFT ICT conformance and interoperability testing for CAN transceivers which is
+shown in . Electrical interoperability does not always assure interchangeability however. Most implementers of
+CAN buses recognize that ISO 11898 does not sufficiently specify the electrical layer and that strict standard
+compliance alone does not ensure full interchangeability. This comes only with thorough equipment testing.
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                     Submit Documentation Feedback      31
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                  www.ti.com
+
+
+System Example (continued)
+
+
+                                                             TEKTRONIX
+                                                                784D
+                                                 Trigger     Oscilloscope
+     TEKTRONIX
+                                                 Input
+      HFS-9003
+       Pattern                    TEKTRONIX
+      Generator                      P6243
+                                  Single-Ended
+                                     Probes
+
+
+
+                                    One Meter Belden Cable # 3105A
+120 W                                                                                                                            120 W
+
+
+
+
+             SN65HVD230                      SN65HVD230                     SN65HVD251                   Competitor X251
+
+
+
+
+                       – +                                                                             – +
+                    HP E3516A                                                                       HP E3516A
+                    3.3-V Power                                                                     5-V Power
+                       Supply                                                                         Supply
+
+
+
+
+                             Figure 43. 3.3-V and 5-V CAN Transceiver System Testing
+
+
+12 Power Supply Recommendations
+The SN65HVD23x 3.3 V CAN transceivers provide the interface between the 3.3 V µPs, MCUs and DSPs and
+the differential bus lines, and are designed to transmit data at signaling rates up to 1 Mbps as defined by the ISO
+11898 standard.
+To ensure reliable operation at all data rates and supply voltages, the VCC supply pin of each CAN transceiver
+should be decoupled with a 100-nF ceramic capacitor located as close to the VCC and GND pins as possible. The
+TPS76333 is a linear voltage regulator suitable for supplying the 3.3-V supply.
+
+
+
+
+32      Submit Documentation Feedback                                              Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                    Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                              SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                             SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+13 Layout
+
+13.1 Layout Guidelines
+In order for the PCB design to be successful, start with design of the protection and filtering circuitry. Because
+ESD and EFT transients have a wide frequency bandwidth from approximately 3 MHz to 3 GHz, high frequency
+layout techniques must be applied during PCB design. On chip IEC ESD protection is good for laboratory and
+portable equipment but is usually not sufficient for EFT and surge transients occurring in industrial environments.
+Therefore robust and reliable bus node design requires the use of external transient protection devices at the bus
+connectors. Placement at the connector also prevents these harsh transient events from propagating further into
+the PCB and system.
+Use VCC and ground planes to provide low inductance. Note: high frequency current follows the path of least
+inductance and not the path of least resistance.
+Design the bus protection components in the direction of the signal path. Do not force the transient current to
+divert from the signal path to reach the protection device.
+An example placement of the Transient Voltage Suppression (TVS) device indicated as D1 (either bi-directional
+diode or varistor solution) and bus filter capacitors C8 and C9 are shown in .
+The bus transient protection and filtering components should be placed as close to the bus connector, J1, as
+possible. This prevents transients, ESD and noise from penetrating onto the board and disturbing other devices.
+Bus termination: Figure 44 shows split termination. This is where the termination is split into two resistors, R7
+and R8, with the center or split tap of the termination connected to ground via capacitor C7. Split termination
+provides common mode filtering for the bus. When termination is placed on the board instead of directly on the
+bus, care must be taken to ensure the terminating node is not removed from the bus as this will cause signal
+integrity issues of the bus is not properly terminated on both ends. See the application section for information on
+power ratings needed for the termination resistor(s).
+Bypass and bulk capacitors should be placed as close as possible to the supply pins of transceiver, examples
+C2, C3 (VCC).
+Use at least two vias for VCC and ground connections of bypass capacitors and protection devices to minimize
+trace and via inductance.
+To limit current of digital lines, serial resistors may be used. Examples are R1, R2, R3 and R4.
+To filter noise on the digital IO lines, a capacitor may be used close to the input side of the IO as shown by C1
+and C4.
+Since the internal pull up and pull down biasing of the device is weak for floating pins, an external 1k to 10k ohm
+pull-up or down resistor should be used to bias the state of the pin more strongly against noise during transient
+events.
+Pin 1: If an open drain host processor is used to drive the D pin of the device an external pull-up resistor
+between 1k and 10k ohms should be used to drive the recessive input state of the device (R1).
+Pin 8: is shown assuming the mode pin, RS, will be used. If the device will only be used in normal mode or slope
+control mode, R3 is not needed and the pads of C4 could be used for the pull down resistor to GND.
+Pin 5 in is shown for the SN65HVD230 and SN65HVD231 devices which have a Vref output voltage reference. If
+used, this pin should be tied to the common mode point of the split termination. If this feature is not used, the pin
+can be left floating.
+For the SN65HVD232, pins 5 and 8 are no connect (NC) pin. This means that the pins are not internally
+connected and can be left floating.
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                    Submit Documentation Feedback       33
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+SN65HVD230, SN65HVD231, SN65HVD232
+SLOS346N – MARCH 2001 – REVISED JULY 2015                                                                                    www.ti.com
+
+
+13.2 Layout Example
+
+                                                             RS
+
+
+
+
+                                                                  R4
+                   VCC         R1                                            GND
+
+
+
+
+                                                                        C4
+                      TXD      R2
+
+
+
+
+                                       C1
+                                                                                                  GND
+
+
+
+
+                                                                                             C8
+                            GND                                              R7
+                                                     U1
+
+
+
+
+                                                                                                      D1
+
+
+                                                                                                               J1
+                                                     U1                                     C7
+                                C2
+                                       C3
+                         VCC                                                 R8
+
+
+
+
+                                                                                             C9
+                                                                                                  GND
+                          RXD        R3                                Vref can be routed
+                                                                       under the device
+
+                                            Figure 44. SN65HVD23x Board Layout
+
+
+
+
+34     Submit Documentation Feedback                                                 Copyright © 2001–2015, Texas Instruments Incorporated
+
+                                     Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                    SN65HVD230, SN65HVD231, SN65HVD232
+www.ti.com                                                                                     SLOS346N – MARCH 2001 – REVISED JULY 2015
+
+
+14 Device and Documentation Support
+
+14.1 Related Links
+The table below lists quick access links. Categories include technical documents, support and community
+resources, tools and software, and quick access to sample or buy.
+
+                                                             Table 8. Related Links
+                                                                          TECHNICAL               TOOLS &               SUPPORT &
+        PARTS             PRODUCT FOLDER                SAMPLE & BUY
+                                                                          DOCUMENTS              SOFTWARE               COMMUNITY
+     SN65HVD230                 Click here                Click here        Click here             Click here             Click here
+     SN65HVD231                 Click here                Click here        Click here             Click here             Click here
+     SN65HVD232                 Click here                Click here        Click here             Click here             Click here
+
+
+14.2 Trademarks
+All trademarks are the property of their respective owners.
+14.3 Electrostatic Discharge Caution
+          These devices have limited built-in ESD protection. The leads should be shorted together or the device placed in conductive foam
+          during storage or handling to prevent electrostatic damage to the MOS gates.
+
+
+14.4 Glossary
+SLYZ022 — TI Glossary.
+   This glossary lists and explains terms, acronyms, and definitions.
+
+15 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical, packaging, and orderable information. This information is the most
+current data available for the designated devices. This data is subject to change without notice and revision of
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+
+
+
+
+Copyright © 2001–2015, Texas Instruments Incorporated                                            Submit Documentation Feedback          35
+                                       Product Folder Links: SN65HVD230 SN65HVD231 SN65HVD232
+                                                                                                                                                 PACKAGE OPTION ADDENDUM
+
+
+www.ti.com                                                                                                                                                                                        29-Jul-2015
+
+
+PACKAGING INFORMATION
+
+        Orderable Device            Status    Package Type Package Pins Package              Eco Plan         Lead/Ball Finish         MSL Peak Temp         Op Temp (°C)               Device Marking          Samples
+                                       (1)                 Drawing        Qty                    (2)                  (6)                      (3)                                            (4/5)
+
+         SN65HVD230D                ACTIVE         SOIC           D        8       75      Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP230
+                                                                                            & no Sb/Br)
+       SN65HVD230DG4                ACTIVE         SOIC           D        8       75      Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP230
+                                                                                            & no Sb/Br)
+        SN65HVD230DR                ACTIVE         SOIC           D        8      2500     Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP230
+                                                                                            & no Sb/Br)
+       SN65HVD230DRG4               ACTIVE         SOIC           D        8      2500     Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP230
+                                                                                            & no Sb/Br)
+         SN65HVD231D                ACTIVE         SOIC           D        8       75      Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP231
+                                                                                            & no Sb/Br)
+       SN65HVD231DG4                ACTIVE         SOIC           D        8       75      Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP231
+                                                                                            & no Sb/Br)
+        SN65HVD231DR                ACTIVE         SOIC           D        8      2500     Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP231
+                                                                                            & no Sb/Br)
+       SN65HVD231DRG4               ACTIVE         SOIC           D        8      2500     Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP231
+                                                                                            & no Sb/Br)
+         SN65HVD232D                ACTIVE         SOIC           D        8       75      Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP232
+                                                                                            & no Sb/Br)
+       SN65HVD232DG4                ACTIVE         SOIC           D        8       75      Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP232
+                                                                                            & no Sb/Br)
+        SN65HVD232DR                ACTIVE         SOIC           D        8      2500     Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP232
+                                                                                            & no Sb/Br)
+       SN65HVD232DRG4               ACTIVE         SOIC           D        8      2500     Green (RoHS           CU NIPDAU           Level-1-260C-UNLIM        -40 to 85          VP232
+                                                                                            & no Sb/Br)
+
+(1)
+   The marketing status values are defined as follows:
+ACTIVE: Product device recommended for new designs.
+LIFEBUY: TI has announced that the device will be discontinued, and a lifetime-buy period is in effect.
+NRND: Not recommended for new designs. Device is in production to support existing customers, but TI does not recommend using this part in a new design.
+PREVIEW: Device has been announced but is not in production. Samples may or may not be available.
+OBSOLETE: TI has discontinued the production of the device.
+
+(2)
+   Eco Plan - The planned eco-friendly classification: Pb-Free (RoHS), Pb-Free (RoHS Exempt), or Green (RoHS & no Sb/Br) - please check http://www.ti.com/productcontent for the latest availability
+information and additional product content details.
+TBD: The Pb-Free/Green conversion plan has not been defined.
+
+
+
+                                                                                             Addendum-Page 1
+                                                                                                                                                     PACKAGE OPTION ADDENDUM
+
+
+www.ti.com                                                                                                                                                                                           29-Jul-2015
+
+
+Pb-Free (RoHS): TI's terms "Lead-Free" or "Pb-Free" mean semiconductor products that are compatible with the current RoHS requirements for all 6 substances, including the requirement that
+lead not exceed 0.1% by weight in homogeneous materials. Where designed to be soldered at high temperatures, TI Pb-Free products are suitable for use in specified lead-free processes.
+Pb-Free (RoHS Exempt): This component has a RoHS exemption for either 1) lead-based flip-chip solder bumps used between the die and package, or 2) lead-based die adhesive used between
+the die and leadframe. The component is otherwise considered Pb-Free (RoHS compatible) as defined above.
+Green (RoHS & no Sb/Br): TI defines "Green" to mean Pb-Free (RoHS compatible), and free of Bromine (Br) and Antimony (Sb) based flame retardants (Br or Sb do not exceed 0.1% by weight
+in homogeneous material)
+
+(3)
+      MSL, Peak Temp. - The Moisture Sensitivity Level rating according to the JEDEC industry standard classifications, and peak solder temperature.
+
+(4)
+      There may be additional marking, which relates to the logo, the lot trace code information, or the environmental category on the device.
+
+(5)
+   Multiple Device Markings will be inside parentheses. Only one Device Marking contained in parentheses and separated by a "~" will appear on a device. If a line is indented then it is a continuation
+of the previous line and the two combined represent the entire Device Marking for that device.
+
+(6)
+   Lead/Ball Finish - Orderable Devices may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead/Ball Finish values may wrap to two lines if the finish
+value exceeds the maximum column width.
+
+
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information
+provided by third parties, and makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and
+continues to take reasonable steps to provide representative and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals.
+TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers and other limited information may not be available for release.
+
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+
+
+
+
+                                                                                                Addendum-Page 2
+                                                                   PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                                 29-Jul-2015
+
+
+
+TAPE AND REEL INFORMATION
+
+
+
+
+*All dimensions are nominal
+             Device           Package Package Pins   SPQ       Reel   Reel   A0           B0     K0     P1     W     Pin1
+                               Type Drawing                  Diameter Width (mm)         (mm)   (mm)   (mm)   (mm) Quadrant
+                                                               (mm) W1 (mm)
+     SN65HVD230DR              SOIC     D      8     2500      330.0     12.4      6.4   5.2    2.1    8.0    12.0    Q1
+     SN65HVD231DR              SOIC     D      8     2500      330.0     12.4      6.4   5.2    2.1    8.0    12.0    Q1
+     SN65HVD232DR              SOIC     D      8     2500      330.0     12.4      6.4   5.2    2.1    8.0    12.0    Q1
+
+
+
+
+                                                           Pack Materials-Page 1
+                                                                PACKAGE MATERIALS INFORMATION
+
+www.ti.com                                                                                                          29-Jul-2015
+
+
+
+
+*All dimensions are nominal
+             Device           Package Type   Package Drawing   Pins    SPQ     Length (mm)   Width (mm)   Height (mm)
+     SN65HVD230DR                SOIC              D            8      2500       340.5        338.1         20.6
+     SN65HVD231DR                SOIC              D            8      2500       340.5        338.1         20.6
+     SN65HVD232DR                SOIC              D            8      2500       340.5        338.1         20.6
+
+
+
+
+                                                       Pack Materials-Page 2
+                                                              IMPORTANT NOTICE
+
+Texas Instruments Incorporated and its subsidiaries (TI) reserve the right to make corrections, enhancements, improvements and other
+changes to its semiconductor products and services per JESD46, latest issue, and to discontinue any product or service per JESD48, latest
+issue. Buyers should obtain the latest relevant information before placing orders and should verify that such information is current and
+complete. All semiconductor products (also referred to herein as “components”) are sold subject to TI’s terms and conditions of sale
+supplied at the time of order acknowledgment.
+TI warrants performance of its components to the specifications applicable at the time of sale, in accordance with the warranty in TI’s terms
+and conditions of sale of semiconductor products. Testing and other quality control techniques are used to the extent TI deems necessary
+to support this warranty. Except where mandated by applicable law, testing of all parameters of each component is not necessarily
+performed.
+TI assumes no liability for applications assistance or the design of Buyers’ products. Buyers are responsible for their products and
+applications using TI components. To minimize the risks associated with Buyers’ products and applications, Buyers should provide
+adequate design and operating safeguards.
+TI does not warrant or represent that any license, either express or implied, is granted under any patent right, copyright, mask work right, or
+other intellectual property right relating to any combination, machine, or process in which TI components or services are used. Information
+published by TI regarding third-party products or services does not constitute a license to use such products or services or a warranty or
+endorsement thereof. Use of such information may require a license from a third party under the patents or other intellectual property of the
+third party, or a license from TI under the patents or other intellectual property of TI.
+Reproduction of significant portions of TI information in TI data books or data sheets is permissible only if reproduction is without alteration
+and is accompanied by all associated warranties, conditions, limitations, and notices. TI is not responsible or liable for such altered
+documentation. Information of third parties may be subject to additional restrictions.
+Resale of TI components or services with statements different from or beyond the parameters stated by TI for that component or service
+voids all express and any implied warranties for the associated TI component or service and is an unfair and deceptive business practice.
+TI is not responsible or liable for any such statements.
+Buyer acknowledges and agrees that it is solely responsible for compliance with all legal, regulatory and safety-related requirements
+concerning its products, and any use of TI components in its applications, notwithstanding any applications-related information or support
+that may be provided by TI. Buyer represents and agrees that it has all the necessary expertise to create and implement safeguards which
+anticipate dangerous consequences of failures, monitor failures and their consequences, lessen the likelihood of failures that might cause
+harm and take appropriate remedial actions. Buyer will fully indemnify TI and its representatives against any damages arising out of the use
+of any TI components in safety-critical applications.
+In some cases, TI components may be promoted specifically to facilitate safety-related applications. With such components, TI’s goal is to
+help enable customers to design and create their own end-product solutions that meet applicable functional safety standards and
+requirements. Nonetheless, such components are subject to these terms.
+No TI components are authorized for use in FDA Class III (or similar life-critical medical equipment) unless authorized officers of the parties
+have executed a special agreement specifically governing such use.
+Only those TI components which TI has specifically designated as military grade or “enhanced plastic” are designed and intended for use in
+military/aerospace applications or environments. Buyer acknowledges and agrees that any military or aerospace use of TI components
+which have not been so designated is solely at the Buyer's risk, and that Buyer is solely responsible for compliance with all legal and
+regulatory requirements in connection with such use.
+TI has specifically designated certain components as meeting ISO/TS16949 requirements, mainly for automotive use. In any case of use of
+non-designated products, TI will not be responsible for any failure to meet ISO/TS16949.
+
+Products                                                           Applications
+Audio                                www.ti.com/audio              Automotive and Transportation      www.ti.com/automotive
+Amplifiers                           amplifier.ti.com              Communications and Telecom         www.ti.com/communications
+Data Converters                      dataconverter.ti.com          Computers and Peripherals          www.ti.com/computers
+DLP® Products                        www.dlp.com                   Consumer Electronics               www.ti.com/consumer-apps
+DSP                                  dsp.ti.com                    Energy and Lighting                www.ti.com/energy
+Clocks and Timers                    www.ti.com/clocks             Industrial                         www.ti.com/industrial
+Interface                            interface.ti.com              Medical                            www.ti.com/medical
+Logic                                logic.ti.com                  Security                           www.ti.com/security
+Power Mgmt                           power.ti.com                  Space, Avionics and Defense        www.ti.com/space-avionics-defense
+Microcontrollers                     microcontroller.ti.com        Video and Imaging                  www.ti.com/video
+RFID                                 www.ti-rfid.com
+OMAP Applications Processors         www.ti.com/omap               TI E2E Community                   e2e.ti.com
+Wireless Connectivity                www.ti.com/wirelessconnectivity
+
+
+                             Mailing Address: Texas Instruments, Post Office Box 655303, Dallas, Texas 75265
+                                            Copyright © 2016, Texas Instruments Incorporated
+

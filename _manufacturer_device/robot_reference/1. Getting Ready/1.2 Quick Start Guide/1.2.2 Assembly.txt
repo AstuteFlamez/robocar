@@ -1,0 +1,9 @@
+Note: The assembly instructions use the MentorPi-M1 Mecanum-wheel version as an example, but they also apply to the
+MentorPi-A1 Ackermann version.
+These two steps are only applicable to the Mecanum-wheel version.
+The wiring instructions for Ackerman version are shown below:
+If your purchased MentorPi includes a monocular camera, please install it based on the following steps.
+Connect the pin headers to the 5V
+pin with jumper caps. (It is already connected       After assembly (partial diagram):
+before delivery, you can check with this diagram.)
+

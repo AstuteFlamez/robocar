@@ -1,0 +1,150 @@
+       Development Environment Setup
+    After installing the Keil software, please activate it. Otherwise, compilation failures
+
+may occur, affecting normal usage.
+
+
+1. Keil Software Installation
+
+Keil is specialized software designed for microcontrollers, with powerful
+functionality. Regardless of the version, the installation process is the same.
+This section uses V5.36 as an example:
+
+1) Go to the folder 'Keil Installation Package and mcuisp Download Tool',
+    double-click the 'mdk536.exe' file.
+
+
+
+
+2) Check the options and agree to the installation agreement.
+3) Choose the installation path.
+
+
+
+
+4) User information needs to be filled in here, you can fill it in randomly.
+
+                                          2
+5) After filling in, click 'Next' to proceed with the installation.
+
+
+
+
+6) Wait for a moment, a prompt to install the ULink driver will pop up, click
+    'Install' at this time.
+
+                                            3
+7) After the installation is complete, click 'Finish' to exit.
+
+
+
+
+2. Configuration
+
+2.1 Add Chip Support Package
+
+After installing the Keil 5 software as described earlier, we need to manually
+install the required chip package, which can be found in this section's directory.
+
+After opening it, click 'Next'.
+
+
+
+
+                                           4
+Wait for the installation to be completed, then click-on ‘Finish’ button.
+
+
+
+
+                                           5
+Reopen the Keil software, then click-on pack installer icon.
+
+
+
+
+Click-on ‘Device’ button. Then choose the correct device as pictured.
+
+
+
+
+                                        6
+2.2 Install J-Link Driver
+
+J-Link is a commonly used debugger/emulator, used for microcontroller
+development and debugging in conjunction with Keil 5. Therefore, when using
+J-Link for programming and debugging microcontrollers in Keil 5, it is
+necessary to install the J-Link driver.
+
+You can find the J-Link installation package in this section's directory, then
+double-click to open it, and click 'Next'.
+
+
+
+
+                                             7
+Choose ‘I Agree’.
+
+
+
+
+Select the installation path to be the same directory as Keil 5.
+
+
+
+
+                                          8
+Wait for the installation to be completed.
+
+
+
+
+Installation completed. If a prompt for upgrade appears, as shown in the
+following image, simply close it.
+
+
+
+
+                                             9
+3. Install STM32CubeMX
+
+STM32CubeMX is a graphical tool for configuring STM32 microcontrollers. It
+assists developers in quickly configuring peripherals such as clocks, GPIOs,
+interrupts, DMA, etc., and generates initialization code. It supports various
+development environments, including Keil, IAR, and GCC.
+
+The installation package can be found in this section's directory. Double-click
+to open it, and click 'Next'.
+
+
+
+
+                                         10
+Tick ‘I accept the terms of this license agreement’, and click-on ‘Next’
+button.
+
+
+
+
+                                       11
+You must check the first option above, then click 'Next'.
+
+
+
+
+                                         12
+Select the installation path, ensuring that the path does not contain any
+Chinese characters. Then continue by clicking 'Next' and wait for the
+installation progress bar to complete.
+
+
+
+
+After waiting for the installation to complete, continue by clicking 'Next', then
+click 'Done' to finish.
+
+
+
+
+                                          13
+

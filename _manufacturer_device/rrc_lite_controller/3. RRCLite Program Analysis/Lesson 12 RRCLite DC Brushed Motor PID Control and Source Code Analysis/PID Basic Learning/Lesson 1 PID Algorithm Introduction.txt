@@ -1,0 +1,172 @@
+Lesson 6 Introduction to PID Algorithm
+1. PID Algorithm Description
+
+     PID algorithm is the most widely used autonomous controller which
+controls a process according to the ratio of errors, Proportional (P), Integral (I),
+and Derivative (D). With simple logic, it is easy to realize and can be widely
+applicable. And its control parameters are separate and it is easy to select the
+parameter.
+
+
+                                    1 t             de(t )
+               u (t )  K p (e(t )   e(t )dt  Td        )
+                                    Ti 0             dt
+
+     Simplify:
+
+
+                                           t                  de(t )
+               u (t )  K p e(t )  K i  e(t )dt  K d
+                                          0                    dt
+     And:
+
+          u(t)——the output of the PID controller；
+
+          Kp——ratio factor；
+
+
+                                               Kp
+          Ki——integral time constant； K i 
+                                               Ti
+
+
+          Kd——derivative time constant； K d  K p  Td
+
+
+          e(t)——the difference between the given value and the measured value
+(error)
+
+
+
+
+                                           1
+2. PID Algorithm Logic
+
+    In a closed-loop control system, the output result of the object controlled
+will be returned to affect the output of the controller so as to generate one or
+multiple loop. The closed-loop system has positive and negative feedback. If
+the feedback signal is opposite to the given signal, it is negative feedback. If
+they are the same, it is positive feedback.
+
+
+
+
+2.1 Proportional
+
+    Error is the difference between the given value (the set threshold r(t) ) and
+the measured output (c(t)). After the proportional is introduced, the output of
+the system is proportional to the error, which can reduce the error quickly and
+stabilize the system. When the system tends to stabilize, steady-state error will
+still exist and cannot be eliminated. The control effect of proportional depends
+on the value of Kp. The smaller the proportional coefficient Kp, the weaker the
+control and the slower the system response. On the contrary, the larger the
+proportional coefficient Kp, the stronger the control, and the faster the system
+response. However, too large Kp will cause the system to generate large
+overshoot and oscillation. The advantage of proportional control lies in its fast
+response, but the disadvantage is that there is a steady-state error.
+
+    Take a bucket for example. There is a hole at the bottom of the bucket, but
+
+                                          2
+you need to maintain the water in the bucket at 1m. And the current water level
+is 0.2m, and the water will leak 0.1m whenever you add the water. Here,
+proportional control can be adopted to control the water volume. The current
+water volume is 0.2m and the target is 1m. Set Kp=0.4. Then u= 0.4*e, and e =
+last water volume - current water volume
+
+     The first error: e(1)=1-0.2=0.8m. Therefore, the volume of the added
+water is 0.32m (Kp*0.8= 0.4*0.8 = 0.32m), and the current water volume in the
+bucket is 0.42m (0.2+0.32 -0.1=0.42m)
+
+    The second error: e(2) = 1-(0.2+0.32) =0.48m. Therefore, the volume of
+the added water is 0.192m (Kp*0.48=0.192m), and the current water volume in
+the bucket is 0.552m (0.52+0.192=0.552)
+
+
+
+
+    Lastly, the water level stabilizes at 0.75m, and the error is 0.25m. When
+you add 0.1m water, the volume of the water added is equivalent to the volume
+
+                                        3
+of the water leaking. And this kind of error is called steady-state error.
+
+    Steady-state error is defined as the difference between the output under
+the system tends to stabilize and the target output.
+
+2.2 Integral
+
+    Integral aims at eliminating the steady-state error. The integral of the error
+over time is continuously accumulated to keep the output changing so as to
+reduce the error. If the integral time is sufficient, the steady-state error can be
+completely eliminated. The smaller Ti is, the stronger the function of integral is.
+But too strong integral function will make the system overshoot and even
+oscillate. The advantage of the integral is that the steady-state error can be
+completely eliminated, but the disadvantage is that the response speed is
+reduced and the overshoot will be too large.
+
+    In the example given in “2.1 Proportional”, the steady-state error still
+exists after proportional control is adopted. To eliminate it completely, you can
+add integral control, and set the integral constant Ki as 0.3 (Ki=0.3).
+
+      The first error: e(1)=1-0.2=0.8m. Therefore, the volume of the added
+water is: Kp*0.8= 0.4*0.8 = 0.32m, KI * e(1) = 0.3 * 0.8 = 0.24, and and the final
+added water is: 0.32m + 0.256 = 0.56. And the current water volume in the
+bucket is : 0.2+ 0.276 - 0.1=0.66
+
+    The second error: e(2)=1-0.66=0.34m. Therefore, the volume of the
+added water is: Kp*0.34 = 0.4*0.34 = 0.136m, KI * (e(2)+e(1)) = 0.3 * 0.342 =
+0.342, and the final added water is: 0.136m + 0.342 = 0.478. And the current
+water volume in the bucket is : 0.66+ 0.478 - 0.1=1.038
+
+
+
+
+                                           4
+5
+    After the Integral control is adopted, the steady-state error is completely
+eliminated, but overshoot occurs.
+
+
+
+
+2.3 Derivative
+
+    The slope error can be obtained by differentiating the error, and the slope
+reflects the change (rate of change) of the error signal, so the error can be
+adjusted in advance in derivative part. And it takes effect at the moment when
+the error appears or changes, so as to avoid excessive overshoot and reduce
+the dynamic error and response time. The larger the derivative coefficient Td,
+the stronger the ability to suppress the error variation. The advantage of
+derivative is that it suppress overshoot and speed up the response. The
+disadvantage is that the anti-interference ability is poor. When the interference
+signal is strong, it is not recommended to add derivative.
+
+    In the above example, the integral effectively eliminates the steady-state
+error, but overshoot occurs. In order to reduce the overshoot, a derivative
+control is added. Set Kd as 0.3 (Kd=0.3).
+
+                                         6
+    The first error: e(1)=1-0.2=0.8m. Therefore, the volume of the added
+water is: Kp*0.8 = 0.4*0.8 = 0.32m, KI * e(1) = 0.3 * 0.8 = 0.24. And KD = 0
+(because the current water difference is 0.8). The final added water is: 0.32m +
+0.256 = 0.56. And the current water volume in the bucket is : 0.2+ 0.276 -
+0.1=0.66
+
+    The second error: e(2)=1-0.66=0.34m. Therefore, the volume of the
+added water is: Kp*0.34 = 0.4*0.34 = 0.136m, KI * (e(2)+e(1)) = 0.3 * 0.342 =
+0.342. And KD*（e(2) - e(1)）= 0.3*(0.342 - 0.8) = -0.138. The final added water
+is: 0.136m + 0.342 -0.138 = 0.34. And the current water volume in the bucket
+is : 0.66+ 0.478 - 0.1=0.9
+
+
+
+
+                                         7
+Compared with proportional control, the overshoot is weakened.
+
+
+
+
+                                       8
+

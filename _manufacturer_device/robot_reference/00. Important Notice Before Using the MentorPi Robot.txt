@@ -1,0 +1,159 @@
+     Important Notice Before Using the
+             MentorPi Robot
+The MentorPi robot is based on ROS and involves multiple modules and
+relatively complex operations. To ensure you have the best experience using
+this product, we strongly recommend reading this document in advance.
+
+
+This guide is intended for users with a basic background in electronics,
+information technology, and computer science. Familiarity with Linux, Python,
+and ROS is recommended.
+
+
+To support your learning, we have included several foundational tutorials in the
+resource package. You can find them in the “1 Tutorial Materials” folder,
+including:
+
+
+   Chapter 2: Linux Basic Lesson
+   Chapter 3: Python Basic Lesson
+   Chapter 4: OpenCV Computer Vision Course
+   Chapter 5: ROS2 Basic Course
+
+
+
+
+1. Important Notes Before Use
+
+1.1 Battery Charging
+
+Caution:
+1.   Do not connect the battery lead wires directly to the lithium battery before connecting
+
+     it to the controller. Direct contact of the positive and negative terminals may cause a
+
+     short circuit.
+
+2.   To ensure stable operation of the robot, please charge the battery promptly when the
+
+     voltage drops below 6.4V. Use only the charger provided in the kit for charging.
+
+
+Due to transportation regulations, lithium batteries are not fully charged when
+shipped. Before first use, please fully charge the battery. Users should first
+connect the battery to the lead wires, then proceed with charging. Charging
+typically takes around 1 hour.
+
+Charging Steps:
+
+1) Make sure the device is turned off.
+
+2) Match the battery wires by color: connect red to red and black to black.
+
+
+
+
+                          Wiring Diagram for Mecanum Chassis
+                     Wiring Diagram for Ackermann Chassis
+
+
+3) Remove the lithium battery’s DC charging port from the side or bottom of
+   the robot, then insert the charger plug to begin charging.
+
+
+
+
+                  Charging Port Location on Mecanum Chassis
+                  Charging Port Location on Ackermann Chassis
+
+
+4) You can check the charging status via the indicator light on the charger:
+
+
+
+
+Reminder: Once charging is complete, please unplug the charger promptly to
+
+prevent overcharging.
+
+
+
+
+1.2 Robot Assembly
+
+The assembly of the MentorPi robot involves numerous detailed steps, so it is
+not fully covered in this document. For a comprehensive guide, please refer to
+the folder:
+
+“1. Getting Ready\ 1.2 Quick Start Guide\ 1.2.2 Assembly”
+1.3 System Configuration After Power-On
+
+The MentorPi robot supports different chassis types (Mecanum wheel,
+Ackermann) and camera versions. If you need to switch between different
+robot configurations or camera models, please follow the steps below:
+
+
+Note:
+
+
+   If the chassis type is incorrectly configured, the robot may not respond to motion
+
+    commands properly, or its movement trajectory and direction may behave
+
+    abnormally.
+
+   If the wrong camera type is selected, image data may not appear on the mobile app
+
+    or Raspberry Pi desktop interface.
+
+
+In such cases, please refer to the following instructions to reconfigure the system.
+
+
+1) Power on the robot and connect it to the remote control software VNC.
+    For guidance on connecting via remote desktop, refer to: 8. Set
+    Development Environment\ Lesson 1 VNC Installation and
+    Connection
+
+
+
+
+2) On the remote desktop, double-click the                      “Tool” icon to launch
+    the system configuration utility, then click the “Execute” button.
+
+
+
+
+3) In the interface, under Camera Type, select the appropriate camera
+   version:
+
+
+
+
+     1   ascamera: Orbbec depth camera
+     2   usb_cam: Standard monocular camera with 2D pan-tilt
+
+
+4) Under Robot Type, select the corresponding chassis:
+
+
+
+
+     1   MentorPi_Mecanum: Mecanum wheel chassis
+     2   MentorPi_Acker: Ackermann chassis
+
+
+5) After making your selections, click Save → Apply → Exit in order. It’s
+    crucial to follow this sequence to ensure the settings take effect correctly.
+
+
+
+
+6) Wait for the buzzer to emit a short beep, indicating that the chassis type
+    has been successfully switched. You can open the terminal to check the
+
+    ROS 2 environment configuration           .
+
+7) Once the configuration is complete, proceed to: 1. Getting Ready\ 1.4 App
+    Control; 1.5 Wireless Controller Control.
+

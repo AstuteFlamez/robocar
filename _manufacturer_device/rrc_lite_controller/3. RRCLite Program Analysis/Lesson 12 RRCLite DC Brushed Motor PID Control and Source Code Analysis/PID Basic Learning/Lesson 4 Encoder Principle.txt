@@ -1,0 +1,138 @@
+                        Encoder Principle
+1. Introduction to Encoder
+
+An encoder is a sensing device that provides feedback. Encoders convert
+motion to an electrical signal for measuring speed or motion information.
+Based on the output data type, encoders can be divided into incremental
+encoders and absolute encoders. Based on the detection principles, there are
+optical, magnetic, inductive, and capacitive types.
+
+
+
+
+2. Encoder Classification
+
+2.1 Incremental encoder
+
+     Basic principle
+
+The incremental encoder is a device that converts the displacement into a
+periodic electrical signal and then converts this electrical signal into counting
+pulses, which are then transformed into counting pulses to represent the
+magnitude of the displacement.
+
+     Basic concept
+
+There are five wires in total, including A, B and C three data wires, as well as
+VCC and GND. Both cable A and B are data output cables, outputting pulse
+signals for data processing. The pulses output by A and B have a phase
+difference of 90 degrees. The Z wire is used for the zero point signal, e.i, when
+encoder is rotating to the zero position, it will emit a pulse for indicating this
+position predetermined by manufacturer, and this position is also known as the
+mechanical zero position.
+
+
+
+
+                                            1
+2.2 Absolute encoder
+
+     Basic principle
+
+Different from incremental encoder that rely on counting pulses and
+determining the direction of pulses, absolute encoder is a sensing device that
+directly output digits. More precisely, they provide a complete numerical output
+corresponding to each angular position. Each position is unique, and during
+the rotation of the encoder, the position can be directly read.
+
+     Single-turn Absolute Encoder
+
+Single-turn encoders measure displacement across 360° from a defined
+starting position with the output repeated for every revolution of the encoder’s
+shaft.
+
+     Multiple-turn Absolute Encoder
+
+Multi-turn encoders measure the degree of rotation within 360 and track the
+number of total revolutions of the encoder’s shaft using a unique word for
+each position and number of revolutions.
+
+
+
+
+                                          2
+2.3 Hall Encoder
+
+
+
+
+Hall encoder consists of a Hall effect disk and Hall effect sensors. The Hall disk
+a circular plate with magnetic poles arranged evenly along a certain diameter.
+The Hall effect disk is mounted coaxially with an electric motor. When the
+motor rotates, the Hall effect sensors detect and output a series of pulse
+signals. To determine the direction of rotation, the encoder typically outputs
+two sets of square wave signals with a certain phase difference between them.
+
+
+
+
+3. Encoder Speed Measurement
+
+3.1 Basic Principle
+
+When a DC motor with Hall sensor completes one revolution, a certain number
+of pulses are generated through the A and B phase outputs of the Hall effect
+sensors. By counting the number of pulses within a certain time period, we can
+calculate the instantaneous speed of the motor.
+
+There are three types of pulse counting modes:
+
+1) The counter counts on the rising or falling edge of the pulses outputted by
+    T1.
+
+2) The counter counts on the rising or falling edge of the pulses outputted by
+    T2.
+
+
+                                          3
+3) The counter counts on both the rising and falling edges of the pulses
+    outputted by both T1 and T2.
+
+The third mode is commonly used, it enhances the accuracy of measurement.
+By determining whether the counter is incrementing or decrementing, we can
+determine the direction of rotation of the motor.
+
+
+3.2 Coefficient
+
+       ARR
+
+
+when a pulse is encountered, the counter increments by one. When the count
+reaches the reload value, an overflow interrupt is generated. The counter is
+then cleared and starts counting again from zero. Therefore, the reload value
+represents the maximum value for pulse counting by the counter.
+
+       PSC
+
+Originally, the timer was used for timing or PWM output, and the prescaler
+factor was based on the 32-bit chip's internal clock. The formula used was
+CK_CNT=TIMxCLK/(PSC+1), where PSC represents the prescaler factor.
+However, when the timer is used for encoder speed measurement, the clock
+source is external.
+
+
+3.3 Convert Pulse into Speed
+
+When the motor completes a revolution, the encoder will receive 360*4 / PSC
+pulses. Then use timer set m seconds and record the
+
+When the motor completes one revolution, the encoder captures a total of
+360*4/PSC pulses, where PSC represents the prescaler factor. Then, using a
+timer, we measure the duration of m milliseconds and record the number of
+timer overflows as n. The speed can be calculated using the formula v = (n *
+ARR + current count value) / (360 * 4 / PSC) / m, where ARR represents the
+auto-reload value of the timer.
+
+                                          4
+

@@ -1,0 +1,306 @@
+       RRCLite Schematic Explanation
+1. Main Chip Description
+Main chip: STM32F407VET6
+
+
+
+
+This STM32F407VET6 has 100 pins. As you can see, many of these pins are
+already in use, while others are left available for customers to use in their own
+development. Below, we will detail which pins are in use, their functions, and
+which pins are available.
+
+
+
+2. Shut Capacity
+These 100nf capacitors are connected to the 3.3V supply on the
+STM32F407VET6. The functions of these bypass capacitors are voltage
+stabilization and filtering.
+
+
+
+3. Peripheral Circuit of VET6
+
+
+
+
+The connections between AGND (analog ground) and GND (digital ground), as
+well as between 3V3 and VDDA, play an important role in the peripheral circuit
+of the device.
+Analog and digital signals often need to coexist on the same circuit board.
+However, the switching processes of digital circuits can introduce noise which
+can negatively impact the performance of analog circuits. To mitigate this issue,
+two separate systems are typically used: one for the analog circuit (AGND)
+and another for the digital circuit (GND). This approach ensures that the
+ground currents of the analog and digital parts do not interfere with each other
+as much as possible, while keeping the entire system at the same potential to
+minimize the impact of noise.
+3V3 is the power supply voltage, and VDDA is the analog power supply voltage.
+The circuit may be a power decoupling design.
+An LC filter consists of an inductor L of 120/100HZ and two capacitors C of
+100nF in parallel. It is used to reduce the high-frequency noise of the power
+supply voltage, thereby providing a more stable analog power supply voltage
+VDDA. This is the power decoupling design used for the peripheral circuit.
+VREF+ and VREF- are each connected in parallel with two 100nF capacitors,
+which are called decoupling capacitors. Decoupling capacitors are used to
+reduce high-frequency noise on the power lines, smooth the power supply
+voltage, and provide a more stable voltage.
+In addition, a 10uF capacitor is connected to AGND through two 0-ohm
+resistors. This is a power filtering method. The 10uF capacitor can provide
+low-frequency    decoupling,    while   the 0-ohm     resistor can     provide   a
+low-impedance path between the power and ground lines. This helps to reduce
+the influence of power supply noise on voltage, improving the accuracy and
+performance of ADC and DAC circuits.
+
+
+
+4. Power Indicator
+The three circuits of the power indicator light utilize resistors to regulate the
+current flowing through the LED, thus preventing overheating and damage to
+the LED.
+
+
+
+
+In the first circuit, a 5V power supply is used with a 3.3k resistor and the LED is
+connected to the ground. The current can be calculated using Ohm's law: I =
+V/R. Therefore, the current I = 5V / 3.3kΩ = 1.52mA. This is a safe current
+value, as the maximum continuous operating current for most LEDs is
+approximately 20mA.
+In the second circuit, a 3.3V power supply is used with a 1k resistor and the
+LED is connected to the ground. Similarly, the current can be calculated as I =
+3.3V / 1kΩ = 3.3mA. This current value is also safe.
+
+
+
+
+In the third circuit, this type of connection is typically used to indicate the status
+of the main chip. When the PD9/PD10/PD11 pins are configured as low-level
+outputs, the current flows through the LED and resistor to the ground (GND),
+illuminating the LED connected to the corresponding pin. When the
+PD9/PD10/PD11 pins are configured as high-level (3.3V) outputs, the voltage
+difference across the LED is 0, and the current stops flowing. This causes the
+LED connected to the corresponding pin to turn off.
+
+
+
+5. Crystal Oscillator Circuit
+
+
+
+
+A 16MHz crystal oscillator is connected in parallel to the OSCIN and OSCOUT
+pins, which are connected together. Each pin of the STM32F407VET6 chip's
+crystal oscillator is then connected to ground through a 10pF capacitor
+(oscillation capacitor). These capacitors provide a loop that allows the crystal
+to start oscillating, thereby generating a stable clock signal.
+
+
+
+
+BOOT and BOOT1: BOOT0 and BOOT1 are digital input pins that read the
+state of the voltage (high or low) at power-up or reset, and select different boot
+sources based on these states. For more details, please refer to the
+STM32F407VET6_Datasheet.
+For example, booting from built-in flash memory, system memory, or a
+connected external memory device. The BOOT0 and BOOT1 pins are each
+connected to ground through a 10KΩ resistor. This means that these pins will
+be pulled low at power-up or reset. This is to set the default boot mode.
+In addition, to accommodate possible special requirements, the BOOT0 pin
+supports connecting to a high voltage by pressing the BOOT button at
+power-up, booting from system memory.
+
+
+
+
+6. Button Circuit
+
+
+
+
+These three circuits are button circuits with pull-down resistors. When the
+button is not pressed, the PE0 pin is connected to the 3.3V power supply
+through a 10kΩ resistor. Therefore, the PE0 pin reads a high level voltage.
+When the button is pressed, the PE0 pin is directly connected to ground. Then,
+the PE0 pin reads a low level voltage.
+The NRST reset button and PE1 circuit are the same.
+
+
+
+7. I2C Reserved Interface
+
+
+
+
+The reserved I2C interface can be used to connect external I2C devices, such
+as language devices and OLED screens. Here, the I2C2 pin of the STM32 is
+connected.
+
+
+
+8. SWD Download
+
+
+
+
+The two pins are usually used as a debugging port (SWD interface) in the
+STM32F407VET6 chip. PA13 is SWDIO (data line) and PA14 is SWCLK (clock
+line).
+
+
+
+9. TYPEC Port
+A diode is connected to the VBUS pin to prevent reverse current on the VBUS
+line.
+The cathode of the diode is connected to the VBUS pin, and the anode is
+connected to the power circuit.
+This allows the power circuit to receive power from the VBUS pin, but prevents
+reverse power supply to the VBUS line.
+DP2 and DN2 are differential data lines of the USB Type-C connector used for
+transmitting USB data. Connecting an ESD protection device can prevent
+these lines from being damaged by electrostatic discharge (ESD) or other
+over-voltage events.
+
+
+
+10. QMI8658
+A 1k resistor is connected to the SCL and SDA pins of the QMI8658 as pull-up
+resistors. This means that the device can pull the line down to a low level
+voltage, but cannot actively pull it up to a high level voltage.
+Power connection: The VCC pin of the MPU-6050 needs to be connected to a
+3.3V power supply, and the GND pin should be connected to ground.
+I2C signal line connection: SDA and SCL are the two important lines for I2C
+communication, which are the data line and the clock line, respectively. The
+corresponding pins for I2C function should be connected to the SDA and SCL
+pins of the MPU-6050. For example, on the STM32F407VET6, PB11 can be
+selected as SDA and PB10 as SCL.
+Interrupt pin: The INT2 pin is the interrupt output. When the QMI8658 has new
+data to be read or other events occur, an interrupt signal can be sent to the
+STM32F407VET6 chip through this pin.
+Capacitor mounted on it: When the QMI8658 starts to work and draws current
+from the power line, the capacitor can quickly provide the required current to
+avoid a momentary drop in the power supply voltage. The capacitor can
+simultaneously absorb high-frequency noise on the power line to prevent noise
+from entering the QMI8658 and affecting its performance.
+
+
+
+11. CH9102F Serial Port 1 Circuit
+
+
+
+
+The USB_D+ and USB_D- pins of the TYEC interface are respectively
+connected to the USB_D+ and USB_D- pins of the CH9102F for USB
+communication.
+VIO and V3 are the power pins of the CH9102F, connected to the VCC power
+supply through 0Ω resistors. Decoupling capacitors (1uF and 100nF)
+connected in parallel between these pins and ground are used to stabilize the
+power supply voltage and filter noise.
+The TXD (transmit) and RXD (receive) pins of the CH9102F are respectively
+connected to the PA9 and PA10 pins on the microcontroller for UART
+communication. This is used for serial port 1 of the main chip.
+In addition, this serial port features a serial programming function. For more
+details, please refer to the CH9102F_Datasheet.
+
+
+
+12. Buzzer
+
+
+
+
+One end of the buzzer is connected to a 5V power supply, and the other end of
+the buzzer is connected to the base of an S8050 transistor. The base is
+grounded through a 10kΩ resistor, and connected to the PA6 pin on the
+microcontroller through a 1kΩ resistor.
+If you want the buzzer to sound, make the PA6 pin of the main chip output high
+level voltage. This will turn on the transistor, allowing current to flow through
+the buzzer and causing it to sound. If you want to stop the buzzer from
+sounding, make the PA6 pin output a low level voltage. This will turn off the
+transistor, preventing current from flowing through the buzzer and causing it to
+stop. This buzzer is a peripheral device used for emitting sound prompts or
+alarms by controlling the pin level.
+
+
+
+13. 4-Ch Servo Interface
+These four interfaces can be connected to the servos to control them.
+The servo interfaces are paired in load voltage distribution, and specific
+selections can be made by shorting the jumper caps.
+The 5V pin is used for low voltage servos, while the VIN pin is used for high
+voltage servos connected to a high voltage power supply.
+
+
+
+14. 5V to 3.3V Circuit
+
+
+
+
+BSMD0603-050-6V is a fuse that is connected to the output of the
+RT9013-33GB. It is designed to protect against damage from excessive
+current. When the current exceeds the rated value of the fuse, it will break,
+cutting off the current.
+
+
+
+15. Raspberry Pi 5V Power Supply Circuit & Onboard 5V
+
+Power Circuit
+As the name implies, this circuit supplies power to our Raspberry Pi using an
+RT8389GSP power chip. The output, 5V5A, can be adjusted via R24 and R25
+according to the formula: V_OUT = V_FB * (1 + R1/R2).
+V_OUT is the output voltage of the regulator.
+V_FB is the feedback reference voltage, which is a fixed value set internally in
+the regulator. In this case, the value is typically 1.222V. For more information,
+you can access RT8289GSP_ datasheet.
+The Raspberry Pi power supply circuit also includes a type-C interface for
+providing 5V5A power output.
+Furthermore, there is an onboard 5V power supply circuit on the Raspberry Pi
+that is also adjustable.
+S1 is the switch for controlling the power supply.
+
+
+
+16. Motor Drive Circuit
+
+
+
+
+The motor drive circuit uses the YX-4055AM motor driver chip to control four
+motors. The chip is connected to the main chip's PA9, PA11, PE5, PE6, PE13,
+PE14, PB8, and PB9 pins to control the motor's rotation speed and direction.
+In addition, the C4, C36, C29, and C48 capacitors are used for filtering and
+denoising. These capacitors can function as a filter to help remove noise from
+the power line. The 220uF capacitor can effectively remove low-frequency
+noise, while the 100nF capacitor is better at removing high-frequency noise.
+The capacitors also help stabilize the power supply voltage. When the load
+current changes, the power supply voltage may fluctuate. In this case, the
+capacitors can provide the necessary current to the circuit to help stabilize the
+power supply voltage and prevent voltage transients.
+Furthermore, the capacitors can prevent excessive peak current from flowing
+to the power supply when the circuit suddenly requires a large current.
+The following are the interfaces for the encoded motors, which are connected
+to the output pins of the motor driver chip and filtered by a 100nF capacitor.
+17. Bus Servo Interface
+
+
+
+
+This is the circuit and interface for the bus servos, which are connected in
+series with PC12 on the main chip.
+
+
+
+18. The RGB-LED (Red-Green-Blue Light Emitting Diode)
+
+Circuit
+The RGB LEDs used in this circuit is based on the WS2812B series, which
+uses a single data line to control the color of the LEDs. This allows for serial
+control, and the STM32F407VET6 uses the SPI protocol to control the LEDs.
+The color information for several RGB LEDs is output on the signal line at once,
+and the connected RGB LEDs will read the color information in sequence
+according to their connection order, allowing them to change colors
+simultaneously.
+

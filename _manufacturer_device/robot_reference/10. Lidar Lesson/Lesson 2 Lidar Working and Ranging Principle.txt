@@ -1,0 +1,33 @@
+   Lidar Working and Ranging Principle
+1．Lidar Ranging
+Two common methods are employed by Lidar to determine the distance to a
+target: triangulation and Time of Flight (TOF).
+In the case of TOF, as depicted in the diagram, the Lidar initially projects light
+onto the object. The object reflects the light directly back to the Lidar, which
+calculates the time it takes for the light to return. The distance between the
+object and the Lidar is then obtained by multiplying this time by the speed of
+light.
+
+
+
+
+In triangulation, as illustrated in the diagram, the Lidar undergoes adjustments
+during manufacturing to ensure that the light does not directly strike the object.
+Instead, it is projected at a specific angle, a pre-set value that remains
+constant during operation. The distance from the object to the Lidar can be
+calculated by incorporating this angle into trigonometric functions.
+
+
+
+
+                                          1
+2．Lidar Working Result
+Its working result is as follows. Lidar will emit light and shine it on the object
+surface. When receiving the light reflected by the object, Lidar will mark the
+contour of the object at the position where the light is reflected.
+
+
+
+
+                                           2
+

@@ -1,0 +1,816 @@
+                                                    ®
+                                                                                                                                                RT8289
+
+5A, 32V, 500kHz Step-Down Converter
+General Description                                                                  Features
+The RT8289 is a step-down regulator with an internal Power                              High Output Current up to 5A
+MOSFET. It achieves 5A of continuous output current over                              Internal Soft-Start
+a wide input supply range with excellent load and line                                100mΩ Ω Internal Power MOSFET Switch
+regulation. Current mode operation provides fast transient                            Internal Compensation Minimizes External Parts
+response and eases loop stabilization.                                                 Count
+                                                                                      High Efficiency up to 90%
+The RT8289 provides protections such as cycle-by-cycle
+                                                                                      25μμA Shutdown Current
+current limiting and thermal shutdown. In shutdown mode,
+                                                                                      Fixed 500kHz Frequency
+the regulator draws 25μA of supply current.
+                                                                                      Thermal Shutdown Protection
+The RT8289 requires a minimum number of external                                      Cycle-by-Cycle Over Current Protection
+components, to provide a compact solution.                                            Wide 5.5V to 32V Operating Input Range
+
+The RT8289 is available in a SOP-8 (Exposed Pad)                                      Adjustable Output Voltage from 1.222V to 26V
+
+package.                                                                              Available in an SOP-8 (Exposed Pad) Package
+
+                                                                                      RoHS Compliant and Halogen Free
+
+Ordering Information
+RT8289                                                                               Applications
+                   Package Type
+                                                                                      Distributive Power Systems
+                   SP : SOP-8 (Exposed Pad-Option 1)
+                                                                                      LCD TV
+                   Lead Plating System                                                DSL Modems
+                   G : Green (Halogen Free and Pb Free)
+                                                                                      Pre-regulator for Linear Regulators
+Note :
+                                                                                      Battery Charger
+Richtek products are :
+  RoHS compliant and compatible with the current require-
+                                                                                     Pin Configurations
+   ments of IPC/JEDEC J-STD-020.
+                                                                                                                    (TOP VIEW)
+  Suitable for use in SnPb or Pb-free soldering processes.
+
+                                                                                                          BOOT                     8      SW
+Marking Information                                                                                           NC      2
+                                                                                                                           GND
+                                                                                                                                   7      VIN
+                                                                                                              NC      3            6      GND
+                            RT8289GSP : Product Number                                                                         9
+                                                                                                              FB      4            5      EN
+  RT8289                    YMDNN : Date Code
+  GSPYMDNN
+                                                                                                               SOP-8 (Exposed Pad)
+
+
+
+Typical Application Circuit
+                                       VIN                        7                       1
+                                                                      VIN        BOOT
+                              5.5V to 32V                                                         CBOOT L
+                                                  CIN                       RT8289
+                                                  4.7µF x 2                                       10nF 10µH                            VOUT
+                                                                                     SW 8
+                                                                                                                                       5V/5A
+                             Chip Enable                          5 EN                            D
+                                                                                                  B550C            R1
+                                                                                                                   10k
+                         Open                                                                                               COUT
+                         = Automatic Startup     6, Exposed Pad (9)                  FB 4                                   47µFx2
+                                                                      GND                                                   (POSCAP)
+                                                                                                                   R2
+                                                                                                                   3.16k
+
+
+
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.                         is a registered trademark of Richtek Technology Corporation.
+
+DS8289-02       October 2014                                                                                                                    www.richtek.com
+                                                                                                                                                              1
+RT8289
+Functional Pin Description
+        Pin No.             Pin Name                                                   Pin Function
+                                               High Side Gate Drive Bootstrap Input. BOOT supplies the drive for the high side
+            1               BOOT               N-MOSFET switch. Connect a 10nF or greater capacitor from SW to BOOT to
+                                               power the high side switch.
+           2, 3             NC                 No Internal Connection.
+                                               Feedback Input. FB senses the output voltage to regulate said voltage. Drive FB
+            4               FB                 with a resistive voltage divider from the output voltage. The value of the divider
+                                               resistors also sets loop bandwidth. The feedback threshold is 1.222V.
+                                               Chip Enable (Active High). EN is a digital input that turns the regulator on or off.
+            5               EN                 Drive EN higher than 1.4V to turn on the regulator, lower than 0.4V to turn it off.
+                                               For automatic startup, leave EN unconnected.
+        6,                                     Ground. The exposed pad must be soldered to a large PCB and connected to
+                 GND
+ 9 (Exposed Pad)                               GND for maximum power dissipation.
+                                               Power Input. VIN supplies the power to the IC, as well as the step-down
+            7               VIN                converter switches. Drive VIN with a 5.5V to 32V power source. Bypass VIN to
+                                               GND with a suitably large capacitor to eliminate noise on the input to the IC.
+                                               Power Switching Output. SW is the switching node that supplies power to the
+            8               SW                 output. Connect the output LC filter from SW to the output load. Note that a
+                                               capacitor is required from SW to BOOT to power the high side switch.
+
+
+
+Function Block Diagram
+
+                          VIN
+                                                                                     Current Sense
+                                                         Ramp                          Amplifier   -
+                                                        Generator                                  +
+
+                                                                                                                      BOOT
+
+                                                        Oscillator
+                           EN           Regulator                                  S
+                                                         500kHz
+                                                                                       Q      Driver
+                                                                         +
+                                                                                   R
+                                                                         -
+                                        Reference          Error           PWM                                        SW
+                                                        + Amplifier     Comparator
+                           FB                           -
+                                         12k                            OC Limit           Bootstrap
+                                                            30pF        Clamp               Control
+                                                    400k
+
+                                                                                                                      GND
+
+                                                       13pF
+
+
+
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.              is a registered trademark of Richtek Technology Corporation.
+
+www.richtek.com                                                                                                      DS8289-02        October 2014
+2
+                                                                                                                                  RT8289
+Absolute Maximum Ratings                                     (Note 1)
+ Supply Voltage, VIN ------------------------------------------------------------------------------------------ 0.3V to 34V
+ Switching Voltage, SW (Note 2) ------------------------------------------------------------------------ −0.6V to (VIN + 0.3V)
+ BOOT Voltage ------------------------------------------------------------------------------------------------- (VSW − 0.3V) to (VSW + 6V)
+
+ Other Pins Voltage ------------------------------------------------------------------------------------------- −0.3V to 6V
+
+ Power Dissipation, PD @ TA = 25°C
+
+  SOP-8 (Exposed Pad) -------------------------------------------------------------------------------------- 1.333W
+ Package Thermal Resistance (Note 3)
+
+  SOP-8 (Exposed Pad), θJA --------------------------------------------------------------------------------- 75°C/W
+  SOP-8 (Exposed Pad), θJC -------------------------------------------------------------------------------- 15°C/W
+ Junction Temperature ---------------------------------------------------------------------------------------- 150°C
+
+ Lead Temperature (Soldering, 10 sec.) ------------------------------------------------------------------ 260°C
+
+ Storage Temperature Range ------------------------------------------------------------------------------- −65°C to 150°C
+
+ ESD Susceptibility (Note 4)
+
+  HBM (Human Body Model) --------------------------------------------------------------------------------- 2kV
+  MM (Machine Model) ---------------------------------------------------------------------------------------- 200V
+
+
+Recommended Operating Conditions                                               (Note 5)
+ Supply Voltage, VIN ------------------------------------------------------------------------------------------ 5.5V to 32V
+ Enable Voltage, VEN ----------------------------------------------------------------------------------------- 0V to 5.5V
+ Junction Temperature Range ------------------------------------------------------------------------------- −40°C to 125°C
+
+ Ambient Temperature Range ------------------------------------------------------------------------------- −40°C to 85°C
+
+
+
+Electrical Characteristics
+(VIN = 12V, TA = 25°C unless otherwise specified)
+
+                  Parameter                            Symbol                 Test Conditions                   Min        Typ       Max           Unit
+ Feedback Reference Voltage                         V FB                5.5V ≦ VIN ≦ 32V                       1.202      1.222 1.239               V
+ High Side Switch-On Resistance                     RDS(ON)1                                                     --        100         --          m
+ Low Side Switch-On Resistance                      RDS(ON)2                                                     --         10        --            
+ Upper Switch Leakage                                                   V EN = 0V, VSW = 0V                      --          0        10           A
+ Current Limit                                      ILIM                Duty = 90%; V BOOTSW = 4.8V             --         6.8        --           A
+ Current Sense Transconductance                     GCS                 Output Current to V COMP                 --         5.5        --          A/V
+ Oscillator Frequency                               fSW                                                          --        500         --          kHz
+ Short Circuit Oscillation Frequency                                    V FB = 0V                                --        120         --          kHz
+ Maximum Duty Cycle                                 DMAX                V FB = 1V                                --         90         --           %
+ Minimum On-Time                                    tON                                                          --        100         --           ns
+ Under Voltage Lockout Threshold
+                                                                                                                 --         4.2        --           V
+ Rising
+ Under Voltage Lockout Threshold
+                                                                                                                 --        200         --          mV
+ Hysteresis
+                     Logic Low Voltage              V IL                                                         --          --       0.4
+ En Threshold                                                                                                                                       V
+                     Logic High Voltage             V IH                                                        1.4          --       5.5
+ Enable Pull Up Current                                                                                          --          1         --          A
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.               is a registered trademark of Richtek Technology Corporation.
+
+DS8289-02       October 2014                                                                                                       www.richtek.com
+                                                                                                                                                 3
+RT8289
+                  Parameter                             Symbol                Test Conditions                   Min        Typ        Max          Unit
+ Shutdown Current                                  I SHDN               VEN = 0V                                  --         25         --         A
+ Quiescent Current                                 IQ                   VEN = 2V, VFB = 1.5V                      --        0.8         1          mA
+ Soft-Start Period                                                                                                --         4          --         ms
+ Thermal Shutdown                                  TSD                                                            --        150         --         C
+Note 1. Stresses beyond those listed “Absolute Maximum Ratings” may cause permanent damage to the device. These are
+          stress ratings only, and functional operation of the device at these or any other conditions beyond those indicated in
+          the operational sections of the specifications is not implied. Exposure to absolute maximum rating conditions may
+          affect device reliability.
+Note 2. The low side MOSFET body diode forward current must be lower than 1mA
+Note 3. θJA is measured at TA = 25°C on a high effective thermal conductivity four-layer test board per JEDEC 51-7. θJC is
+          measured at the exposed pad of the package.
+Note 4. Devices are ESD sensitive. Handling precaution is recommended.
+Note 5. The device is not guaranteed to function outside its operating conditions.
+
+
+
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.               is a registered trademark of Richtek Technology Corporation.
+
+www.richtek.com                                                                                                        DS8289-02       October 2014
+4
+                                                                                                                                                                                                  RT8289
+Typical Operating Characteristics
+                                                         Efficiency vs. Output Current                                                                       Output Voltage vs. Output Current
+                                           100                                                                                             5.008
+                                            90
+                                                                                                                                           5.004
+                                            80          VIN = 8V
+                                                        VIN = 12V
+
+
+
+
+                                                                                                                Output Voltage (V)
+                                            70                                                                                             5.000
+                          Efficiency (%)
+
+
+
+
+                                                        VIN = 24V
+                                            60          VIN = 32V                                                                                             VIN = 32V
+                                                                                                                                           4.996
+                                                                                                                                                              VIN = 24V
+                                            50                                                                                                                VIN = 12V
+                                                                                                                                           4.992
+                                            40
+                                            30                                                                                             4.988
+                                            20
+                                                                                                                                           4.984
+                                            10
+                                                                                               VOUT = 5V                                                                                                 VOUT = 5V
+                                             0                                                                                             4.980
+                                                 0           1           2         3           4           5                                           0             1            2           3          4             5
+                                                                    Output Current (A)                                                                                         Output Current (A)
+
+                                                      Reference Voltage vs. Input Voltage                                                                    Reference Voltage vs. Temperature
+                                 1.230                                                                                                      1.230
+                                 1.228                                                                                                      1.228
+                                 1.226                                                                                                      1.226
+  Reference Voltage (V)
+
+
+
+
+                                                                                                                   Reference Voltage (V)
+
+
+
+
+                                 1.224                                                                                                      1.224
+                                 1.222                                                                                                      1.222
+                                                                                                                                                                                  VIN = 8V
+                                 1.220                                                                                                      1.220                                 VIN = 12V
+                                 1.218                                                                                                      1.218                                 VIN = 24V
+                                                                                                                                                                                  VIN = 32V
+                                 1.216                                                                                                      1.216
+                                 1.214                                                                                                      1.214
+                                 1.212                                                                                                      1.212
+                                                                                               IOUT = 0A                                                                                                  IOUT = 0A
+                                 1.210                                                                                                      1.210
+                                                 4       8       12       16     20       24       28      32                                          -50     -25         0       25      50       75       100   125
+                                                                      Input Voltage (V)                                                                                        Temperature (°C)
+
+                                                         Frequency vs. Input Voltage                                                                             Frequency vs. Temperature
+                                           550                                                                                                   550
+                                           540                                                                                                   540
+                                           530                                                                                                   530
+                 Frequency (kHz)1
+
+
+
+
+                                                                                                                              Frequency (kHz)1
+
+
+
+
+                                           520                                                                                                   520
+                                           510                                                                                                   510
+                                           500                                                                                                   500
+                                           490                                                                                                   490
+                                                                                                                                                                         VIN = 8V
+                                           480                                                                                                   480                     VIN = 12V
+                                           470                                                                                                   470                     VIN = 24V
+                                                                                                                                                                         VIN = 32V
+                                           460                                                                                                   460
+                                                                                   VOUT = 5V, IOUT = 0A                                                                                         VOUT = 5V, IOUT = 0A
+                                           450                                                                                                   450
+                                                 4       8       12       16     20       24       28      32                                          -50     -25         0          25   50       75       100   125
+                                                                      Input Voltage (V)                                                                                        Temperature (°C)
+
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.                                                                      is a registered trademark of Richtek Technology Corporation.
+
+DS8289-02                                            October 2014                                                                                                                                 www.richtek.com
+                                                                                                                                                                                                                5
+  RT8289
+
+                                               Shutdown Current vs. Input Voltage                                                              Quiescent Current vs. Temperature
+                                    60                                                                                              1
+                                                                                                                                   0.9
+                                    50
+
+
+
+
+                                                                                                          Quiescent Current (mA)
+                                                                                                                                   0.8
+           Shutdown Current (μA)1
+
+
+
+
+                                                                                                                                   0.7
+                                    40
+                                                                                                                                   0.6
+                                    30                                                                                             0.5
+                                                                                                                                                              VIN = 8V
+                                                                                                                                   0.4                        VIN = 12V
+                                    20                                                                                                                        VIN = 24V
+                                                                                                                                   0.3
+                                                                                                                                                              VIN = 32V
+                                                                                                                                   0.2
+                                    10
+                                                                                                                                   0.1
+                                                                                      VEN = 0V
+                                     0                                                                                              0
+                                          4       8     12       16    20        24    28        32                                      -50     -25     0       25       50    75     100    125
+                                                             Input Voltage (V)                                                                               Temperature (°C)
+
+                                                 Current Limit vs. Temperature                                                                                  Switching
+                                    12
+
+                                    11
+                                                                                                         VOUT
+                                                                                                      (10mV/Div)
+                                    10
+       Current Limit (A)
+
+
+
+
+                                     9                                                                    VSW
+                                                                                                        (20V/Div)
+                                     8
+
+                                     7
+                                                                                                            IL
+                                     6
+                                                                                                         (5A/Div)
+                                                                       VIN = 12V, VOUT = 2.5V                                                                   VIN = 12V, VOUT = 5V, IOUT = 5A
+                                     5
+                                         -50     -25    0       25     50        75    100   125                                                               Time (1μs/Div)
+                                                            Temperature (°C)
+
+                                                   Load Transient Response                                                                         Load Transient Response
+
+
+   VOUT                                                                                                  VOUT
+(200mV/Div)                                                                                           (200mV/Div)
+
+
+
+
+      IOUT                                                                                                 IOUT
+    (2A/Div)                                                                                             (2A/Div)
+                                                       VIN = 12V, VOUT = 5V, IOUT = 2.5A to 5A                                                         VIN = 12V, VOUT = 5V, IOUT = 0.2A to 5A
+
+
+                                                             Time (100μs/Div)                                                                                Time (100μs/Div)
+
+
+
+  Copyright © 2014 Richtek Technology Corporation. All rights reserved.                                               is a registered trademark of Richtek Technology Corporation.
+
+  www.richtek.com                                                                                                                                                 DS8289-02     October 2014
+  6
+                                                                                                                         RT8289
+
+                               Power On from EN                                                    Power Off from EN
+
+
+    VEN                                                                   VEN
+  (5V/Div)                                                              (5V/Div)
+
+
+    VOUT                                                                  VOUT
+  (5V/Div)                                                              (5V/Div)
+
+
+     IL                                                                    IL
+  (5A/Div)                                                              (5A/Div)
+
+
+                                      VIN = 12V, VOUT = 5V, IOUT = 5A                                     VIN = 12V, VOUT = 5V, IOUT = 5A
+
+                                  Time (2.5ms/Div)                                                     Time (2.5ms/Div)
+
+
+
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.      is a registered trademark of Richtek Technology Corporation.
+
+DS8289-02       October 2014                                                                                              www.richtek.com
+                                                                                                                                        7
+RT8289
+Application Information
+The RT8289 is an asynchronous high voltage buck                         Soft-Start
+converter that can support the input voltage range from                 The RT8289 contains an internal soft-start clamp that
+5.5V to 32V and the output current can be up to 5A.                     gradually raises the output voltage. The typical soft-start
+                                                                        time is 4ms.
+Output Voltage Setting
+The resistive divider allows the FB pin to sense the output             Chip Enable Operation
+voltage as shown in Figure 1.
+                                                                        The EN pin is the chip enable input. Pull the EN pin low
+                                                                        (<0.4V) will shutdown the device. During shutdown mode,
+                                          VOUT
+                                                                        the RT8289 quiescent current drops to lower than 25μA.
+                                                 R1                     Drive the EN pin to high (>1.4V, < 5.5V) will turn on the
+                                 FB                                     device again. If the EN pin is open, it will be pulled to high
+                          RT8289                 R2                     by internal circuit. For external timing control (e.g.RC),the
+                               GND                                      EN pin can also be externally pulled to High by adding a
+                                                                        100kΩ or greater resistor from the VIN pin (see Figure 3).
+                Figure 1. Output Voltage Setting
+                                                                        Inductor Selection
+                                                                        The inductor value and operating frequency determine the
+The output voltage is set by an external resistive divider
+                                                                        ripple current according to a specific input and output
+according to the following equation :
+                                                                        voltage. The ripple current ΔIL increases with higher VIN
+VOUT = VFB  1 R1                                                   and decreases with higher inductance.
+             R2 
+                                                                        IL =  OUT   1 OUT 
+                                                                                 V            V
+Where VFB is the feedback reference voltage (1.222V typ.).
+                                                                                 f  L      VIN 
+Where R1 = 10kΩ.
+                                                                        Having a lower ripple current reduces not only the ESR
+                                                                        losses in the output capacitors but also the output voltage
+External Bootstrap Diode
+                                                                        ripple. High frequency with small ripple current can achieve
+Connect a 10nF low ESR ceramic capacitor between the
+                                                                        highest efficiency operation. However, it requires a large
+BOOT pin and SW pin. This capacitor provides the gate
+                                                                        inductor to achieve this goal.
+driver voltage for the high side MOSFET.
+                                                                        For the ripple current selection, the value of ΔIL = 0.2 (IMAX)
+It is recommended to add an external bootstrap diode
+                                                                        will be a reasonable starting point. The largest ripple
+between an external 5V and BOOT pin for efficiency
+                                                                        current occurs at the highest VIN. To guarantee that the
+improvement when input voltage is lower than 5.5V or duty
+                                                                        ripple current stays below the specified maximum, the
+ratio is higher than 65% .The bootstrap diode can be a
+                                                                        inductor value should be chosen according to the following
+low cost one such as IN4148 or BAT54. The external 5V
+                                                                        equation :
+can be a 5V fixed input from system or a 5V output of the
+RT8289.                                                                     VOUT                  VOUT 
+                                                                        L =                 1           
+                                                                            f   IL(MAX)        VIN(MAX) 
+                                            5V
+
+                                                                        The inductor's current rating (caused a 40°C temperature
+                                                                        rising from 25°C ambient) should be greater than the
+                               BOOT
+                                                                        maximum load current and its saturation current should
+                          RT8289                 10nF
+                                   SW
+                                                                        be greater than the short circuit peak current limit. Please
+                                                                        see Table 2 for the inductor selection reference.
+
+              Figure 2. External Bootstrap Diode
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.        is a registered trademark of Richtek Technology Corporation.
+
+www.richtek.com                                                                                                DS8289-02        October 2014
+8
+                                                                                                                              RT8289
+      Table 2. Suggested Inductors for Typical                          The output ripple, ΔVOUT , is determined by :
+
+                                                                        VOUT  IL ESR       1   
+                 Application Circuit
+   Component                         Dimensions                                             8fCOUT 
+                     Series
+    Supplier                            (mm)                            The output ripple will be highest at the maximum input
+     TAIYO
+                    NR10050          10 x 9.8 x 5                       voltage since ΔIL increases with input voltage. Multiple
+     YUDEN
+                                                                        capacitors placed in parallel may be needed to meet the
+      TDK          SLF12565       12.5 x 12.5 x 6.5
+                                                                        ESR and RMS current handling requirement. Dry tantalum,
+                                                                        special polymer, aluminum electrolytic and ceramic
+Diode Selection                                                         capacitors are all available in surface mount packages.
+When the power switch turns off, the path for the current               Special polymer capacitors offer very low ESR value.
+is through the diode connected between the switch output                However, it provides lower capacitance density than other
+and ground. This forward biased diode must have a                       types. Although Tantalum capacitors have the highest
+minimum voltage drop and recovery times. Schottky diode                 capacitance density, it is important to only use types that
+is recommended and it should be able to handle those                    pass the surge test for use in switching power supplies.
+current. The reverse voltage rating of the diode should be              Aluminum electrolytic capacitors have significantly higher
+greater than the maximum input voltage, and current rating              ESR. However, it can be used in cost-sensitive applications
+should be greater than the maximum load current. For                    for ripple current rating and long term reliability
+more detail please refer to Table 4.                                    considerations. Ceramic capacitors have excellent low
+                                                                        ESR characteristics but can have a high voltage coefficient
+CIN and COUT Selection
+                                                                        and audible piezoelectric effects. The high Q of ceramic
+The input capacitance, C IN, is needed to filter the                    capacitors with trace inductance can also lead to significant
+trapezoidal current at the source of the high side MOSFET.              ringing.
+To prevent large ripple current, a low ESR input capacitor
+                                                                        Higher values, lower cost ceramic capacitors are now
+sized for the maximum RMS current should be used. The
+                                                                        becoming available in smaller case sizes. Their high ripple
+RMS current is given by :
+                                                                        current, high voltage rating and low ESR make them ideal
+                V                   VIN
+IRMS = IOUT(MAX) OUT                    1                              for switching regulator applications. However, care must
+                 VIN               VOUT
+                                                                        be taken when these capacitors are used at input and
+This formula has a maximum at VIN = 2VOUT, where
+                                                                        output. When a ceramic capacitor is used at the input
+I RMS = I OUT /2. This simple worst-case condition is
+                                                                        and the power is supplied by a wall adapter through long
+commonly used for design because even significant
+                                                                        wires, a load step at the output can induce ringing at the
+deviations do not offer much relief.
+                                                                        input, VIN. At best, this ringing can couple to the output
+Choose a capacitor rated at a higher temperature than                   and be mistaken as loop instability. At worst, a sudden
+required. Several capacitors may also be paralleled to                  inrush of current through the long wires can potentially
+meet size or height requirements in the design.                         cause a voltage spike at VIN large enough to damage the
+For the input capacitor, two 4.7μF low ESR ceramic                      part.
+capacitors are recommended. For the recommended
+                                                                        Checking Transient Response
+capacitor, please refer to table 3 for more detail.
+                                                                        The regulator loop response can be checked by looking
+The selection of COUT is determined by the required ESR                 at the load transient response. Switching regulators take
+to minimize voltage ripple.                                             several cycles to respond to a step in load current. When
+Moreover, the amount of bulk capacitance is also a key                  a load step occurs, VOUT immediately shifts by an amount
+for COUT selection to ensure that the control loop is stable.           equal to ΔILOAD (ESR) also begins to charge or discharge
+Loop stability can be checked by viewing the load transient             COUT generating a feedback error signal for the regulator
+response as described in a later section.                               to return VOUT to its steady-state value. During this
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.           is a registered trademark of Richtek Technology Corporation.
+
+DS8289-02       October 2014                                                                                                   www.richtek.com
+                                                                                                                                             9
+RT8289
+recovery time, VOUT can be monitored for overshoot or                             snubber between SW and GND and make them as close
+ringing that would indicate a stability problem.                                  as possible to the SW pin (see Figure 3). Another method
+                                                                                  is to add a resistor in series with the bootstrap
+EMI Consideration                                                                 capacitor, CBOOT. But this method will decrease the driving
+Since parasitic inductance and capacitance effects in PCB                         capability to the high side MOSFET. It is strongly
+circuitry would cause a spike voltage on SW pin when                              recommended to reserve the R-C snubber during PCB
+high side MOSFET is turned-on/off, this spike voltage on                          layout for EMI improvement. Moreover, reducing the SW
+SW may impact on EMI performance in the system. In                                trace area and keeping the main power in a small loop will
+order to enhance EMI performance, there are two methods                           be helpful on EMI performance. For detailed PCB layout
+to suppress the spike voltage. One is to place an R-C                             guide, please refer to the section of Layout Consideration.
+
+                                                                                      RBOOT*
+                           VIN                              7                     1
+                                                                VIN        BOOT
+                  5.5V to 32V                   CIN                                              CBOOT  L
+                                    REN*        4.7µF x 2             RT8289
+                                                                                                 10nF 10µH                          VOUT
+                                                                               SW 8
+                                                            5 EN                                                                    5V/5A
+                                                                                        RS*       D
+                                        CEN*                                                      B550C              R1        COUT
+                                                                                        CS*                          10k
+                                                                                                                               47µFx2
+                                         6, Exposed Pad (9)
+                                                                GND            FB 4                                            (POSCAP)
+                                                                                                                     R2
+                                                                                                                     3.16k
+                         * : Optional
+
+
+
+                                  Figure 3. Reference Circuit with Snubber and Enable Timing Control
+
+
+Thermal Considerations
+For continuous operation, do not exceed the maximum                               (min.copper area PCB layout)
+operation junction temperature. The maximum power                                 PD(MAX) = (125°C − 25°C) / (49°C/W) = 2.04W (70mm2
+dissipation depends on the thermal resistance of IC                               copper area PCB layout)
+package, PCB layout, the rate of surroundings airflow and
+                                                                                  The thermal resistance θJA of SOP-8 (Exposed Pad) is
+temperature difference between junction to ambient. The
+                                                                                  determined by the package architecture design and the
+maximum power dissipation can be calculated by following
+                                                                                  PCB layout design. However, the package architecture
+formula :
+                                                                                  design had been designed. If possible, it's useful to
+PD(MAX) = (TJ(MAX) − TA ) / θJA                                                   increase thermal performance by the PCB layout copper
+Where T J(MAX) is the maximum operation junction                                  design. The thermal resistance θJA can be decreased by
+temperature , TA is the ambient temperature and the θJA is                        adding copper area under the exposed pad of SOP-8
+the junction to ambient thermal resistance.                                       (Exposed Pad) package.
+
+For recommended operating conditions specification of                             As shown in Figure 4, the amount of copper area to which
+RT8289, the maximum junction temperature is 125°C. The                            the SOP-8 (Exposed Pad) is mounted affects thermal
+junction to ambient thermal resistance θJA is layout                              performance. When mounted to the standard
+dependent. For PSOP-8 package, the thermal resistance                             SOP-8 (Exposed Pad) pad (Figure 4a), θJA is 75°C/W.
+θJA is 75°C/W on the standard JEDEC 51-7 four-layers                              Adding copper area of pad under the SOP-8 (Exposed
+thermal test board. The maximum power dissipation at                              Pad) (Figure 4.b) reduces the θJA to 64°C/W. Even further,
+TA = 25°C can be calculated by following formula:                                 increasing the copper area of pad to 70mm2 (Figure 4.e)
+                                                                                  reduces the θJA to 49°C/W.
+P D(MAX) = (125°C − 25°C) / (75°C/W) = 1.333W
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.                   is a registered trademark of Richtek Technology Corporation.
+
+www.richtek.com                                                                                                            DS8289-02        October 2014
+10
+                                                                                                                                       RT8289
+   The maximum power dissipation depends on operating
+   ambient temperature for fixed T J (MAX) and thermal
+   resistance θJA. For the RT8289, the Figure 5 of derating
+   curves allows the designer to see the effect of rising
+   ambient temperature on the maximum power dissipation
+   allowed.
+                        2.2                                                                  (d) Copper Area = 50mm2 , θJA = 51°C/W
+                                                                 Four Layer PCB
+                        2.0
+                        1.8
+Power Dissipation (W)
+
+
+
+
+                        1.6                                         Copper Area
+                                                                    70mm2
+                        1.4
+                                                                    50mm2
+                        1.2                                         30mm2
+                        1.0                                         10mm2
+                                                                    Min.Layout
+                        0.8
+                        0.6
+                        0.4                                                                 (e) Copper Area = 70mm2 , θJA = 49°C/W
+                        0.2                                                          Figure 4. Thermal Resistance vs. Copper Area Layout
+                        0.0
+                                                                                                           Design
+                              0       25       50       75          100       125
+
+                                           Ambient Temperature (°C)
+                         Figure 5. Derating Curves for RT8289 Package               Layout Consideration
+                                                                                    Follow the PCB layout guidelines for optimal performance
+                                                                                    of the RT8289.
+                                                                                     Keep the traces of the main current paths as short and
+
+                                                                                     wide as possible.
+                                                                                     Put the input capacitor as close as possible to the device
+
+                                                                                     pins (VIN and GND).
+                        (a) Copper Area = (2.3 x 2.3) mm , θJA = 75°C/W
+                                                             2
+                                                                                     LX node is with high frequency voltage swing and should
+
+                                                                                     be kept at small area. Keep analog components away
+                                                                                     from the LX node to prevent stray capacitive noise pick-
+                                                                                     up.
+                                                                                     Connect feedback network behind the output capacitors.
+
+                                                                                     Keep the loop area small. Place the feedback
+                                                                                     components near the RT8289.
+
+                              (b) Copper Area = 10mm2, θJA = 64°C/W                  Connect all analog grounds to a command node and
+
+                                                                                     then connect the command node to the power ground
+                                                                                     behind the output capacitors.
+                                                                                     An example of PCB layout guide is shown in Figure 6 for
+
+                                                                                     reference.
+
+
+
+
+                              (c) Copper Area = 30mm2 , θJA = 54°C/W
+
+
+   Copyright © 2014 Richtek Technology Corporation. All rights reserved.                 is a registered trademark of Richtek Technology Corporation.
+
+   DS8289-02                      October 2014                                                                                          www.richtek.com
+                                                                                                                                                      11
+RT8289
+                                                                        SW should be connected to inductor by
+                                                                        wide and short trace. Keep sensitive
+                                                                        components away from this trace.
+
+                                                         SW                                      VOUT        COUT
+
+
+                                                            CBOOT                                            COUT
+                                                                                                   L
+                                                                                                             D1
+                                                           BOOT                        8      SW
+                                                                NC        2            7      VIN
+                                                                              GND                            CIN
+                                          VOUT                  NC        3            6      GND
+                                                    R1                             9
+                                                                                                             CIN
+                                                                FB        4            5      EN
+                                                           R2                              Input capacitor should be
+                                                                                           placed as close to the IC
+                                          The feedback components                          as possible.
+                                          should be connected as close
+                                          to the device as possible.                   GND
+
+                                                            Figure 6. PCB Layout Guide
+
+
+Table 3. Suggested Capacitors for CIN and COUT
+   Location          Component Supplier                              Part No.                      Capacitance (F)              Case Size
+       CIN                   MURATA                        GRM32ER71H475K                                    4.7                     1206
+       CIN               TAIYO YUDEN                      UMK325BJ475MM-T                                    4.7                     1206
+     COUT                     SANYO                              16IQC47M                                    47                       D2
+     COUT                     SANYO                            10TPE47MAIB                                   47                       B2
+     COUT                    MURATA                        GRM31CR60J476M                                    47                      1206
+
+
+
+Table 4. Suggested Diode
+  Component Supplier                  Series          VRRM (V)             IOUT (A)             Package
+           DIODES                     B550C               50                   5                       SMC
+             PANJIT                    SK55               50                   5                       SMC
+
+
+
+
+Copyright © 2014 Richtek Technology Corporation. All rights reserved.                        is a registered trademark of Richtek Technology Corporation.
+
+www.richtek.com                                                                                                                DS8289-02        October 2014
+12
+                                                                                                                                              RT8289
+Outline Dimension
+                                                                                                                     H
+                                                                                 A
+
+                                                                                                                                M
+
+                                   EXPOSED THERMAL PAD                           Y
+                                   (Bottom of Package)
+                                                                    J                       X    B
+
+
+
+
+                                                                                        F
+
+
+
+                                                                                                   C
+                                                                I
+                                                                                            D
+
+                                                        Dimensions In Millimeters                      Dimensions In Inches
+                                     Symbol
+                                                               Min                   Max                 Min                 Max
+                                          A                   4.801                5.004                0.189               0.197
+                                          B                   3.810                4.000                0.150               0.157
+                                         C                    1.346                1.753                0.053               0.069
+                                         D                    0.330                0.510                0.013               0.020
+                                          F                   1.194                1.346                0.047               0.053
+                                         H                    0.170                0.254                0.007               0.010
+                                          I                   0.000                0.152                0.000               0.006
+                                          J                   5.791                6.200                0.228               0.244
+                                         M                    0.406                1.270                0.016               0.050
+                                                 X            2.000                2.300                0.079               0.091
+                               Option 1
+                                                 Y            2.000                2.300                0.079               0.091
+                                                 X            2.100                2.500                0.083               0.098
+                               Option 2
+                                                 Y            3.000                3.500                0.118               0.138
+
+                                                  8-Lead SOP (Exposed Pad) Plastic Package
+
+
+
+Richtek Technology Corporation
+14F, No. 8, Tai Yuen 1st Street, Chupei City
+Hsinchu, Taiwan, R.O.C.
+Tel: (8863)5526789
+
+Richtek products are sold by description only. Richtek reserves the right to change the circuitry and/or specifications without notice at any time. Customers should
+obtain the latest relevant information and data sheets before placing orders and should verify that such information is current and complete. Richtek cannot
+assume responsibility for use of any circuitry other than circuitry entirely embodied in a Richtek product. Information furnished by Richtek is believed to be
+accurate and reliable. However, no responsibility is assumed by Richtek or its subsidiaries for its use; nor for any infringements of patents or other rights of third
+parties which may result from its use. No license is granted by implication or otherwise under any patent or patent rights of Richtek or its subsidiaries.
+DS8289-02        October 2014                                                                                                                  www.richtek.com
+                                                                                                                                                             13
+

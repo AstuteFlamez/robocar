@@ -1,0 +1,127 @@
+     RRCLite Hardware Introduction
+1. Development Board Diagram
+
+
+
+
+    NO.                       Function Description
+    (1)    First group of PWM servo interface x2: Control high-current and
+
+                                 high-torque servos
+
+    (2)   Power selection pin for the first group of PWM servos: By shorting
+
+          with a jumper cap, the power supply for the servos can be selected
+
+                      between the power supply voltage and 5V
+
+    (3)   Second group of PWM servo interface x2: Control high-current and
+
+                                 high-torque servos
+
+    (4)      Power selection pin for the second group of PWM servos: By
+
+          shorting with a jumper cap, the power supply for the servos can be
+
+                  selected between the power supply voltage and 5V
+
+    (5)   I2C expansion interface: Used for communication with I2C interface
+
+                                        modules
+
+
+
+                                    1
+(6)     Bus servo interface x2: Control the bus servos to move the robotic
+
+                                       arm
+
+(7)    4-Ch encoder motor interface x4: Drive four motors simultaneously.
+
+       The connection method varies depending on the robot car type. For
+
+        specific connection instruction, please refer to the corresponding
+
+                                     tutorials.
+
+(8)       RGB light x2: The color of the RGB light can be programmed.
+
+(9)                User Indicator: Custom LED light functions
+
+(10)      User button x2: Custom button functions and combine button
+
+                                     functions
+
+(11)            Reset button: Reset button for the controller chip
+
+(12)         Power switch: Power switch for the development board
+
+(13)    Power interface: DC 5V ~ 12.6V power input; can be powered by
+
+                             power supply or battery
+
+(14)   5V5A external power supply: Specially designed to power Raspberry
+
+                    Pi, Jetson Nano development boards, etc.
+
+(15)     USB serial port 1/flashing and downloading: Used for serial port
+
+                           flashing and communication
+
+(16)           Buzzer: Used for user prompts and alarm functions.
+
+(17)   On-board power indicator: Indicates whether the voltage of each part
+
+                                     is normal
+
+(18)     GPIO expansion and SWD debugging: Used for other external
+
+                        module expansion and debugging
+
+(19)    STM32F407VET6 controller chip: 168MHz main frequency, ARM
+
+         Cortex-M4 core, 512KB Flash, 192KB RAM, and 82 common IO
+
+                                       ports
+
+(20)    QMI8658 IMU attitude sensor: Provides the current attitude of the
+
+                               development board
+
+
+
+
+                                 2
+2. FAQ for Controller
+Q1: How to control the control board with Raspberry Pi or Jetson Nano? How
+to communicate with the control board?
+A: Raspberry Pi, Jetson Nano, and similar devices can communicate with the
+control board via the serial port 1.
+Please note that the serial port 2 is a 5V5A power output port dedicated to
+Raspberry Pi and other development boards. It cannot used for serial port
+communication.
+
+
+Q2: Which functions on the development board are managed by the
+microcontroller?
+A: The microcontroller on the development board manages several
+components, including the buzzer, robotic arm, servo pan-tilt, buttons, encoder
+motor interface, QMI8658 accelerometer and gyroscope, USB serial port,
+display interface, I2C interface, RGB LED, LED, GPIO expansion port, and
+more.
+
+
+Q3: How to learn to use the development board? How to update the firmware
+of the development board?
+A: The development board comes with rich comprehensive tutorials, such as
+FREERTOS system LED control tutorial, encoder motor control tutorial, and
+motor PID control tutorial. The interfaces have been implemented, which can
+achieve rapid development. To update the firmware, you can use the USB
+serial port for downloads and JLink for debug updates. All interfaces are
+externally connected to make learning and debugging easier.
+
+
+
+
+                                       3
+

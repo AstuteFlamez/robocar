@@ -1,0 +1,48 @@
+To adapt to different types of chassis, the source code needs to be modified
+with the type parameter values and low voltage alarm thresholds!!!
+Since the RRCLite communication routine with the host computer is
+compatible with multiple chassis types, only the code of this routine needs to
+be modified.
+If the type parameters are not modified, the motors may become
+uncontrolled!!!
+If the low voltage alarm threshold is not modified, low voltage warnings cannot
+be correctly executed!!!
+
+
+1. Change Chassis Type
+
+1) Open the app.c file under the Hiwonder/System folder, and replace it with
+
+the corresponding chassis type value.
+
+
+
+
+2) Optional type macro definitions
+
+
+
+
+CHASSIS_TYPE_JETAUTO —— Mecanum-wheel chassis
+CHASSIS_TYPE_JETTANK —— Big continuous track chassis
+CHASSIS_TYPE_TI4WD —— Four-wheel differential chassis
+CHASSIS_TYPE_TANKBLACK —— Small continuous track chassis
+
+
+
+2. Revise Voltage Alarm Threshold
+
+1) Open the global_conf.h file under the Hiwonder/System folder.
+
+
+
+
+2) If the battery voltage is 12V, choose 9600; if it is 8V, choose 6300.
+
+Configuration for an 8V battery is as follows:
+
+
+
+
+Configuration for a 12V battery is as follows:
+

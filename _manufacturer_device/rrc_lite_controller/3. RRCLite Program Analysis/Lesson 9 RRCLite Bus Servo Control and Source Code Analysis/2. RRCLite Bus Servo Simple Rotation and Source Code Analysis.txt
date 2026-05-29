@@ -1,0 +1,102 @@
+Bus Servo Simple Rotation and Source
+           Code Analysis
+1. Servo Description
+It's an automatic control system consisting of a DC motor, reduction gear set,
+sensor, and control circuitry, which specifies the rotation angle of the output
+shaft by sending signals.
+Differences between a servo and a motor:
+Servos generally have a maximum rotation angle; DC motors rotate in full
+circles. Therefore, servos can only rotate within a certain angle and cannot
+rotate continuously like DC motors. Regular DC motors cannot provide
+feedback on their rotation angle, while servos can. (Digital servos can switch
+between servo mode and motor mode.)
+
+
+
+2. Serial Bus Servo
+Regular DC motors typically rotate in full circles to provide power, while servos
+are used to control the rotation of an object to a specific angle.
+Bus servos are derivatives of digital servos that communicate via an
+asynchronous serial bus, meaning control is achieved through the sending and
+receiving of instruction packets, representing a closed-loop control system.
+Due to this feature, bus servos can be daisy-chained, simplifying wiring and
+reducing serial port usage. Consequently, when connecting bus servos, it's
+necessary to set the ID for each servo beforehand; otherwise, it would be
+impossible to differentiate between them during control.
+Bus servos internally utilize high-precision potentiometers. Compared to PWM
+servo control, they not only have the ability to provide feedback on position,
+temperature, voltage, and other information, but also exhibit excellent
+accuracy and linearity. This makes robot operation more stable and
+
+                                          1
+significantly extends the lifespan of servos.
+Additionally, before assembling servos, it's essential to perform a midpoint
+operation. The midpoint of the servo refers to its initial position, which serves
+as the "zero point" for positive and negative angle rotations. Therefore, servos
+should be adjusted to the midpoint before installation onto servo horns.
+This is because, during servo rotation, the moving parts drive the
+potentiometer. The software assumes the midpoint as the "zero point";
+otherwise, the potentiometer might enter a "blind spot," causing the entire
+component to malfunction. Consequently, when using the robot, the specified
+angles may not be achieved, or the corresponding action sets may not match.
+
+
+
+3. Program Outcome
+We rotated the servo counterclockwise by 90 degrees, then returned it to 0
+degrees, and finally stopped the servo.
+In this section, our HTS-16L digital bus servo is used as the experimental
+object. Connected it to one of the two bus multi-level interfaces on the RRCLite
+board.
+Place a servo arm on top of the servo. Then, you can indirectly observe the
+rotation of the servo by observing the movement of the servo arm. This is the
+state before powering on or resetting.
+
+
+
+
+                                          2
+After powering on, the servo begins to rotate counterclockwise to the position
+shown in the figure below, and then rotates back to the physical position when
+powered on.
+
+
+
+
+                                        3
+4. Code Analysis
+File location: Hiwonder/app.c. This file implements the simple angle rotation of
+the servo and sets the position and duration of the servo's movement.
+
+
+
+
+The function serial_servo_set_position() is used to set the position and
+duration of movement for the servo. Specific position and duration information
+is sent to the servo via a serial data frame (defined by the array buffer[]). The
+execution process of the function is as follows:
+1) Define a buffer to store the sent data frame.
+2) If the target position is greater than 1000, it is set to 1000.
+3) Fill the content of the data frame: frame header, servo ID, buffer[3] setting
+data length, set the position and movement duration of the servo.
+4) Store the low byte and high byte of the target position in buffer[5] and
+buffer[6], and store the low byte and high byte of the movement duration in
+buffer[7] and buffer[8]. Calculate the checksum, and finally send the data
+frame via the serial port.
+
+
+
+
+                                           4
+The serial_servo_stop() function is designed to send a command to stop the
+servo via the serial port. The execution process is as follows:
+1) Define a buffer to store the sent data frame.
+2) Fill the content of the data frame: frame header, servo ID, data length, stop
+the servo, calculate the checksum, and finally send the data frame via the
+serial port.
+
+
+
+
+                                         5
+

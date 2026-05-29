@@ -1,0 +1,131 @@
+      2.1 RRCLite Buzzer Source Code
+                 Analysis
+1. Program Logic
+This section mainly focuses on controlling the sound of the buzzer on the
+STM32 main control board.
+
+
+
+2. Hardware Connection
+The hardware connection diagram is as below:
+
+
+
+
+3. Program Download
+The example for this section is “RosRobotControllerLite_ros”.
+For specific instructions on how to download the program, refer to the
+document: “2.STM32 Development Fundamentals/3.Project Compilation and
+Download”.
+
+
+
+4. Program Outcome
+After powered on, the buzzer will first sound for 1 second.
+
+                                         1
+Then, it will sound three beeps at a frequency of 1500 Hz. The duration of each
+beep is 50 milliseconds, and the interval between two beeps is 100
+milliseconds.
+After that, it will sound three beeps at a frequency of 2000 Hz. The duration of
+each beep is 50 milliseconds, and the interval between two beeps is 100
+milliseconds.
+Finally, the buzzer will be turned off.
+
+
+
+5. State Machine Configuration
+Use STM32CubeMX to check the information on software timers and state
+machines. In the “Pinout & Configuration” section, go to “FREERTOS” and
+open “Timers and Semaphores”. You will find the details of “buzzer_timer”
+there.
+
+
+
+
+The current application is in Hiwonder/Peripherals/led.c.
+
+
+
+
+                                          2
+6. Source Code Analysis
+The source code for this course is located in the same folder as this tutorial
+document, mainly analyzing the files Hiwonder/System/app.c and
+Hiwonder/Peripherals/led.c.
+
+6.1 Buzzer Functionality Implementation
+
+
+
+
+Above is the App.c file. “app_task_entry()” serves as the user's entry function.
+The main programming flow is as follows:
+An externally defined variable buzzer_timerHandle is used as the timer handle.
+The buzzers_init function is called to initialize the buzzer.
+Then, the osTimerStart function is used to start the timer, passing
+BUZZER_TASK_PERIOD as the timer's working interval. This enables the
+buzzer control function to be called in the timer interrupt.
+The program uses a timer callback function to control the sound of the buzzer.
+Delay functions are used to control the duration and the number of times of the
+buzzer sound.
+
+
+
+
+                                           3
+(In the freertos.c file, the timer handle is associated with the corresponding timer callback
+
+                                         function)
+
+
+
+
+(In the buzzer_porting.c file, the timer callback function for the buzzer executes the buzzer
+
+                                      task by default)
+
+6.2 Control Buzzer On, Off and Sound Times
+
+
+
+
+                                                4
+Above is the buzzer.c file. It constructs a buzzer object and provides three
+methods for controlling the buzzer. These functions can be called to turn the
+buzzer on/off and set its sound frequency.
+In these functions, different members for controlling the buzzer structure
+(working frequency, sound duration, mute time, repetition times) are assigned
+different values, based on different functions. The defined structure is then
+passed into the buzzer message queue. The data will be retrieved and
+processed from other functions.
+The buzzer_on_() function is a structure for turning the buzzer on.
+The buzzer_off() function is a structure for turning the buzzer off.
+The buzzer_didi function is a structure for controlling the buzzer to sound
+multiple times.
+The buzzer_object_init(LEDObjectTypeDef *self) function initializes the buzzer
+object. In this function, the state of the state machine is set to
+BUZZER_STAGE_IDLE.
+When the buzzer state machine is in the idle mode, each time the buzzer task
+
+
+                                           5
+triggered by the buzzer timer will not perform any operation.
+
+6.3 Physical Implementation of Buzzer Operating Parameter
+
+
+
+
+Above is the buzzer.c file. It constructs a buzzer object and controls the buzzer
+based on the different buzzer state machines. When new data is retrieved from
+the buzzer message queue, the state machine is set to the beginning of a new
+work cycle. The buzzer is controlled accordingly.
+The new data obtained from the buzzer message queue are exactly the data
+stored in functions such as buzzer_on and buzzer_didi.
+
+
+
+
+                                         6
+

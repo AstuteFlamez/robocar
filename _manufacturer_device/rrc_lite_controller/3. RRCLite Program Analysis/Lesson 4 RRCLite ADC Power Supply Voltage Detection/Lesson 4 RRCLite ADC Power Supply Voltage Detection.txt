@@ -1,0 +1,151 @@
+  Lesson 4 RRCLite ADC Power Supply
+                        Voltage Detection
+1．Program Description
+
+This section primarily involves using the built-in ADC circuit in the STM32 main
+control board to read the battery voltage and output the voltage value via the
+serial port and OLED.
+
+
+
+
+2．Hardware Connection
+
+Connect the RRCLite controller to the PC via USB cable through serial port 1,
+and connect it to the OLED through the I2C interface. The hardware
+connection diagram is as follows:
+
+
+
+
+                                         1
+3．Program Download
+
+The example for this section is “RosRobotControllerLite_ros”.
+
+For specific download methods, refer to the document: "2. STM32
+Development Fundamentals/3. Project Compilation and Download".
+
+
+4．Program Outcome
+
+1) Serial port
+
+
+
+
+           (Note: The development board needs to be powered by PC with the USB cable)
+
+
+Open the serial assistant (located in "Appendix/3.Software/Serial Assistant").
+Find the serial port connected to the development board. It may not
+necessarily be COM4. Please select it based on actual conditions. Set it as
+follows:
+
+Baud Rate: 115200
+
+Data Bits: 8
+
+Parity: None
+
+
+                                                 2
+Stop Bits: 1
+
+Display Encoding Format: UTF-8
+
+After opening the serial port, you will see continuously refreshed data, where
+the data following "battery" is the battery voltage.
+
+2) OLED Display
+
+
+
+
+               (Note: The development board needs to be powered by the battery)
+
+
+
+
+5. Pin Configuration
+
+Use the STM32CubeMX software to view pin information. During program
+operation, the ADC conversion function of the pin will be enabled. The
+corresponding chip pin is: PB0
+
+
+
+                                                3
+6. Source Code Analysis
+
+The source code for this course is located in the same folder as this tutorial
+document, mainly analyzing the Hiwonder/System/app.c and
+Hiwonder/System/battery_handle.c files.
+
+6.1 Voltage Print Output
+
+
+
+
+The App.c file includes the user entry function app_task_entry(). The main
+programming flow is as follows:
+
+    Start the battery monitoring timer, which detects once every 50ms.
+
+    Then start the ADC conversion channel.
+
+    Finally, continuously print the battery voltage value.
+
+The external variable battery_volt stores the measured battery voltage value.
+
+                                          4
+Therefore, by reading this value, you can obtain the voltage.
+
+6.2 Reading Battery Voltage
+
+
+
+
+The battery_handle.c file contains the battery_check_timer_callback() function,
+which is the callback function for the battery monitoring timer and is entered
+every 50ms to read the voltage value. The ADC value read will be stored in the
+adc_value array. The program flow is as follows:
+
+    First, check if adc_value[] is an error read value.
+
+    If the read value is correct, calculate and convert the value to a voltage
+value and store it in the global variable battery_volt.
+
+    If incorrect, do nothing.
+
+    Start a new ADC value reading.
+
+The HAL_ADC_Start_DMA() function enables the DMA method for ADC
+reading:
+
+    HAL_StatusTypeDef HAL_ADC_Start_DMA ( ADC_HandleTypeDef* hadc,
+
+    uint32_t* pData ,    uint32_t Length )
+
+    Parameter 1: ADC handle
+
+    Parameter 2: Storage address of the ADC value
+
+    Parameter 3: Size of the ADC data
+
+
+                                           5
+This function allows the ADC value to be automatically stored in the storage
+address without needing the CPU.
+
+
+
+
+The collected voltage data will be stored in an external variable, which will be
+printed on the OLED screen in its processing function.
+
+
+
+
+                                          6
+

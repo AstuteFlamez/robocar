@@ -1,0 +1,86 @@
+      Startup Guide & Status Overview
+
+Turn on the expansion board and wait for approximately 1 minute. When LED1
+on the expansion board lights up blue and the buzzer emits a "beep" sound, it
+indicates that the ROS configuration is complete and the device has
+successfully started.
+Once the robot has fully powered on, LED2 will blink once every second, and a
+Wi-Fi hotspot prefixed with “HW” will be broadcast.
+The default network mode is AP (Access Point) direct connection. When
+connecting via the mobile app or remote desktop, use the password: hiwonder.
+You can now refer to the table below to verify the device status.
+
+
+        Module                     Check Steps                     Outcome
+                                                            Default AP (Access Point)
+
+                                                           mode: LED1 is steady on;
+  Expansion Board LEDs      Observe the status of the
+                                                              LED2 blinks once per
+                                        LEDs
+                                                                     second.
+
+                                                           A single beep indicates that
+
+                                                             the expansion board’s
+         Buzzer                 Listen for a beep sound
+                                                              onboard hardware is
+
+                                                              functioning normally.
+
+                            Observe for rotation a few      The lidar begins to rotate,
+          Lidar
+                             seconds after power-on.        indicating normal startup.
+
+                            1)     Open the mobile app        The live video feed is
+
+                                    and connect to the      displayed, and the pan-tilt
+Depth Camera / Monocular
+                                          robot.            mechanism responds to
+         Camera
+                           2)     Navigate to the "Robot   screen gestures (monocular
+
+                                   Control" interface to              only).
+
+
+                                           1
+                                  view the live camera
+
+                                         feed.
+
+                             3)   Drag the screen to
+
+                                   adjust the camera
+
+                                     pan-tilt angle
+
+                                  (monocular version
+
+                                         only).
+
+                            After powering on, use the    After powering on, use the
+
+                             wireless controller or the   wireless controller or the
+ Encoder Motors + STM32
+                              app’s "Robot Control"         app’s "Robot Control"
+        Controller
+                              function to operate the       function to operate the
+
+                                      robot.                        robot.
+
+
+Note:
+
+1) If the buzzer does not emit a beep, the onboard hardware—such as the
+    IMU or buzzer—may be malfunctioning. This issue is rare under normal
+    use. If it occurs, please contact our support team at
+    support@hiwonder.com.
+
+2) If the device’s Wi-Fi hotspot is not visible, check whether LED1 on the
+    expansion board is steadily lit and LED2 is flashing once per second.
+
+
+
+
+                                         2
+

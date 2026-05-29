@@ -35,6 +35,11 @@ phase_1_powertrain/ … phase_8_autonomy/
   wiring_diagram.md          cumulative ASCII schematic + checkable wire-by-wire list + pin tables
   bom.md                     just this phase's parts, with links (a slice of products_to_buy.md)
 _archive/original_plan/    the first-draft plan (DO NOT EDIT — superseded)
+_manufacturer_device/      VENDOR REFERENCE (read-only input, NOT source of truth) — as-shipped Hiwonder
+                           MentorPi M1: whole-robot hardware + device/interface map (mentorpi_m1_hardware.md),
+                           manufacturer robot PDFs (robot_reference/), and the RRC Lite controller docs +
+                           firmware (rrc_lite_controller/ — the board this project replaces). See its
+                           README.md for the layout; treat its numbers as claims to verify, not canon.
 ```
 
 Phase order builds cumulatively: 1 Powertrain → 2 Odometry/PID → 3 Teleop+Mecanum → 4 IMU/pose → 5 Camera/pan-tilt → 6 Lidar → 7 SLAM → 8 Autonomy. Each phase's wiring diagram shows the full system state *at the end of that phase*.

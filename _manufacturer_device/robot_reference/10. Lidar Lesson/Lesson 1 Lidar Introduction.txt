@@ -1,0 +1,176 @@
+                        Lidar Introduction
+1. Preface
+Lidar is a remote sensing technology that uses laser beams to detect target
+positions, velocities, and other characteristics. It has the advantages of high
+measurement resolution, strong penetration ability, strong anti-interference
+ability, and strong anti-stealth ability.
+According to the measurement principle, Lidar can be divided into three types:
+triangulation Lidar, pulse Lidar, and coherent Lidar. The Lidar equipped with
+MentorPi belongs to the pulse Lidar.
+
+
+
+
+2. Lidar Principle
+A Lidar system consists of a laser emission system, a scanning system, a laser
+reception system, and a signal processing system.
+First, the laser emission system emits a detection signal (laser beam) towards
+
+                                            1
+the target, while the scanning system is responsible for scanning the plane to
+obtain the plane map information.
+Next, the laser reception system receives the laser reflected from the target
+object and generates a reception signal.
+Finally, the signal processing system processes the reception signal to obtain
+the characteristics of the target surface, physical properties, and other features,
+such as target location, height, and speed. Then, complete the construction of
+the object model.
+
+
+
+3. Lidar Parameter
+The specifications of the Lidar used by MentorPi are as follows:
+
+3.1 Electrical and Mechanical Parameter
+    Parameter        Unit    Minimum       Typical   Maximum           Note
+                              value         value     value
+   Input voltage       V        4.5V           5V       5V
+   PWM control        20         30            50     Square
+  frequency KHz                                       signal
+  PWM high level       V         3             3         5
+  PWM low level        V        -0.3           0        0.5
+  PWM duty ratio      %          0             40       100        40% duty cycle
+                                                                    with scanning
+                                                                    frequency of
+                                                                        10Hz
+  Start-up current    mA          -            300       -
+ Working current      mA          -            180       -
+       Size           mm     54*46.29*
+                                34.8
+                              (length*
+                               width*
+                               height)
+       Wight           g          -            47        -          Connection
+                                                                   cables are not
+                                                                     included
+  Communication        -     UART@23
+    interface                  0400
+
+
+                                           2
+ UART high level      V        2.9          3.3      3.5
+  UART low level      V       -0.3           0       0.4
+   Drive motor        -      BLDC        BLDC
+     Working         ℃         -10          25       40
+   temperature
+     Storage         ℃         -30          25       70
+   temperature
+
+
+
+3.2 Optical Parameter
+    Parameter        Unit   Minimum     Typical   Maximum           Note
+                             value       value     value
+ Laser wavelength    nm        895          905     915           Infrared
+                                                                 wavelength
+   Laser power        W            -        25           -      Peak power of
+                                                               laser diode; the
+                                                                 actual power
+                                                                 used is much
+                                                                lower than this
+                                                                     value
+ Laser pulse width   ns            -         1           -
+Laser safety class    -     IEC-60825
+                              Class 1
+    Pitch angle       °         0           0.5          2
+
+
+
+3.3 Performance Parameter
+    Parameter        Unit   Minimum     Typical   Maximum          Note
+                             value       value     value
+ Measuring range      m       0.02          -       12          70% target
+                                                                 reflection
+                                                                coefficient
+Scanning frequency   Hz        5            10      13        External PWM
+                                                              speed control
+Ranging frequency    Hz        -         4500        -       Fixed frequency
+Ranging accuracy     mm        -            -        -       When the ranging
+                                                             is less than 0.3m,
+                                                               there is output
+                                                                     data.
+                                                                 The trend of
+                                                                   distance
+
+                                        3
+                                                             measurement data
+                                                             changes consistent
+                                                              with the trend of
+                                                               actual distance
+                                                                  changes.
+                       mm     - 45            -      45           When the
+                                                             measuring range is
+                                                              between 300mm
+                                                             and 12000mm, the
+                                                               average of 100
+                                                               measurements
+                                                                (70% diffuse
+                                                                  surface).
+ Ranging standard      mm       -             10      -          When the
+    deviation                                                measuring range is
+                                                              between 300mm
+                                                               and 12000mm
+  Measurement          mm       -             15      -
+   resolution
+    Angle error         °       -             -       2
+ Angle resolution       °       -             1       -
+Anti-environmental     KLux     -             -      30
+ light interference
+ Service life of the    h     10000           -       -
+      device
+
+
+
+3.4 Interface Instruction and Communication Protocol
+LD19 uses ZH1.5T-4P 1.5mm connector to connect with external systems for
+power supply and data reception. The specific interface definition and
+parameter are shown in the table below:
+
+
+
+
+                                          4
+ No.   Signal     Type     Description     Minimum    Typical      Maximum
+                                            value      value        value
+  1      Tx      Output     Lidar data         0V      3.3V          3.5V
+                              output
+  2     PWM       Input    Motor control       0V        -           3.3V
+                              signal
+  3     GND      Power     Power supply         -       0V             -
+                 supply      negative
+                             terminal
+  4     P5V      Power     Power supply        4.5V     5V           5.5V
+                 supply      positive
+                             terminal
+
+
+
+3.5 Serial Specification
+You can connect the Lidar to external systems through its physical interface.
+By following the communication protocol of the system, you can obtain
+real-time point cloud data, device information and device status from the laser
+scanning, and can also set the device working mode.
+
+
+
+
+                                           5
+Baud      Data     Stop Bit       Parity Bit   Flow Control
+Rate     Length
+230400    8 Bits      1             None          None
+
+
+
+
+                              6
+

@@ -1,0 +1,153 @@
+Bus Servo ID Writing and Source Code
+              Analysis
+1. Servo Description
+
+It is an automatic control system composed of a DC motor, reduction gears, a
+sensor, and control circuitry, which specifies the rotation angle of the output
+shaft by sending signals.
+
+Differences between a servo and a motor:
+
+A servo generally has a maximum rotation angle, while a DC motor rotates
+continuously. Therefore, a servo can only rotate within a certain angle and
+cannot rotate continuously like a DC motor. A regular DC motor cannot provide
+feedback on its rotation angle, whereas a servo can. Digital servos can switch
+between servo mode and motor mode.
+
+
+
+
+2. Serial Bus Servo
+
+A regular DC motor typically rotates continuously to provide power, while a
+servo is used to control the rotation of an object to a specific angle.
+
+A bus servo is a derivative of a digital servo that communicates via an
+asynchronous serial bus, meaning it can be controlled by sending and
+receiving command packets, forming a closed-loop control system. Due to this
+feature, bus servos can be daisy-chained, making wiring simpler and reducing
+the use of serial ports. Because of this, when connecting bus servos, each
+servo's ID must be set in advance, or they cannot be individually controlled.
+
+Bus servos use high-precision potentiometers internally, and unlike PWM
+servos, they can provide feedback on position, temperature, voltage, and other
+
+                                          1
+information. Their accuracy and linearity are excellent, resulting in more stable
+robot operation and significantly extending the servo's lifespan.
+
+Additionally, before assembling the servo, it must be set to its midpoint position.
+The servo midpoint refers to its initial position, considered the "zero point" from
+which it rotates to positive and negative angles. Therefore, the servo must be
+adjusted to the midpoint before being installed onto the servo horn.
+
+This is because, during rotation, the moving parts drive the potentiometer. The
+software assumes the midpoint as the "zero point"; otherwise, the
+potentiometer might enter a "blind spot," causing the entire component to
+malfunction. Consequently, when using the robot, the specified angles may not
+be achieved, or the corresponding action sets may not match.
+
+
+
+
+3. Procedure
+
+1) We notice that the program defaults to setting the bus servo ID as 1, but
+    this ID can be changed to other numbers.
+
+
+
+2) We can change the ID number to 5.
+
+
+
+
+3) After recompiling and burning the program, connect the servo debugging
+    board to the computer's serial port. Open the Bus Servo Terminal software
+
+         , select the communication port, for example, COM15, click on
+    parameter settings, and upon reading, it will show the ID number as 5,
+    indicating that the ID has been successfully set.
+
+
+
+
+                                          2
+           2.5ms ---------- 180 degrees
+
+
+
+
+4. Code Analysis
+
+File locations: Hiwonder/app.c    void app_task_entry(void *argument)
+Function
+
+
+
+
+At the beginning of the program, it initializes the hardware peripherals and
+creates relevant variables.
+
+
+
+
+                                          3
+It reads the ID of the servo connected to the bus. Only one servo can be
+connected to the bus to prevent conflicts. If the servo is successfully read, the
+program returns 0 and controls the servo to move to angle 0 (0*0.24°=0°), and
+then exits the loop. Otherwise, the program will be stuck in this loop and report
+an error log.
+
+
+
+
+Set new ID for the servo and print it to the serial port.
+
+
+
+
+After setting, the program reads the servo's ID again to verify that the new ID
+has been successfully written. If the read fails, the program will be stuck in this
+loop. If the read is successful, the program compares the read new ID with the
+preset new ID. If they are the same, the write is successful. Otherwise, the
+write fails, and the program is stuck in the next loop.
+
+If the write is successful, the program controls the servo to move to angle 750
+(750*0.24°=180°) with its new ID.
+
+
+
+
+After that, the program stops the servo's movement and completes its mission.
+It releases system resources in the for loop.
+
+The serial_servo_set_id() function in the Hiwonder/serial_servo.c file is used
+to modify the ID of a specific servo from old_id to new_id. The servo ID is sent
+                                           4
+to the servo through a serial data frame defined by the buf[] array.
+
+
+
+
+The serial_servo_set_position() function sets the position and duration of the
+servo's movement. The specific position and duration information is sent to the
+servo through a serial data frame defined by the buffer[] array.
+
+
+
+
+The serial_servo_stop() function sends a control command to stop the servo
+through the serial port.
+
+The execution flow is as follows:
+(1) Define a buffer to store the sent data frame.
+(2) Fill in the content of the data frame: frame header, servo ID, data length,
+stop servo, checksum, and finally send the data frame through the serial port.
+
+
+
+
+                                          5
+6
+

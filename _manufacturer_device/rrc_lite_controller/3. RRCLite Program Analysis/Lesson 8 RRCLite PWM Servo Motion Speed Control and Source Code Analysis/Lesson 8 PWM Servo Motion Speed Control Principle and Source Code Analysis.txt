@@ -1,0 +1,127 @@
+  Lesson 8 RRCLite PWM Servo Motion
+   Speed Control Principle and Source
+            Code Analysis
+1．PWM Servo Description
+A servo is a common motor drive device used to control the position, speed,
+and acceleration in a mechanical system. It typically consists of a motor, a
+control circuit, and a feedback system.
+In terms of type, servos can be categorized into analog servos, PWM (pulse
+width modulation) servos, and bus servos. This section mainly focuses on
+PWM servos.
+PWM servos use pulse width modulation signals to control the angular position
+of the servo.
+In simple terms, a PWM servo controls the angular position by varying the
+pulse width of the signal. The range of the pulse width determines the extreme
+angular positions of the servo, while the period of the control signal determines
+the refresh frequency of the signal. By adjusting the duration of the pulse width,
+precise control of the servo position can be achieved.
+PWM achieves a level state between 0 and 1, meaning that when PWM is
+output, the voltage can be any value between 0 and 3.3V/5V.
+When using PWM control, it is essential to know two parameters of the object
+being controlled:
+Its PWM frequency (corresponding to the timer cycle)
+Its operating pulse width (corresponding to the PWM duty cycle)
+The control signal enters the signal modulation chip from the receiver channel
+to obtain a DC bias voltage. Inside, a reference circuit generates a reference
+signal with a period of 20ms and a width of 1.5ms. The obtained DC bias
+voltage is compared with the voltage of the potentiometer to produce a voltage
+
+                                          1
+difference output. Finally, the positive and negative outputs of the voltage
+difference are sent to the motor driver chip to determine the motor's forward
+and reverse rotation. When the motor speed is constant, the potentiometer is
+driven to rotate through the cascade reduction gear, ensuring the voltage
+difference becomes zero, and the motor stops rotating.
+
+
+
+2．Wiring Method:
+
+2.1 Required Stuffs:
+1. stm32 controller
+2. LD-1501MG digital servo
+
+2.2 Connection Instructions
+1. The diagram below shows the reserved interface J3 provided by the STM32
+main control board for the PWM servo.
+
+
+
+
+The reserved interface for PWM servos is J3, as shown below. There are two
+power supply options for the servo: VBAT (battery voltage) and 5V (+), as
+indicated by the green box in the diagram.
+                                        2
+2. Connect the servo's 3-pin cable to the corresponding J2 interface, as
+shown below:
+The connection method is as follows:
+White -> Signal line (SUBS)
+Red -> Power supply (+5V)
+Black -> Ground (−)
+
+
+
+
+3. Select the 5V power supply for J2 and connect the 5V pin with the middle
+pin on J2 using a jumper cap, as shown in the diagram below.
+
+
+
+
+                                        3
+Attention: The servo motor must be connected according to the positions shown in the
+
+document diagram. Avoid connecting it incorrectly or mistakenly to prevent burning out the
+
+motor. Our company will not take any responsibility!!!
+
+
+
+
+3．Program Download
+The sample program is 'RosRobotControllerLite_ros'.
+After downloading the program (refer to '2. STM32 Development
+Fundamentals/Lesson 3 Project Compilation and Download' for details on how
+to download the program), you need to press the RESET button to reset the
+microcontroller, which will then start executing the new program.
+
+
+
+4．Program Outcome
+After pressing reset, the servo will first initialize to 90°, then move to 0°, and
+finally rotate to 180° at a speed of 60 degrees per second.
+
+
+
+5．Code Analysis
+This program is only for speed control. For detailed PWM servo control
+                                               4
+routines, please refer to “Lesson 7 RRCLite PWM Servo Control Principle and
+Source Code Analysis”.
+
+
+
+
+The program is located in the app.c file under /Hiwonder/System.
+The pwm_servo_set_position() function controls the rotation of the servo. The
+required parameters are defined as follows:
+Parameter 1: Servo object
+Parameter 2: Target angle of the servo
+Parameter 3: Movement time
+The rotation speed can be obtained by dividing the rotation angle by the
+movement time. The program logic is as follows:
+①Initialize the servo;
+②Set the servo to a known initial angle;
+③Delay to allow the servo to complete the movement. The delay time must be
+greater than or equal to the movement time of the servo, otherwise, the servo
+cannot reach the target position.
+④Move the servo to the target angle and specify the movement time.
+⑤Delay to allow the servo to complete the movement.
+The servo movement speed can be calculated by dividing the known angle
+difference by the movement time.
+
+
+
+
+                                           5
+

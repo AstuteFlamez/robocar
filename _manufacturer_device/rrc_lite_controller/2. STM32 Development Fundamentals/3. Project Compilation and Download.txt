@@ -1,0 +1,149 @@
+       Project Compilation & Download
+1. Project Compilation
+Once the program is written, we need to compile it into machine language for
+execution on the embedded system. Keil5 comes with a built-in compiler that
+can translate program source code into executable files. The compiler can
+generate different target files based on different processor architectures and
+instruction sets. Additionally, the compiler can optimize the code to produce
+more efficient and stable executable files. The process of project compilation
+involves the following steps:
+1) Open the option to generate the hex file in settings:
+In the Keil5 software interface menu bar, click on the 'Project' option, then click
+on the 'Options for File 'app.c'' button.
+
+
+
+
+                                            1
+Click on the "OutPut" option, tick the three red options below, and then click
+"OK".
+
+
+
+
+2) In the Keil5 software interface menu bar, click on the "Project" option, then
+select "Build Target" from the drop-down menu that appears to compile the
+project, as shown in the figure below:
+
+
+
+
+You can also compile by clicking on the corresponding icon on the toolbar, as
+shown in the figure below:
+                                         2
+The following message appeared in the "Build Output" window at the bottom
+of the software, indicating a successful compilation.
+
+
+
+
+Note: If the "Build Output" window displays error message(s) after compiling the project, it
+
+is necessary to double-click on the corresponding line to navigate to the relevant position
+
+and make corrections. Afterward, compile again. If there are warning message(s), these
+
+can be ignored.
+
+
+
+
+2. USB Download
+After compiling the project, you can download the generated hex file to the
+STM32 main control board. The following software and hardware materials are
+required.
+
+2.1 Software & Hardware Preparation
+Software: mcuisp (included in the attachments). For specific installation
+instructions, please refer to "Appendix/Software Installation".
+
+
+
+
+Hardware: Type-C cable and STM32 controller
+
+2.2 Download Steps
+1. Type-C to USB cable is used to connect the computer and the STM32
+main control board (hereinafter referred to as Type-C cable).
+
+                                               3
+2. STM32 Controller
+The specific operation steps are as follows, with the programmed named
+"Blinking LED":
+（1）Hardware Connection:
+Insert the Type-C cable into the Type-C port (UART1) of the STM32 main
+control board and connect it to the USB port of the computer.
+
+
+
+
+                                  [UART1]
+
+
+
+
+                                        4
+                                [power supply]
+
+
+（2）Basic Configuration:
+Open the mcuisp software, click on "Search Serial Port" in the menu bar at
+the top of the software, then set the baud rate (bps) to 115200.
+
+
+
+
+Click on the "STMISP" option in the software interface.
+
+
+
+
+Select "DTR low level reset, RTS high level to enter BootLoader" at the
+bottom.
+
+                                         5
+（3）Software Burning:
+Click on the button inside the red box in the mcuisp software interface, and
+select the hex file that needs to be burned.
+
+
+
+
+Return to the previous interface and click on the "Start ISP" button to burn the
+generated hex file onto the STM32 main control board.
+
+
+
+
+Burning in progress
+
+
+
+
+                                         6
+If the sidebar displays the following image, it indicates that the burning process
+is complete.
+Note: The STM32 main control board comes with pre-loaded software (resulting in LED1
+
+blinking blue every 1 second). If you need to burn the PS2 joystick control program, you
+
+can find the RosRobotControllerM4.hex file in the 'Chapter 1: Introduction to the Car
+
+Hardware and Usage / Section 2: PS2 Joystick Remote Control / Program /
+
+rosrobotcontrollerm4_motor_ps2 / MDK-ARM / RosRobotControllerM4' folder for burning.
+
+
+
+
+If burning fails, refer to the 'Troubleshooting Guide' document in the 'Appendix'
+folder for assistance.
+Note: To avoid any abnormal occurrences during the burning process, users should follow
+
+the steps in sequence carefully!!!
+
+
+
+
+                                              7
+

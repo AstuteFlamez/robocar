@@ -1,0 +1,30 @@
+                   MentorPi Introduction
+1. Product Introduction
+MentorPi is a ROS2 robot powered by the Raspberry Pi 5. It comes in two
+variants: MentorPi-M1, which features a Mecanum-wheel chassis, and
+MentorPi-A1, equipped with an Ackermann chassis. Both models are built with
+high-performance hardware, including a TOF Lidar and a 3D depth camera,
+enabling advanced functionalities such as mapping, navigation, path planning,
+image recognition, vision tracking, and human-robot interaction.
+
+
+
+
+2. Packing List
+Note: The following packing list uses the Mecanum wheel version (M1) as an example.
+
+The listed accessories are also compatible with the Ackermann version (A1).
+
+MentorPi M1 (Depth camera version)
+
+
+
+
+                                             1
+MentorPi M1 (Monocular camera version)
+
+
+
+
+                                    2
+

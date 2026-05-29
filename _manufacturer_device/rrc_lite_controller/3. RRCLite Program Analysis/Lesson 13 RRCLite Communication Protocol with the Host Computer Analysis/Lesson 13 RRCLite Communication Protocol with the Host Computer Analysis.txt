@@ -1,0 +1,1338 @@
+ RRCLite Communication Protocol with
+     the Host Computer Analysis
+1. Description
+This chapter mainly analyzes the communication protocol between the
+RRCLite development board and the host computer (ROS package), laying the
+foundation for subsequent learning about the host computer.
+
+
+
+2. Communication Protocol
+Common instruction examples can be found in: Common Communication
+Instruction Examples
+Instructions are written in hexadecimal. If you are not familiar with the
+calculation method, you can refer to: Using a calculator tool for hexadecimal
+conversion. For converting negative numbers and floating-point numbers to
+hexadecimal, please search for online tutorials.
+Instruction format:
+Frame Header     Function Code     Data Length       Parameter        Checksum
+
+                      （uint8_t）     （uint8_t）                        （uint8_t）
+ 0xAA 0x55                                             Data
+                       Function       Length                            CRC
+
+   Frame Header: Continuous reception of 0xAA, 0x55 indicates the arrival of
+a data packet.
+   Function Code: Used to indicate the purpose of an information frame.
+   Data Length: Number of parameters.
+   Parameters: Additional control information other than function instructions.
+   Checksum: Verifies the correctness of the data using CRC checksum
+method (CRC calculation of Function, Length, and Data values, taking the
+lower 8 bits).
+
+
+
+                                          1
+    2.1 User-Initiated Data Transmission to the Control Board
+
+    Section
+    The development board already has a dedicated UART to USB circuit, so
+    communication only requires connecting the UART1 port to the host computer
+    using a data cable.
+    1. LED control: Instruction name PACKET_FUNC_LED, value 1
+  Frame                                Data
+                  Function Code                                 Parameter                 Checksum
+ Header                                Length
+
+                                                    Parameter 1:（uint8_t）led_id
+
+                                                    Parameter 2: （ uint16_t ） light-on
+
+                                                    duration(ms)
+
+0xAA 0x55       PACKET_FUNC_LED          7          Parameter 3: （ uint16_t ） light-off     CRC
+
+                                                    duration(ms)
+
+                                                    Parameter 4:（uint16_t）number of
+
+                                                    cycles
+
+    Example:
+    1     Control the LED to blink 5 times, with each cycle having the light on
+    for 100ms and off for 100ms:
+        Frame                                Data
+                       Function Code                           Parameter           Checksum
+        Header                               Length
+
+                                                        Parameter 1: 0x01（1）
+
+                                                        Parameter 2: 0x64 0x00
+
+                                                        （100）
+
+    0xAA 0x55       PACKET_FUNC_LED             7       Parameter 3: 0x64 0x00        CRC
+
+                                                        （100）
+
+                                                        Parameter 4: 0x05 0x00
+
+                                                        （5）
+
+    Note: This is little-endian mode. For example, the uint32_t value 5 (decimal) is
+
+                                                    2
+   written as 0x00 0x05. In little-endian mode, the least significant byte comes
+   first, so when sending data, it should be written as 0x05 0x00.
+    2     Control the LED to blink 10 times, with each cycle having the light on
+   for 500ms and off for 300ms
+        Frame                             Data
+                       Function Code                              Parameter      Checksum
+        Header                           Length
+
+                                                         Parameter 1：0x01（1）
+
+                                                         Parameter 2：0xF4 0x01
+
+                                                         （500）
+
+    0xAA 0x55       PACKET_FUNC_LED           7          Parameter 3：0x2C 0x01     CRC
+
+                                                         （300）
+
+                                                         Parameter 4：0x0A 0x00
+
+                                                         （10）
+
+   2. Buzzer control: Instruction name PACKET_FUNC_BUZZER, value 2
+  Frame                                 Data
+                    Function Code                                  Parameter           Checksum
+ Header                                 Length
+
+                                                      Parameter 1：
+                                                                 （uint16_t）frequency
+
+                                                      (Hz)
+
+                                                      Parameter 2：（uint16_t）beeping
+
+                                                      duration(ms)
+0xAA 0x55       PACKET_FUNC_BUZZER        8                                              CRC
+                                                      Parameter 3 ： （ uint16_t ）
+
+                                                      no-beeping duration(ms)
+
+                                                      Parameter 4：（uint16_t）number
+
+                                                      of cycles
+
+   Example：
+   ①Control the buzzer to sound 5 times, with a frequency of 1400Hz, each
+   lasting for 100ms followed by a 100ms pause
+        Frame           Function Code             Data             Parameter     Checksum
+
+
+                                                  3
+  Header                             Length
+
+                                               Parameter 1 ： 0x78
+
+                                               0x05（1400）
+
+                                               Parameter 2 ： 0x64
+
+                                               0x00（100）
+0xAA 0x55   PACKET_FUNC_BUZZER            8                           CRC
+                                               Parameter 3 ： 0x64
+
+                                               0x00（100）
+
+                                               Parameter 4 ： 0x05
+
+                                               0x00（5）
+
+
+
+②Control the buzzer to sound 10 times, with a frequency of 1000Hz, each
+lasting for 500ms followed by a 300ms pause.
+  Frame                               Data
+                 Function Code                     Parameter        Checksum
+  Header                             Length
+
+                                               Parameter 1 ： 0xE8
+
+                                               0x03（1000）
+
+                                               Parameter 2 ： 0xF4
+
+                                               0x01（500）
+0xAA 0x55   PACKET_FUNC_BUZZER            8                           CRC
+                                               Parameter 3 ： 0x2C
+
+                                               0x01（300）
+
+                                               Parameter 4 ： 0x0A
+
+                                               0x00（10）
+
+
+
+3. Encoder motor control: Instruction name PACKET_FUNC_MOTOR,
+value 3
+(1) Control Single Motor
+Frame                              Data
+               Function Code                        Parameter             Checksum
+Header                            Length
+
+
+                                      4
+                                                 Parameter 1：（uint8_t）0x00
+
+                                                 （subcommand）
+ 0xAA
+           PACKET_FUNC_MOTOR          6          Parameter 2：
+                                                            （uint8_t）motor_id         CRC
+ 0x55
+                                                 Parameter 3 ： （ float ） speed
+
+                                                 value（positive and negative）
+
+(Note: float type is 4 bytes)
+Example: Control motor 1 to rotate at -1r/s speed:
+   Frame                                  Data
+                   Function Code                              Parameter       Checksum
+  Header                              Length
+
+                                                         Parameter 1：0x00
+
+                                                         Parameter 2：0x01
+0xAA 0x55     PACKET_FUNC_MOTOR             6                                   CRC
+                                                         Parameter 3 ： 0x00
+
+                                                         0x00 0x80 0xBF（-1）
+
+(2) Control Multiple Motors
+Frame                              Data
+               Function Code                                 Parameter          Checksum
+Header                             Length
+
+                                                Parameter 1：（uint8_t）0x01
+
+                                                （subcommand）
+
+                                                Parameter 2：（uint8_t）motor
+
+                                                quantity
+
+                                                Parameter 3 ： （ uint8_t ）
+
+0xAA                                            motor_id_1
+           PACKET_FUNC_MOTOR       5N+2                                           CRC
+ 0x55                                           Parameter 4：
+                                                           （float）speed _1
+
+                                                ······
+
+                                                Parameter 2N+1：（uint8_t）
+
+                                                motor_id_N
+
+                                                Parameter 2N+2：
+                                                              （float）speed
+
+                                                _N
+
+
+                                           5
+                                                （      Format          reference
+
+                                                parameters 3, 4）
+
+(Note: float type is 4 bytes)
+Example:
+Control motor 1 and motor 2 to rotate at speeds of -1r/s and 2r/s respectively:
+  Frame                                Data
+                   Function Code                           Parameter           Checksum
+  Header                              Length
+
+                                                    Parameter 1 ： 0x01
+
+                                                    （subcommand）
+
+                                                    Parameter 2：0x02
+
+                                                    Parameter 3：0x01
+
+0xAA 0x55    PACKET_FUNC_MOTOR            12        Parameter 4 ： 0x00             CRC
+
+                                                    0x00 0x80 0xBF（-1）
+
+                                                    Parameter 5：0x02
+
+                                                    Parameter 6 ： 0x00
+
+                                                    0x00 0x00 0x40（+2）
+
+（3）Control Single Motor to Stop
+Frame                                Data
+                Function Code                              Parameter               Checksum
+Header                              Length
+
+                                                Parameter 1：（uint8_t）0x02
+
+0xAA                                            （subcommand）
+           PACKET_FUNC_MOTOR          2                                              CRC
+ 0x55                                           Parameter 2 ： （ uint8_t ）
+
+                                                motor_id
+
+Example:
+Control motor 1 to stop:
+  Frame                                Data
+                  Function Code                            Parameter           Checksum
+  Header                              Length
+
+   0xAA      PACKET_FUNC_MOTOR            2         Parameter 1 ： 0x02             CRC
+
+
+                                            6
+         0x55                                           （subcommand）
+
+                                                        Parameter 2：0x01
+
+   （4）Control several motors to stop:
+
+   Frame                                Data
+                   Function Code                               Parameter             Checksum
+   Header                             Length
+
+                                                      Parameter 1 ： (uint8_t) 0x03
+
+   0xAA                                               （subcommand）
+                PACKET_FUNC_MOTOR         2                                            CRC
+    0x55                                              Parameter 2：(uint8_t) motor
+
+                                                      mask
+
+   Example:
+   Control motor 1 and motor 3 to stop:
+                                          Data
+    Frame                                                                                 Chec
+                    Function Code         Lengt                     Parameter
+   Header                                                                                 ksum
+                                              h
+
+                                                       Parameter 1：0x03 (mode)
+
+ 0xAA 0x55       PACKET_FUNC_MOTOR            2        Parameter 2 ： 0x05 (Binary         CRC
+
+                                                       00000101)
+
+
+
+   4. PWM servo control：instruction name PACKET_FUNC_PWM_SERVO，
+   value 4
+   （1）Control several PWM servos
+Frame                                      Data
+                  Function Code                                      Parameter             Checksum
+Header                                    Length
+
+                                                         Parameter 1 ： (uint8_t) 0x01
+
+                                                         (subcommand)
+0xAA
+            PACKET_FUNC_PWM_SERVO          3N+4          Parameter 2：(uint16_t) motion       CRC
+ 0x55
+                                                         time(ms)
+
+                                                         Parameter 3 ： (uint8_t) number
+
+
+                                                  7
+                                                    of servo
+
+                                                    Parameter 4：(uint8_t)
+
+                                                    servo_id_1
+
+                                                    Parameter 5: (unit16_t) pulse
+
+                                                    width
+
+                                                    ······
+
+                                                    Parameter 2N+2：(uint8_t)
+
+                                                    servo_id_N
+
+                                                    Parameter 2N+3：(uint16_t)
+
+                                                    pulse width
+
+ Example: Control servo 1 and servo 2 to rotate to 90° and 180° respectively,
+ corresponding to pulse widths of 1500 and 2500, within 2 seconds:
+
+Frame                                        Data
+                 Function Code                                  Parameter           Checksum
+Header                                   Length
+
+                                                       Parameter 1：0x01
+
+                                                       (subcommand)
+
+                                                       Parameter 2：0xD0 0x07
+
+                                                       (2000)
+
+                                                       Parameter 3：0x02 (the
+
+                                                       number of servos to be
+0xAA
+         PACKET_FUNC_PWM_SERVO               10        controlled)                    CRC
+ 0x55
+                                                       Parameter 4: 0x01 (1)
+
+                                                       Parameter 5：0xDC 0x05
+
+                                                       (1500)
+
+                                                       Parameter 6：0x02 (2)
+
+                                                       Parameter 7：0xC4 0x09
+
+                                                       (2500)
+
+ （2）Control single PWM servo
+
+
+                                         8
+Frame                                     Data
+                 Function Code                                      Parameter        Checksum
+Header                                   Length
+
+                                                         Parameter 1：
+                                                                    （uint8_t）0x03
+
+                                                         （subcommand）
+
+                                                         Parameter 2：（uint16_t）
+
+ 0xAA                                                    motion time(ms)
+         PACKET_FUNC_PWM_SERVO              6                                          CRC
+ 0x55                                                    Parameter 3 ： （ uint8_t ）
+
+                                                         servo_id
+
+                                                         Parameter 4：（uint16_t）
+
+                                                         pulse width
+
+    The pulse width ranges from [500, 2500], corresponding to [0°, 180°].
+    Example:
+    Control servo 1 to rotate to the 90° position within 1 second, with a pulse width
+    of 1500:
+    Frame                                           Data                               Check
+                       Function Code                                    Parameter
+    Header                                      Length                                    sum
+
+                                                              Parameter     1 ： 0x03
+
+                                                              （subcommand）
+
+                                                              Parameter 2：0xE8 0x03
+               PACKET_FUNC_PWM_SERV
+  0xAA 0x55                                          6        （1000）                      CRC
+                             O
+                                                              Parameter 3：0x01（1）
+
+                                                              Parameter 4：0xDC 0x05
+
+                                                              （1500）
+
+
+
+    （3）Read PWM servo position
+Frame                                     Data                                             Checks
+                 Function Code                                         Parameter
+Header                                   Length                                              um
+
+0xAA     PACKET_FUNC_PWM_SERVO              2            Parameter 1 ： （ uint8_t ） 0x05     CRC
+
+
+                                                9
+ 0x55                                                （subcommand）
+
+                                                     Parameter 2：（uint8_t）servo_id
+
+    After sending the command to read the position, the control board will send the
+    position data of the corresponding PWM servo with the ID to the host
+    computer."
+    （4）Set PWM Servo Deviation
+Frame                                    Data                                           Checks
+                  Function Code                                  Parameter
+Header                                  Length                                           um
+
+                                                     Parameter 1 ： （ uint8_t ） 0x07
+
+                                                     （subcommand）
+
+                                                     Parameter 2：（uint8_t）servo_id
+ 0xAA
+            PACKET_FUNC_PWM_SERVO          3         Parameter 3：（uint8_t）deviation      CRC
+ 0x55
+                                                     parameter
+
+                                                     （ Convert to int8_t type, valid
+
+                                                     range is -100 to +100）
+
+    Example:
+    Set the offset of servo 2 to +10
+   Frame                                      Data                                   Check
+                    Function Code                                Parameter
+   Header                                  Length                                      sum
+
+                                                       Parameter     1   ：    0x07
+
+   0xAA                                                （subcommand）
+             PACKET_FUNC_PWM_SERVO              3                                      CRC
+    0x55                                               Parameter 2：0x02（2）
+
+                                                       Parameter 3：0x0A（10）
+
+
+
+    （5）Read PWM Servo Deviation
+Frame                                    Data                                           Checks
+                 Function Code                                   Parameter
+Header                                  Length                                           um
+
+0xAA       PACKET_FUNC_PWM_SERVO          2          Parameter 1 ： （ uint8_t ） 0x09      CRC
+
+
+                                              10
+0x55                                             （subcommand）
+
+                                                 Parameter 2：（uint8_t）servo_id
+
+   After sending the command to read the position, the control board will send the
+   offset data of the corresponding PWM servo with the ID to the host computer.
+
+
+   5. Serial bus servo control: Instruction name
+   PACKET_FUNC_BUS_SERVO，value 5
+   （1）Control serial bus servo to move
+  Frame                                  Data
+                  Function Code                             Parameter         Checksum
+ Header                                 Length
+
+                                                 Parameter 1：
+                                                            （uint8_t）0x01
+
+                                                 （subcommand）
+
+                                                 Parameter 2 ： （ uint16_t ）
+
+                                                 motion time(ms)
+
+                                                 Parameter 3：
+                                                            （uint8_t）servo
+
+                                                 quantity
+
+                                                 Parameter 4 ： （ uint8_t ）
+  0xAA
+           PACKET_FUNC_BUS_SERVO         3N+4    servo_id_1                      CRC
+  0x55
+                                                 Parameter 5 ： （ uint16_t ）
+
+                                                 Pulse width
+
+                                                 ······
+
+                                                 Parameter 2N+1：（uint8_t）
+
+                                                 servo_id_N
+
+                                                 Parameter 2N+2：
+                                                               （uint16_t）
+
+                                                 Pulse width
+
+   Example:
+   Control bus servo 1 and servo 2 to rotate to 200° and 240° respectively,
+   corresponding to pulse widths of 833 and 1000, within 1 second:
+
+
+                                           11
+ Frame                                   Data
+                  Function Code                          Parameter         Checksum
+ Header                                 Length
+
+                                                   Parameter   1 ： 0x01
+
+                                                   （subcommand）
+
+                                                   Parameter 2：0xE8 0x03
+
+                                                   （1000）
+
+                                                   Parameter 3：0x02（2）
+  0xAA
+          PACKET_FUNC_BUS_SERVO             10     Parameter 4：0x01（1）       CRC
+  0x55
+                                                   Parameter 5：0x41 0x03
+
+                                                   （833）
+
+                                                   Parameter 4：0x02（2）
+
+                                                   Parameter 5：0xE8 0x03
+
+                                                   （1000）
+
+ （2）Read position command
+                                       Data
+Frame                                                                             Chec
+                Function Code         Lengt                Parameter
+Header                                                                            ksum
+                                        h
+
+                                                 Parameter 1 ： （ uint8_t ） 0x05
+0xAA      PACKET_FUNC_BUS_SERV
+                                        2        （subcommand）                     CRC
+ 0x55                 O
+                                                 Parameter 2：（uint8_t）servo_id
+
+ After sending the command to read the position, the control board will send the
+ position data of the corresponding bus servo with the ID to the host computer.
+ （3）Read the input voltage command
+                                       Data
+Frame                                                                             Chec
+                Function Code         Lengt                Parameter
+Header                                                                            ksum
+                                        h
+
+0xAA      PACKET_FUNC_BUS_SERV                   Parameter 1 ： （ uint8_t ） 0x07
+                                        2                                         CRC
+ 0x55                 O                          （subcommand）
+
+
+                                         12
+                                                Parameter 2：（uint8_t）servo_id
+
+   After sending the command to read the input voltage, the control board will
+   send the input voltage data of the corresponding bus servo with the ID to the
+   host computer.
+   （4）Read temperature command
+                                         Data
+ Frame                                                                             Checks
+                    Function Code       Lengt             Parameter
+ Header                                                                             um
+                                          h
+
+                                                Parameter 1 ： （ uint8_t ） 0x09
+  0xAA      PACKET_FUNC_BUS_SERV
+                                          2     （subcommand）                        CRC
+  0x55                   O
+                                                Parameter 2：（uint8_t）servo_id
+
+   After sending the command to read the temperature, the control board will
+   send the temperature data of the corresponding bus servo with the ID to the
+   host computer.
+
+
+   （5）Motor power-off command
+                                         Data
+ Frame                                                                             Chec
+                    Function Code       Lengt             Parameter
+ Header                                                                            ksum
+                                          h
+
+                                                Parameter 1 ： （ uint8_t ） 0x0B
+  0xAA      PACKET_FUNC_BUS_SERV
+                                          2     （subcommand）                       CRC
+  0x55                   O
+                                                Parameter2：（uint8_t）servo_id
+
+   After sending the command to unload power, the control board will unload the
+   power of the corresponding bus servo with the ID.
+
+
+   （6）Motor power-on command
+Frame                                   Data                                       Chec
+                Function Code                             Parameter
+Header                                 Length                                      ksum
+
+
+                                           13
+                                                     Parameter 1 ： （ uint8_t ） 0x0C
+ 0xAA
+         PACKET_FUNC_BUS_SERVO              2        （subcommand）                     CRC
+ 0x55
+                                                     Parameter 2：（uint8_t）servo_id
+
+   After sending the command to load power, the control board will load power to
+   the corresponding bus servo with the ID.
+
+
+   （7）ID writing command
+Frame                                     Data                                        Chec
+                Function Code                                   Parameter
+Header                                   Length                                       ksum
+
+                                                     Parameter1:（uint8_t）0x10
+
+0xAA                                                 （subcommand）
+         PACKET_FUNC_BUS_SERVO              3                                         CRC
+ 0x55                                                Parameter 2:（uint8_t）servo_id
+
+                                                     Parameter3:（uint8_t）save_id
+
+   After sending the ID write command, the control board will overwrite the ID
+   number of the corresponding bus servo.
+
+
+   （8）ID reading command
+
+Frame                                     Data                                        Chec
+                Function Code                                   Parameter
+Header                                   Length                                       ksum
+
+                                                     Parameter1 ： （ uint8_t ） 0x12
+
+ 0xAA                                                （subcommand）
+         PACKET_FUNC_BUS_SERVO              2                                         CRC
+ 0x55                                                Parameter2 ： （ uint8_t ） 0xFE
+
+                                                     （Broadcast Query）
+
+   After sending the ID read command, the control board will upload the ID
+   number of the bus servo to the host computer.
+   Note: There can only be one bus servo here. Otherwise, multiple bus servos
+
+   returning data simultaneously will cause bus conflicts.
+
+
+
+
+                                                14
+   （9）Deviation adjusting command
+Frame                                   Data                                         Chec
+                Function Code                                 Parameter
+Header                                 Length                                       ksum
+
+                                                   Parameter 1 ： （ uint8_t ） 0x20
+
+                                                   （subcommand）
+0xAA
+         PACKET_FUNC_BUS_SERVO            3        Parameter 2：（uint8_t）servo_id     CRC
+ 0x55
+                                                   Parameter 3：（uint8_t）deviation
+
+                                                   adjustment value
+
+   After sending the offset adjustment command, the control board will set the
+   offset value of the corresponding bus servo with the value of parameter 3.
+
+
+   （10）Deviation reading command
+Frame                                   Data                                        Check
+                Function Code                                Parameter
+Header                                  Length                                      sum
+
+                                                   Parameter 1 ： （ uint8_t ） 0x22
+0xAA
+         PACKET_FUNC_BUS_SERVO            2        （subcommand）                     CRC
+ 0x55
+                                                   Parameter 2：（uint8_t）servo_id
+
+   After sending the offset read command, the control board will read the offset
+   value of the corresponding bus servo and upload it to the host computer.
+
+
+
+
+   （11）Deviation saving command
+Frame                                   Data                                        Check
+                Function Code                                Parameter
+Header                                 Length                                       sum
+
+                                                   Parameter 1 ： （ uint8_t ） 0x24
+0xAA
+         PACKET_FUNC_BUS_SERVO            2        （subcommand）                     CRC
+ 0x55
+                                                   Parameter 2：（uint8_t）servo_id
+
+   After sending the offset save command, the control board will enable the
+
+
+                                              15
+ corresponding bus servo with the ID to save its current offset value.
+
+
+ （12）Position limit setting command
+                                        Data
+Frame                                                                                 Chec
+                 Function Code          Lengt                Parameter
+Header                                                                                ksum
+                                          h
+
+                                                  Parameter 1 ： （ uint8_t ） 0x30
+
+                                                  （subcommand）
+0xAA      PACKET_FUNC_BUS_SERV
+                                          6       Parameter 2：（uint8_t）servo_id       CRC
+ 0x55                  O
+                                                  Parameter 3：
+                                                             （uint16_t）lower limit
+
+                                                  Parameter 4：
+                                                             （uint16_t）higher limit
+
+ The numerical range of the limit is [0, 1000].
+ After sending the position limit setting command, the control board will set the
+ limit parameters for the corresponding ID of the bus servo.
+ （13）Position limit reading command
+                                        Data
+Frame                                                                                 Chec
+                 Function Code          Lengt                Parameter
+Header                                                                                ksum
+                                          h
+
+                                                  Parameter 1 ： （ uint8_t ） 0x32
+0xAA      PACKET_FUNC_BUS_SERV
+                                          2       （subcommand）                        CRC
+ 0x55                  O
+                                                  Parameter 2：（uint8_t）servo_id
+
+ After sending the position limit read command, the control board will upload
+ the limit parameters of the corresponding bus servo to the host computer.
+
+
+ （14）Voltage Limit Setting Command
+                                        Data
+Frame                                                                                 Chec
+                 Function Code          Lengt                Parameter
+Header                                                                                ksum
+                                          h
+
+
+                                          16
+                                                 Parameter 1 ： （ uint8_t ） 0x34
+
+                                                 （subcommand）
+0xAA      PACKET_FUNC_BUS_SERV
+                                           6     Parameter   2：（uint8_t）servo_id     CRC
+ 0x55                 O
+                                                 Parameter 3：
+                                                            （uint16_t）lower limit
+
+                                                 Parameter 4：
+                                                            （uint16_t）higher limit
+
+ The low voltage limit value should be greater than 4500, and the high voltage
+ limit value should be less than 14000.
+ After sending the voltage limit setting command, the control board will set the
+ voltage limit parameters for the corresponding ID of the bus servo.
+
+
+ （15）Voltage limit reading command
+                                          Data
+Frame                                                                                Chec
+                 Function Code         Lengt                 Parameter
+Header                                                                               ksum
+                                           h
+
+                                                 Parameter 1 ： （ uint8_t ） 0x36
+0xAA      PACKET_FUNC_BUS_SERV
+                                           2     （subcommand）                        CRC
+ 0x55                 O
+                                                 Parameter 2：（uint8_t）servo_id
+
+ After sending the voltage limit read command, the control board will upload the
+ voltage limit parameters of the corresponding bus servo to the host computer.
+
+
+ （16）Temperature limit setting command
+                                          Data
+Frame                                                                                Chec
+                 Function Code         Lengt                 Parameter
+Header                                                                               ksum
+                                           h
+
+                                                 Parameter 1 ： （ uint8_t ） 0x38
+
+0xAA      PACKET_FUNC_BUS_SERV                   （subcommand）
+                                           3                                         CRC
+ 0x55                 O                          Parameter 2：（uint8_t）servo_id
+
+                                                 Parameter 3 ： （ uint8_t ） high
+
+
+                                           17
+                                                 temperature threshold
+
+   The parameter value for the high-temperature threshold should be less than
+   100.
+   After sending the temperature limit setting command, the control board will set
+   the high-temperature threshold parameter for the corresponding ID of the bus
+   servo.
+
+
+   （17）Temperature limit reading command
+                                         Data
+ Frame                                                                            Chec
+                  Function Code          Lengt              Parameter
+ Header                                                                           ksum
+                                           h
+
+                                                 Parameter 1 ： （ uint8_t ） 0x3A
+  0xAA      PACKET_FUNC_BUS_SERV
+                                           2     （subcommand）                     CRC
+  0x55                  O
+                                                 Parameter 2：（uint8_t）servo_id
+
+   After sending the temperature limit setting command, the control board will
+   upload the high-temperature threshold parameter of the corresponding bus
+   servo to the host computer.
+
+
+
+   2.2 Data sent by the control board to the user
+   1. Bus Servo Data Upload: Command name
+   PACKET_FUNC_BUS_SERVO, value 5
+   （1）Serial bus servo position upload
+                                         Data                                        Che
+  Frame
+                   Function Code         Leng                Parameter            cksu
+ Header
+                                           th                                        m
+
+                                                 Parameter 1：（uint8_t）servo_id
+            PACKET_FUNC_BUS_SERV
+0xAA 0x55                                  5     Parameter 2 ： （ uint8_t ） 0x05   CRC
+                         O
+                                                 （subcommand）
+
+
+                                           18
+                                                    Parameter 3：
+                                                               （int8_t）Was the read
+
+                                                    successful?
+
+                                                    （0：success；-1：fail）
+
+                                                    Parameter 4 ： （ int16_t ） servo
+
+                                                    position
+
+   When a read command is received, the corresponding servo's position
+   parameter is read and uploaded to the host computer.
+   Example:
+   The angle of servo 5 is uploaded as 30°, corresponding to a pulse width of
+   833:
+                                              Data
+   Frame                                                                             Checks
+                     Function Code         Lengt                  Parameter
+   Header                                                                             um
+                                                h
+
+                                                       Parameter 1：0x05（5）
+
+                                                       Parameter      2   ：   0x05
+
+               PACKET_FUNC_BUS_SERV                    （subcommand）
+ 0xAA 0x55                                      5                                     CRC
+                            O                          Parameter 3：0x00（0）
+
+                                                       Parameter 4 ： 0x41 0x03
+
+                                                       （833）
+
+
+
+   （2）Bus Servo Voltage Upload
+                                         Data                                           Che
+  Frame
+                   Function Code         Leng                     Parameter             cksu
+ Header
+                                          th                                               m
+
+                                                    Parameter 1：（uint8_t）servo_id
+
+              PACKET_FUNC_BUS_SERV                  Parameter 2 ： （ uint8_t ） 0x07
+0xAA 0x55                                 5                                             CRC
+                        O                           （subcommand）
+
+                                                    Parameter 3：
+                                                               （int8_t）Was the read
+
+
+                                          19
+                                               successful?
+
+                                               （0：success；-1：fail）
+
+                                               Parameter 4：（uint16_t） servo
+
+                                               voltage
+
+   When a read command is received, the voltage parameter of the
+   corresponding servo is read and uploaded to the host computer.
+
+
+   （3）Bus Servo Temperature Upload
+                                        Data                                      Che
+  Frame
+                  Function Code         Leng                 Parameter            cksu
+ Header
+                                         th                                        m
+
+                                               Parameter 1：（uint8_t）servo_id
+
+                                               Parameter 2 ： （ uint8_t ） 0x09
+
+                                               （subcommand）
+
+            PACKET_FUNC_BUS_SERV               Parameter 3 ： （ int8_t ） Was the
+0xAA 0x55                                4                                        CRC
+                        O                      reading successful
+
+                                               （0：success；-1：fail）
+
+                                               Parameter 4 ： （ uint8_t ） servo
+
+                                               temperature
+
+   When a read command is received, the temperature parameter of the
+   corresponding servo is read and uploaded to the host computer.
+
+
+   （4）Serial Bus Servo ID Upload
+                                        Data                                      Che
+  Frame
+                  Function Code         Leng                 Parameter            cksu
+ Header
+                                         th                                        m
+
+            PACKET_FUNC_BUS_SERV               Parameter 1 ： （ uint8_t ） 0xFE
+0xAA 0x55                                4                                        CRC
+                        O                      （broadcast command）
+
+
+                                         20
+                                               Parameter 2 ： （ uint8_t ） 0x12
+
+                                               （subcommand）
+
+                                               Parameter 3 ： （ int8_t ） Was the
+
+                                               reading successful
+
+                                               （0：success；-1：fail）
+
+                                               Parameter 4 ： （ uint8_t ） read
+
+                                               servo_id
+
+   When a read command is received, the ID number of the servo is read and
+   uploaded to the host computer.
+
+
+   （5）Serial Bus Servo Deviation Parameter Upload
+                                        Data                                      Che
+  Frame
+                  Function Code         Leng               Parameter              cksu
+ Header
+                                         th                                        m
+
+                                               Parameter 1 ： （ uint8_t ） 0xFE
+
+                                               （previous broadcast command）
+
+                                               Parameter 2 ： （ uint8_t ） 0x22
+
+                                               （subcommand）
+            PACKET_FUNC_BUS_SERV
+0xAA 0x55                                4     Parameter 3 ： （ int8_t ） Was the   CRC
+                        O
+                                               reading successful
+
+                                               （0：success；-1：fail）
+
+                                               Parameter 4 ： （ uint8_t ） servo
+
+                                               deviation
+
+   When a read command is received, the deviation parameter of the
+   corresponding servo is read and uploaded to the host computer.
+
+
+   （6）Bus Servo Position Limit Parameter Upload
+  Frame           Function Code         Data               Parameter              Che
+
+
+                                         21
+ Header                                 Leng                                       cksu
+
+                                         th                                         m
+
+                                               Parameter 1：（uint8_t）servo_id
+
+                                               Parameter 2 ： （ uint8_t ） 0x32
+
+                                               （subcommand）
+
+            PACKET_FUNC_BUS_SERV               Parameter 3 ： （ int8_t ） Was the
+0xAA 0x55                                 7                                        CRC
+                        O                      reading successful
+
+                                               （0：success；-1：fail）
+
+                                               Parameter 4：
+                                                          （uint16_t）lower limit
+
+                                               Parameter 5：
+                                                          （uint16_t）higher limit
+
+   When a read command is received, the position limit parameters of the
+   corresponding servo are read and uploaded to the host computer.
+
+
+   （7）Serial Bus Servo Voltage Limit Parameter Upload
+                                        Data                                       Che
+  Frame
+                  Function Code         Leng              Parameter                cksu
+ Header
+                                         th                                         m
+
+                                               Parameter 1：（uint8_t）servo_id
+
+                                               Parameter 2 ： （ uint8_t ） 0x36
+
+                                               （subcommand）
+
+            PACKET_FUNC_BUS_SERV               Parameter 3 ： （ int8_t ） Was the
+0xAA 0x55                                 7                                        CRC
+                        O                      reading successful
+
+                                               （0：success；-1：fail）
+
+                                               Parameter 4：
+                                                          （uint16_t）lower limit
+
+                                               Parameter 5：
+                                                          （uint16_t）higher limit
+
+   When a read command is received, the voltage limit parameters of the
+   corresponding servo are read and uploaded to the host computer.
+
+
+
+
+                                         22
+   （8）Bus Servo Temperature Limit Parameter Upload
+                                          Data                                       Che
+  Frame
+                   Function Code          Leng                Parameter              cksu
+ Header
+                                           th                                          m
+
+                                                  Parameter 1：（uint8_t）servo_id
+
+                                                  Parameter 2 ： （ uint8_t ） 0x3A
+
+                                                  （subcommand）
+
+              PACKET_FUNC_BUS_SERV                Parameter 3 ： （ int8_t ） Was the
+0xAA 0x55                                   4                                        CRC
+                         O                        reading successful
+
+                                                  （0：success；-1：fail）
+
+                                                  Parameter 4：
+                                                             （uint8_t）temperature
+
+                                                  limit
+
+   When a read command is received, the temperature limit parameters of the
+   corresponding servo are read and uploaded to the host computer.
+   2. Upload Button Message: Instruction Name PACKET_FUNC_KEY,
+   Value 6
+     Frame                                Data
+                     Function Code                        Parameter         Checksum
+     Header                              Length
+
+                                                  Parameter 1 ： (uint8_t)
+
+                                                  button_id
+   0xAA 0x55     PACKET_FUNC_KEY           2                                  CRC
+                                                  Parameter 2 ： (uint8_t)
+
+                                                  button event
+
+   Partial button event callback values are as follows:
+   BUTTON_EVENT_PRESSED = 0x01, /* Button pressed /
+   BUTTON_EVENT_LONGPRESS = 0x02, / Button long pressed /
+   BUTTON_EVENT_CLICK = 0x20, / Button clicked /
+   BUTTON_EVENT_DOUBLE_CLICK = 0x40, / Button double-clicked */
+   Example:
+
+
+                                            23
+    Send a message indicating that button 1 is pressed:
+         Frame                           Data
+                       Function Code                      Parameter             Checksum
+         Header                         Length
+
+                                                   Parameter 1：0x01
+    0xAA 0x55       PACKET_FUNC_KEY       2                                       CRC
+                                                   Parameter 2：0x01
+
+
+
+    3. Upload IMU Data: Command Name PACKET_FUNC_IMU, Value 7
+         Frame                         Data
+                       Function Code                     Parameter              Checksum
+         Header                        Length
+
+                                                  Parameter      1 ： (float)
+
+                                                  accel_x data
+
+                                                  Parameter      2 ： (float)
+
+                                                  accel_y data
+
+                                                  Parameter      3 ： (float)
+
+                                                  accel_z data
+    0xAA 0x55      PACKET_FUNC_IMU      24                                        CRC
+                                                  Parameter       4 ： (float)
+
+                                                  gyro_x data
+
+                                                  Parameter      5 ： (float)
+
+                                                  gyro_y data
+
+                                                  Parameter      6 ： (float)
+
+                                                  gyro_z data
+
+
+
+    4. PWM servo control: Command name PACKET_FUNC_PWM_SERVO,
+    value 4
+    （1）PWM servo position upload
+Frame                                    Data                                           Checks
+                  Function Code                                  Parameter
+Header                                  Length                                             um
+
+0xAA      PACKET_FUNC_PWM_SERVO           4          Parameter 1：(uint8_t)servo_id       CRC
+
+
+                                             24
+ 0x55                                               Parameter 2 ： (uint8_t)0x05
+
+                                                    （subcommand）
+
+                                                    Parameter 3 ： (uint16_t)pulse
+
+                                                    width
+
+    Upon receiving the read command, read the pulse width of the corresponding
+    servo and upload it to the host computer.
+    （2）PWM servo deviation upload
+Frame                                    Data                                          Checks
+                Function Code                                  Parameter
+Header                                  Length                                          um
+
+                                                   Parameter 1：(uint8_t)servo_id
+
+                                                   Parameter    2 ： (uint8_t)0x05
+0xAA
+         PACKET_FUNC_PWM_SERVO            3        （subcommand）                         CRC
+ 0x55
+                                                   Parameter    3 ：    (int8_t)servo
+
+                                                   deviation
+
+    Upon receiving the read command, read the pulse width of the corresponding
+    servo and upload it to the host computer.
+
+
+
+    Common Communication Protocol Examples
+    Preparation:
+    Open the serial port assistant, connect via type-C to UART1, set the baud rate
+    to 1000000, and select HEX (hexadecimal transmission).
+    Examples:
+    1. Control the buzzer to sound 5 times, at a frequency of 1400Hz, each time
+    for 100ms and stop for 100ms:
+    AA 55 02 08 78 05 64 00 64 00 05 00 F0
+    2. Control the buzzer to sound 10 times, at a frequency of 1000Hz, each time
+    for 500ms and stop for 300ms:
+    AA 55 02 08 E8 03 F4 01 2C 01 0A 00 8B
+
+                                              25
+3. Control the LED light to flash 10 times, each time on for 500ms and off for
+300ms:
+AA 55 01 07 01 F4 01 2C 01 0A 00 04
+4. Control the LED light to flash 5 times, each time on for 100ms and off for
+100ms:
+AA 55 01 07 01 64 00 64 00 05 00 37
+5. Single motor control movement: Control motor 1 to rotate at -1r/s speed:
+AA 55 03 06 00 01 00 00 80 BF DA
+6. Control motor 1 to stop:
+AA 55 03 02 02 01 08
+7. Control motor 1 and motor 2 to rotate at -1r/s and 2r/s respectively:
+AA 55 03 0C 01 02 01 00 00 80 BF 02 00 00 00 40 FB
+8. Control motors 1 and 3 to stop:
+AA 55 03 02 03 05 AD
+9. Control servo 1 and servo 2 to rotate to 90° and 180° respectively,
+corresponding to pulse widths of 1500, 2500, 2s:
+AA 55 04 0A 01 D0 07 02 01 DC 05 02 C4 09 C8
+10. Control PWM servo 1 to move to 1000:
+AA 55 04 06 03 e8 03 01 e8 03 e4
+11. Set PWM servo deviation: Set the deviation of servo 2 to +10:
+AA 55 03 03 07 02 0A 53
+12. Control bus servo rotation: Control bus servo No. 1 and No. 2 to 200° and
+240° respectively, the corresponding pulse widths are 833 and 1000, and it
+takes 1s:
+AA 55 05 0A 01 E8 03 02 01 41 03 02 E8 03 9F
+13. Control the bus servo to rotate: Control bus servo No. 1 and No. 2 to rotate
+to 0°, the corresponding pulse width is 0, and the time is 1s:
+AA 55 05 0A 01 E8 03 02 01 00 00 02 00 00 D2
+14. Control the bus servo with ID 1 to power off:
+                                         26
+AA 55 05 02 0B 01 B3
+15. Control the bus servo with ID 1 to power on:
+AA 55 05 02 0C 01 DD
+16. Change the ID of the bus servo with ID 1 to 2:
+AA 55 05 03 10 01 02 68
+Expansion—Using the Calculator Tool for Base Conversion
+Using the Windows Calculator for Base Conversion:
+①：Open the Start menu, search for Calculator, and open it.
+
+
+
+
+②：Click on the Open Navigation button in the top left corner, and select
+Programmer.
+
+
+
+
+                                       27
+③：Four bases are available for selection. Choose one base, input a value,
+and the equivalent values in the other three bases will be displayed.
+
+
+
+
+                                        28
+29
+

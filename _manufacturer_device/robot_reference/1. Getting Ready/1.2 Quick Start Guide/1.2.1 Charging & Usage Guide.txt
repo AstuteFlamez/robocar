@@ -1,0 +1,110 @@
+                Charging & Usage Guide
+
+1. Charging Instruction
+For delivery safety, the LiPo battery is not fully charged. Please fully charge the
+battery before the first operation. To do so, connect the battery to the battery
+connector before the first charge. The charging time is approximately one hour.
+
+
+
+2. Battery Usage Guideline
+1) Charging: Please charge the battery using the provided charger when the
+voltage drops below 6.4V. This helps maintain stable operation of the robot.
+2) Long-Term Storage: If the robot will not be used for an extended period,
+fully charge the battery beforehand. Switch the expansion board to “OFF” and
+disconnect the battery wires.
+3) Storage Environment: Store the battery in a cool, dry place to prevent
+damage caused by overheating or moisture, which can shorten battery life.
+4) Handling Precautions: Do not hit, throw, or step on the battery.
+5) Usage Conditions: Do not use the battery in environments with strong
+electrostatic or magnetic fields, as this may damage the battery's safety
+protection circuitry.
+Warning: Please follow these guidelines strictly. Our company is not
+responsible for any product damage, economic loss, or accidents resulting
+from improper use.
+
+
+
+3. Charging Method
+Charging steps are as follows:
+1) Turn OFF the robot.
+2) Connect the battery by matching the connectors: red to red, and black to
+
+
+                                         1
+black.
+
+
+
+
+          Battery Connector Location Diagram – Mecanum Wheel Chassis
+
+
+
+
+          Battery Connector Location Diagram – Ackerman wheel chassis
+
+3) Remove the lithium battery's DC plug from the side or bottom of the device,
+
+                                       2
+then insert the charger connector to begin charging.
+
+
+
+
+             Charging port location diagram for Mecanum wheel chassis
+
+
+
+
+             Charging port location diagram for Ackerman wheel chassis
+
+4) Check the charging status using the indicator light on the charger: red
+indicates charging, while green means the battery is fully charged.
+
+
+
+
+                                         3
+Note: Please unplug the charger in time after charging is complete to avoid overcharging
+
+the battery.
+
+
+
+
+4. Note for Device Usage
+1) Do not place the robot on the edge of a high platform to avoid damage
+caused by the robot falling from a height. When using, place the robot on a flat
+surface. Placement Safety: Do not place the robot near the edge of a high
+platform to avoid damage from falls. Always operate the robot on a flat, stable
+surface.
+2) Movement Deviation: If the robot veers significantly to one side and
+cannot move in a straight line, please refer to 9. IMU, Linear Velocity and
+Angular Velocity Calibration. Calibration helps reduce deviation, but some
+hardware-level deviation may still remain. Adjust based on your specific
+accuracy requirements.
+3) USB Receiver Check: Before powering on, ensure that the USB handle
+receiver is properly connected. This receiver is pre-installed in the robot before
+delivery.
+4) Handle Control Precaution: Due to the intercommunication feature of the
+handle control, we recommend disabling this function when multiple robots are
+operating in the same area to prevent misconnection or control interference.
+5) Lidar Guarding Limitation: The Ackermann chassis version does not
+support the “Lidar Guarding” feature.
+
+                                            4
+6) Startup Mapping Tip: During initial mapping, position the robot facing a flat
+wall or a closed cardboard box to allow the lidar sensor to scan more reference
+points.
+7) Map Integrity: To ensure a complete map, allow the lidar to scan all 360°
+around the robot in the area where it will operate.
+8) Large-Scale Mapping: In larger environments, it is recommended to let the
+robot first complete mapping of the main area, then proceed to scan finer
+details of the surroundings.
+
+
+
+
+                                        5
+

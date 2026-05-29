@@ -1,0 +1,111 @@
+         Depth Camera Configuration
+
+1. Depth Camera Configuration
+Note:
+
+1   This document uses Ubuntu 20.04 and ROS2 Foxy as examples for installation.
+
+The system and ROS versions should not be lower than Ubuntu 20.04 and ROS2
+
+Foxy, as software versions below these are outdated. Using outdated software
+
+means you will not receive security and maintenance updates, and compatibility
+
+issues will pose significant challenges, potentially leading to unsolvable problems.
+
+2   Before starting the configuration, please install virtual machine software and
+
+import Ubuntu 20.04. Refer to "2.Linux Basic Lesson".
+
+3   Next, install ROS Foxy. Refer to "Test and Configure ROS2" in the same path
+
+as this document. This document will not provide further details on the
+
+aforementioned installations.
+
+2. Network Configuration
+
+
+1) Open virtual machine              .
+2) Click-on “Edit” and choose “Virtual Network Editor”.
+
+
+
+
+3) Tick “Bridged”, and choose the corresponding wireless network card.
+4) Select the imported virtual machine, then click on “Power on this
+virtual machine”.
+5) Click on          to open terminal. Or press the short-cut “Ctrl+Alt+t”
+
+to open the command-line terminal.
+6) Enter the command to check whether the network connection is
+successful.
+ping www.baidu.com
+
+
+If the terminal prints following content, that means network connection is
+successful.
+
+
+
+
+If it shows that “Name or service not known”, that means virtual machine
+fails to connect to the network.
+
+
+
+7) Execute this step only when network connection is failed. Enter
+command “ip a” to check the ID of network card.
+
+
+
+
+8) Execute this step only when network connection is failed. Enter
+command and press Enter. “ens33” is the ID of network card. You need to
+modify the entered command based to suit the specific case at hand.
+sudo dhclient ens33
+Repeat step 6. If the terminal prints following content, that means network
+connection is successful.
+
+
+
+
+3. Install Dependency
+1) Run the command “sudo apt update” to update apt library.
+
+
+
+After update, the following messages will occur.
+
+
+
+
+2) Enter the following commands to install the dependency library:
+sudo apt install libgflags-dev nlohmann-json3-dev
+libgoogle-glog-dev \
+ros-$ROS_DISTRO-image-transport
+ros-$ROS_DISTRO-image-publisher
+ros-$ROS_DISTRO-camera-info-manager
+
+
+
+
+4. Construct Workspace
+1) Execute the command to build the workspace.
+mkdir -p ~/ros_ws/src && cd ~/ros_ws/src
+
+
+2) Execute the command to compile the new workspace. Ensure that the
+compilation is performed within the “ros_ws” workspace.
+colcon build
+
+
+
+3) Run the command to set a new workspace.
+. ./install/setup.bash
+
+
+4) Enter the command to append the initialization action of environment
+variables to the terminal initialization file.
+echo "source $HOME/ros_ws/install/setup.bash" >> ~/.bashrc
+

@@ -1,0 +1,26 @@
+            Position PID Control Basics
+Position closed-loop control means that the position information of the motor is
+measured based on the pulse accumulation of the encoder and compared with
+the target value to obtain the control deviation. Then the process of controlling
+the proportional (P), integral (I) and differential (D) of the deviation to make the
+deviation tend to zero.
+
+
+
+
+You can refer to the following formulate:
+
+    formula：PWM=Kpe(k)+KiΣe(k)+Kd[e(k)-e(k-1)]
+
+    e(k)：current deviation
+
+    Σe(k)：deviation accumulation
+
+    e(k-1)：previous deviation
+
+    Kp： proportionality coefficient
+
+    Ki：Integral coefficient
+
+    Kd：differential coefficient
+

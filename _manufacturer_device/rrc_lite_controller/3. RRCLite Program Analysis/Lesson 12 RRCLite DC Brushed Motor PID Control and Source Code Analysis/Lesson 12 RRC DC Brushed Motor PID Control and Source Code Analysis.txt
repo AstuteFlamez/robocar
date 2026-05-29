@@ -1,0 +1,201 @@
+     Lesson 12 DC Brushed Motor PID
+     Control and Source Code Analysis
+1.Preface
+This chapter mainly focuses on PID algorithm control of DC geared motors via
+the STM32 main control board. Through hardware connections and program
+downloads, the written code is burnt onto the STM32 main control board via a
+data connection cable to control the motor's movement. The final section
+analyzes the source code of the PID control algorithm.
+
+
+2.Hardware Connection
+The encoder motor is connected to M1 port, with a RESET button nearby. The
+Type-C interface below is for serial port logging, connecting to the computer
+end to observe the printed data. The physical connection diagram is as
+follows:
+3. Program Download
+
+The example routine for this section is called 'EncoderMotor_PID_Demo'.
+
+After downloading the program (specific downloading instructions can be
+found in "2. STM32 Development Fundamentals/Lesson 3 Project Compilation
+and Download"), press the RESET button to reset the microcontroller for the
+new program to start executing.
+
+
+
+
+4. Program Outcome
+
+After powering on the STM32 control board, the motor runs in both slow and
+fast states. When viewed from top to bottom, the motor rotates
+counterclockwise, first at a speed of 1 r/s (rotations per second) for 10 seconds,
+then at a speed of 0.5 r/s for another 10 seconds, repeating this cycle.
+Open the serial assistant (located in "Appendix/3.Software/Serial Assistant"),
+find the serial port connected to the development board (may not necessarily
+be COM4, choose the appropriate COM based on actual connection), and
+configure it as shown below:
+
+Baud Rate = 115200;
+
+Data Bits = 8;
+
+Parity = None;
+
+Stop Bits = 1;
+
+Display Encoding = UTF-8.
+
+Then, you can open the serial port.
+
+The middle box in the figure displays the data received by the microcontroller
+through the serial port. The data after 'set' indicates the set speed (r/s), while
+the data after 'actual' represents the motor's current speed calculated by the
+encoder. You may observe a slight deviation between the actual and preset
+speeds, which is normal.
+
+
+5. PIN Info Configuration
+
+From the circuit schematic, it can be determined that PE13 and PE14 are used
+as the motor drive pins for Motor1, while PA0 and PA1 are used as the encoder
+pins for Motor1. The schematic is as follows:
+
+
+
+
+6. Source Code Analysis
+
+The source code for this lesson is located in the same folder as this tutorial
+document, mainly for analysis of the following files:
+Core/Src/main.c,
+Hiwonder/motor_porting.c,
+Hiwonder/system/app.c, and
+Hiwonder/encoder_motor.c.
+
+
+
+6.1 PID Principle
+The encoder is a sensor used to measure the position of a motor. Its principle
+involves detecting changes in the sensor's magnetic field during motor rotation
+to determine the motor's position. As the motor rotates, the encoder outputs a
+binary code representing the current motor position.
+
+
+
+
+PID control is a commonly used closed-loop control algorithm for controlling
+the speed or position of a motor. The PID controller consists of three parts:
+Proportional (P): The proportional part controls the output based on the
+difference between the motor position and the target position.
+Integral (I): The integral part adjusts the output based on the cumulative
+difference in position.
+Derivative (D): The derivative part adjusts the output based on the rate of
+change in position.
+In motor PID control, the encoder is used to measure the actual motor position.
+The PID controller calculates based on the difference between the target
+position and the actual position, and outputs a control signal to control the
+motor's movement. The PID controller can adjust the control signal based on
+changes in the actual position to better control the motor's movement.
+For more information on PID principles, refer to "Lesson 12 RRCLite DC
+Brushed Motor PID Control and Source Code Analysis/PID Basic Learning."
+
+
+
+6.2 Code Analysis
+In the main.c file located in the Application/User/Core folder, the main()
+function serves as the entry point of the project.
+   Basic Configuration Initialization
+
+
+
+
+The diagram illustrates the initialization process including system clock
+initialization (SystemClock_Config), GPIO initialization (MX_GPIO_Init), UART
+initialization (MX_USART_UART_Init), timer 1, 5, and 6 initialization
+(MX_TIM1_Init, MX_TIM5_Init, MX_TIM6_Init), and interrupt initialization
+(MX_NVIC_Init). To delve into specific details, you can select the
+corresponding function and press 'F12' to enter the function body and review
+the comments provided.
+   Motor Initialization
+
+
+
+The diagram above shows the motor initialization function, which is located in
+the motor_porting.c file in the Hiwonder folder. The specific function is as
+depicted in the following diagram:
+
+
+
+
+Initialize the motor structure, then set the parameters corresponding to the
+
+motor structure (here, parameters need to be set according to the motor model;
+
+simply find the corresponding motor parameters in the encoder_motor.h file
+
+and replace the parameters here).
+
+Start the motor control timer TIM1, set and start the encoder timer TIM5, then
+configure and start the speed calculation timer TIM7.
+   Motor Loop Control
+Within the loop｛
+    Set the motor speed to 1.0 r/s；
+    Loop 10 times, printing data each time, with a delay of 100ms between iterations；
+    Set the motor speed to 0.5 r/s；
+    Loop 10 times, printing data each time, with a delay of 100ms between iterations；
+｝
+The specific program is as below:
+
+
+
+
+The printed data: the data after 'set' represents the set speed (r/s), while the
+data after 'actual' represents the current motor speed calculated by the
+encoder.
+   Timer 7
+The function of Timer 7 is to calculate motor speed and update PID parameters.
+It generates an update interrupt every 10ms. The update interrupt function is
+as follows (located in the motor_porting.c file in the Hiwonder folder):
+
+
+
+
+encoder_update() is the function responsible for calculating the updated motor
+speed based on the encoder count. Its specific implementation is as follows
+(located in the encoder_motor.c file in the Hiwonder folder):
+
+
+
+
+encoder_motor_control() is the function for updating the encoder motor speed
+control. It first updates the PID parameters, corrects the output PWM, and
+generates a new PWM signal. Its specific implementation is as follows (located
+in the encoder_motor.c file in the Hiwonder folder)
+
+
+
+
+The PID controller update function, pid_controller_update(), is the core of PID
+control, specifically speed PID control.
+    It first calculates the error 'err',
+    then calculates the proportional, integral, and derivative values based on
+time.
+    Next, it calculates the correction value for the output,
+    and finally updates the error parameters.
+The specific code implementation is shown in the diagram below.
+
+
+
+
+In this context:
+- 'err' represents the error between the current target value and the actual
+value.
+- 'proportion' is the difference between the current error and the previous error,
+used for calculating the derivative.
+- 'integral' accumulates the time without friction, used in combination with the
+derivative for calculation.
+- 'derivative' represents the derivative parameter.
+- Finally, the function stores the result in the 'output' field of the
+PID_ControllerTypeDef structure."
+

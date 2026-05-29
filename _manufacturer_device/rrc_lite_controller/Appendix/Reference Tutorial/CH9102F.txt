@@ -1,0 +1,426 @@
+CH9102 DataSheet                                       1
+
+
+
+                USB to High Speed Serial Port Chip CH9102
+                                                  DataSheet
+                                                 Version: 1A
+                                                 http://wch.cn
+
+1. Introduction
+CH9102 is a USB bus converter chip, which converts USB to serial UART interface. CH9102 provides
+common MODEM signal, to expand UART interface of computer or upgrade common serial devices or
+MCU to USB bus directly.
+
+
+                                  VDD5                              VIO
+
+           Computer or                         CH9102
+            other USB                          convert
+               host               USB           chip             UART/RS232/RS485/RS422
+
+
+
+
+2. Features
+   l    Full speed USB device interface, USB 2.0 compatible.
+   l    Built-in firmware, emulate standard UART interface, used to upgrade the original serial peripherals
+        or expand additional serial UART via USB.
+   l    Original serial applications are totally compatible without any modification.
+   l    Support free-installation operating system built-in CDC driver or multi-functional high-speed VCP
+        manufacturer driver.
+   l    Hardware full duplex serial UART interface, integrated transmit-receive buffer, supports
+        communication baud rate varies from 50bps to 4Mbps.
+   l    Supports 5, 6, 7 or 8 data bits, supports odd, even, blank, mark and no parity.
+   l    Supports common MODEM interface signals RTS, DTR, DCD, RI, DSR and CTS.
+   l    Supports CTS and RTS hardware automatic flow control.
+   l    Supports half-duplex, provides sending status TNOW supports RS485 switch.
+   l    Provides further RS232 interface, through external voltage conversion chip.
+   l    Supports 5V and 3.3V power supply.
+   l    CH9102F serial port interface I/O powered independently, support 5V, 3.3V, 2.5V, 1.8V power
+        supply voltage.
+   l    CH9102X serial port interface I/O only supports 3.3V voltage.
+   l    Built-in power-on reset, built-in clock, no external crystal required.
+   l    RoHS compliant QFN24 and QFN28 PB-free package.
+CH9102 DataSheet                                     2
+
+
+
+3. Packages
+
+
+
+
+                                                                                                    Ordering
+  Package    Width Of Plastic       Pitch Of Pin              Instruction Of Package
+                                                                                                  Information
+
+QF24_4X4            4*4mm          0.5mm 19.7mil      Ultra-small square without lead 24-pin       CH9102F
+
+QF28_5X5            5*5mm          0.5mm 19.7mil      Ultra-small square without lead 28-pin       CH9102X
+
+Note:
+The backplane of the CH9102F and CH9102X is 0# pin GND, which is an optional connection, but
+suggested connection; other GND are necessary connections.
+
+CH9102X VIO pins and V3 pins have been short-circuited internally.
+
+4. Pin Out
+ QNF24       QNF28
+                            Pin Name    Pin Type                        Pin Description
+ Pin No.     Pin No.
+                                                   Power supply voltage input, requires an external 0.1uF
+    7           7            VDD5       POWER
+                                                   decoupling capacitor
+                V3
+            Connected                              I/O power supply voltage input, requires an external
+    5                         VIO       POWER
+              to VIO                               0.1uF decoupling capacitor
+            internally
+
+   2,0         3, 0          GND        POWER Ground
+                                              Internal voltage regulator output and kernel and USB
+                                              power supply input.
+                                              When VDD5 voltage is less than 3.6V, connects to
+    6         6, 22           V3        POWER
+                                              VDD5.
+                                              When VDD5 voltage is more than 3.6V, connects to
+                                              external 0.1uF decoupling capacitor
+    9           9             RST          IN      Input of external reset, active low, integrated pull-up
+CH9102 DataSheet                                 3
+
+
+                                              resistor
+
+                                      USB
+   3          4          UD+                  Connect to USB D+ Signal directly
+                                     signal
+
+                                      USB
+   4          5          UD-                  Connect to USB D- Signal directly
+                                     signal
+                                              VBUS status detection input of USB bus, integrated
+   8          8          VBUS         IN
+                                              pull-down resistor
+                                              Transmit asynchronous data output, idle state is high
+   21        26          TXD         OUT
+                                              level
+                                              Receive asynchronous data input, integrated pull-up
+   20        25          RXD          IN
+                                              resistor
+   18        23          CTS          IN      MODEM input signal, clear to send, active low
+
+   22        27          DSR          IN      MODEM input signal, data set ready, active low
+
+   1          2           RI          IN      MODEM input signal, ring indicator , active low
+
+   24         1          DCD          IN      MODEM input signal, data carrier detect, active low
+
+   23        28          DTR         OUT      MODEM output signal, data terminal ready, active low
+
+   19        24          RTS         OUT      MODEM output signal, request to send, active low
+                                              USB suspend state output, active low, normal working
+   15        11        SUSPEND#      OUT
+                                              state output high level, output low level after suspension
+                                              USB suspend state output, active high, normal working
+   17        12        SUSPEND       OUT
+                                              state output low level, output high level after suspension
+
+                       WAKEUP/        IN/   USB wake-up event detects input, low active, built-in
+   11        16                             pull-up resistor
+                        GPIO3      (IN/OUT) GPIO3, configurable input or output
+
+                        TNOW/        OUT/ The serial port sends the status indication in progress,
+   12        17                             active high
+                        GPIO2      (IN/OUT) GPIO2, configurable input or output
+
+                                     OUT/ The RXD pin input state indicator
+   13        18        RXS/GPIO1
+                                   (IN/OUT) GPIO1, configurable input or output
+
+                                     OUT/ The TXD pin output state indicator
+   14        19        TXS/GPIO0
+                                   (IN/OUT) GPIO0, configurable input or output
+
+ NONE        20         GPIO6      IN/OUT GPIO6, configurable input or output
+
+ NONE        21         GPIO5      IN/OUT GPIO5, configurable input or output
+
+   16      NONE         GPIO4      IN/OUT GPIO4, configurable input or output
+                                              USB configuration completed state output, active low,
+   10        10          ACT#      OUTPUT
+                                              invalid when suspended
+ NONE     13, 14, 15      NC        NONE      No Connection, must be suspended
+CH9102 DataSheet                                        4
+
+
+
+5. Function Description
+5.1. Power and power consumption
+The CH9102 has 3 power supplies and a built-in voltage regulator which generates 3.3V. VDD5 is the input
+of the power regulator, V3 is the output of the voltage regulator and USB transceiver and core power supply
+input, and VIO is the I/O pin power supply.
+The CH9102 supports 5V or 3.3V supply voltage, and the V3 pin should be externally connected to a power
+decoupling capacitor with a capacity of about 0.1uF. When using 5V power supply(greater than 3.8V),
+VDD5 inputs external 5V power supply (for example, the USB bus power supply), the internal voltage
+regulator generates 3.3V on V3 which used by USB transceivers. When using 3.3V or lower operating
+voltage (less than 3.6V), V3 should be connected to VDD5, while input external 3.3V power supply. V3 still
+requires an external decoupling capacitor.
+
+VIO pin of CH9102 provides I/O power for serial port I/O and RST pin. It supports 1.8V～5V power supply
+voltage. VIO should use the same power supply as MCU and other peripherals. UD+, UD- and VBUS pins
+use V3 power supply, not VIO power supply.
+CH9102 automatically supports USB device suspension to save power consumption. In the USB suspend
+state, if the I/O output pin has no external load and the I/O input pin is floating (internally pulled up) or in a
+high level state, the VIO power supply will not consume current. In addition, when V3 and VDD5 lose
+power and are at a voltage of 0V, the current consumption of VIO is the same as above, and VIO will not
+flow backwards current to VDD5 or V3.
+VBUS should be connected to USB bus power supply, and when the loss of USB power is detected, CH9102
+will turn off the USB and sleep (hang up). CH9102 provides VIO low-voltage protection mechanism when
+VBUS connects with resistor in series and used to control VIO power through PMOS. During the shutdown
+of the VBUS pull down resistance, if VIO voltage is detected to be lower than about 1.4V, then CH9102 will
+automatically absorb about 300uA discharge current on VBUS, until the end of the discharge current after
+the VIO voltage rises, and enables the pull-down resistance automatically.
+Several power connection schemes for reference here:
+
+                  UART signals                                                            MCU or peripheral power
+                                          VDD5               V3               VIO
+ Power supply     voltage                                                                         supply
+   scheme         MCU operating        Not less than    Rated around         Both use the same power supply,
+                  voltage               V3 voltage          3.3V                        1.8V～5V
+
+                                      USB powered       Connects to
+                         5V                                                          USB powered 5V
+                                          5V           capacitor only
+
+                                      USB powered        Connects to
+                        3.3V                                               Powered by V3 for 3.3V, up to 10mA
+                                          5V              capacitor
+All USB power
+    supply                           USB 5V power stepped down to 3.3V via external LDO power regulator, V3
+                        3.3V
+                                                         connects to external capacitor
+
+                                      USB powered       Connects to
+                     1.8V～4V                                             USB powered by external LDO regulator
+                                          5V           capacitor only
+CH9102 DataSheet                                        5
+
+
+
+     USB+
+ self-powered
+                                      USB powered        Connects to               Self-powered 1.8V～5V
+  Dual power         1.8V～5V
+                                          5V            capacitor only               (1.8V,2.5V,3.3V,5V)
+     supply
+
+
+                                       Self-powered      Connects to
+                      4V～5V                                                         Self-powered 4V～5V
+      All                                4V～5V          capacitor only
+ self-powered                            Self-powered, rated 3.3V,
+                     1.8V～5V                                                       Self-powered 1.8V～5V
+                                       connects to external capacitor
+
+VIO and V3 of CH9102X have been shorted internally. VIO uses the 3.3V power output by the internal
+voltage regulator LDO. CH9102X only supports 3.3V serial port signals.
+
+
+5.2. UART
+In serial UART mode, CH9102 contains: data transfer pins, MODEM interface signals and assistant pins.
+Data transfer pins contain: TXD and RXD. RXD should be high when UART input is idle. When UART
+output is idle, TXD is high level.
+MODEM interface signals contain: CTS, DSR, RI, DCD, DTR and RTS. All these MODEM interface
+signals are controlled and function defined by computer applications.
+Assistant pins contain: SUSPEND#, SUSPEND, WAKEUP, RXS, TXS, ACT#, etc.
+SUSPEND# and SUSPEND are the output signals to indicate suspend states of the chip. When the chip is in
+the normal working state, the SUSPEND# pin outputs a high level, and the SUSPEND pin outputs a low
+level; when the chip is in a suspend state, the SUSPEND# pin outputs low level, SUSPEND pin outputs high
+level.
+WAKEUP is the USB wake-up event detection input pin. It is low active and has a built-in pull-up resistor.
+RXS is the output pin of UART receiving data status, TXS is the output pin of UART sending data status.
+ACT# is USB device configuration complete status output, which can be used to notify the MCU or drive
+the LED which connects to the VIO through the current limiting resistor.
+CH9102 supports CTS and RTS hardware automatic flow control, which can be enabled by software. If
+enabled, UART will continue to send the next data only when CTS is valid (active low), otherwise the UART
+transmission will be suspended; when the receiving buffer is empty, UART will automatically set RTS to be
+valid (active low), it will automatically invalidate RTS until the data in the receiving buffer is nearly full, and
+RTS will be valid again when the buffer is empty. While using hardware automatic flow control, CTS of
+CH9102 should connect to RTS of the other side, and RTS of CH9102 should connect to CTS of the other
+side.
+CH9102 has integrated separate transmit-receive buffer and supports simplex, half-duplex and full duplex
+UART communication. UART data contains one low-level start bit, 5, 6, 7 or 8 data bits and 1 or 2
+high-level stop bits, supports odd/even/mark/space parity. CH9102 supports common baud rate: 50, 75, 100,
+110, 134.5, 150, 300, 600, 900, 1200, 1800, 2400, 3600, 4800, 9600, 14400, 19200, 28800, 33600, 38400,
+56000, 57600, 76800, 115200, 128000, 153600, 230400, 256000, 307200, 460800, 921600, 1M, 1.5M, 2M,
+CH9102 DataSheet                                        6
+
+
+3M 4M etc.
+In applications with high communication baud rate, it is recommended to enable hardware automatic flow
+control. Full-speed USB is only 12Mbps, considering the protocol overhead and other factors, the serial port
+should be avoided in a continuous or full-duplex high-speed communication state of 3Mbps and above in
+applications.
+The allowable baud rate error of CH9102 UART reception is less than 2%, the baud rate error of UART
+transmission is less than 1.5%.
+On operating systems, CH9102 supports CDC class driver that comes with system, and VCP manufacturer
+driver could be installed to support high speed communication and other functions. It can simulate the
+standard serial port, so most serial port applications are fully compatible, usually without any modification.
+CH9102 can be used to upgrade the UART peripherals, or expand extra serial ports for computers via USB
+bus, provides further RS232, RS485, RS422 interface, etc. through external voltage conversion chip.
+
+
+5.3. Clock and reset and others
+CH9102 has a built-in USB pull-up resistor, and the UD+ and UD- pins should be directly connected to the
+USB bus.
+CH9102 has built-in power-on reset circuit and a low-voltage reset circuit. It also monitors the voltage of the
+V3 pin and the VIO pin. When the V3 voltage is lower than VRV3 or the VIO voltage is lower than VRVIO,
+the chip will automatically reset by hardware.
+CH9102 has built-in clock generator, without external crystal and oscillation capacitor.
+In larger batch applications, the manufacturer identification such as VID, PID, product information and pin
+definition of CH9102 can be customized.
+
+
+6. Parameters
+6.1. Absolute Maximum Ratings
+(critical state or exceeding maximum can cause chip to not work or even be damaged)
+
+  Name                         Parameter Description                       Min.         Max.           Unit
+   TA                     Operating Ambient Temperature                    -40             85           ℃
+   TS                           Storage Temperature                        -55             105          ℃
+                USB power supply voltage (VDD5 connects to power,
+ VDD5                                                                      -0.5            6.0          V
+                                GND to ground)
+                Serial port I/O power supply voltage (VIO connects to
+  VIO                                                                      -0.5            6.0          V
+                                power, GND to ground)
+VVBUS                             Voltage on VBUS                          -0.5            6.5          V
+ VUSB                         Voltage on USB signals                       -0.5        V3+0.5           V
+VUART                     Voltage on UART and other pins                   -0.5       VIO+0.5           V
+
+
+6.2. Electrical Parameters
+(test conditions: TA=25℃,VCC=5V OR VDD5=V3=3.3V, VIO1.8～5V, exclude pins connected to USB
+CH9102 DataSheet                                   7
+
+
+bus)
+
+
+  Name                  Parameter Description                   Min.     Typical   Max.   Unit
+
+          USB power      V3 doesn’t connect to VDD5, V3
+                                                                 4.0       5       5.3
+ VDD5       supply           connected to capacitor                                        V
+           voltage      V3 connected to VDD5, VDD5=V3            3.0       3.3     3.6
+
+  VIO           Serial port I/O power supply voltage             1.7       5       5.5     V
+
+  IVDD      Operating VDD5 or V3 power supply current                      3        15    mA
+  IVIO             Operating VIO Supply current                            0        10    mA
+                               VDD5 power supply =5V                      0.09     0.16   mA
+           Operating
+            Supply          VDD5=V3 power supply =3.3V                    0.005    0.02   mA
+  ISLP
+          Current(USB
+           Suspend)            VIO power supply, no I/O
+                                                                          0.002    0.05   mA
+                                     load/pull up
+  ILDO    External load capacity of internal power regulator                        10    mA
+
+                                               VIO=5V            0                 1.5     V
+   VIL    Low-level input voltage          VIO=3.3V              0                 0.9     V
+                                           VIO=1.8V              0                 0.5     V
+                                               VIO=5V            2.5               VIO     V
+  VIH     High-level input voltage         VIO=3.3V              1.9               VIO     V
+                                           VIO=1.8V              1.2               VIO     V
+           VBUS pin high level
+VIHVBS                                   VIO=1.8～5V              1.7               5.8     V
+               voltage
+                             VIO=5V, 15mA draw current                     0.4     0.5     V
+          Output Low
+  VOL                       VIO=3.3V, 8mA draw current                     0.3     0.4     V
+           Voltage
+                            VIO=1.8V, 3mA draw current                     0.3     0.4     V
+                            VIO=5V, 10mA output current        VIO-0.5   VIO-0.4           V
+          Output High
+  VOH                       VIO=3.3V, 5mA output current       VIO-0.4   VIO-0.3           V
+            Voltage
+                            VIO=1.8V, 2mA output current       VIO-0.4   VIO-0.3           V
+                                                  VIO=5V         35       150      220    uA
+          Pull-up current of serial port and
+  IPUP                                           VIO=3.3V        15        60       90    uA
+          RST pin (pull up to VIO voltage)
+                                                 VIO=1.8V        3         14       21    uA
+                                                VBUS>1.6V        6         10       16    uA
+  IPDN      Pull-down current on VBUS
+                                                VBUS<1.3V        50       140      200    uA
+             V3 Power-on reset/low voltage reset voltage
+  VRV3                                                           2.5       2.7     2.9     V
+                             threshold
+             VIO power supply low voltage reset voltage
+ VRVIO                                                           0.8       1.0     1.15    V
+                            threshold
+CH9102 DataSheet                                       8
+
+
+  VESD      HBM ESD withstand voltage on USB or I/O pins              5           6                    KV
+
+
+6.3. Timing Parameters
+(test conditions: TA=25℃,VDD5=5V or VDD5=V3=3.3V, VIO=1.8V～5V)
+
+  Name                       Parameter Description                   Min.       Typ.       Max.       Unit
+           Error of internal clock (affecting   TA=-15℃～60℃           -1.0     ± 0.5       +1.0        %
+   FD
+               baud rate year-on-year)          TA=-40℃～85℃           -1.5     ± 0.8       +1.5        %
+ TRSTD        Reset delay after power on or external reset input          9      15         25         mS
+ TSUSP                Detect USB automatic hang time                      3      5           9         mS
+ TWAKE            Wake-up completion time after chip sleep            1.2       1.5          5         uS
+
+
+7. Applications
+7.1. USB to 9-wire TTL serial port
+The figure below is the USB to TTL converter realized by CH9102F. Only RXD, TXD and public ground are
+necessary connection, while the others are optional.
+P4 is USB port, USB bus contains a pair of 5V power lines and a pair of data signals. Usually, the color of
++5V power line is red, the black one is ground. D+ signal line is green and the D- signal line is white. The
+max supply current of USB bus is up to 500mA.The VBUS pin detects the USB power supply status here.
+The capacitor C2 on V3 is 0.1uF, used to CH9102 internal power decoupling. C1 and C3 are used for
+external power decoupling.
+Three power supply schemes: One is all USB power supply, CH9102 chip and USB products directly use the
+5V power supply provided by the USB bus, that is, VDD5=VBUS=USB 5V power, VIO=VMCU=USB 5V
+or 1.8V~4V after step-down; The second is separate and independent power supply. The VIO of CH9102 and
+the MCU of the product use self-supplied standing power VDD, while CH9102 uses USB power, and its
+VDD5 is connected to the USB power VBUS, that is, VDD5=VBUS=USB 5V power, VIO=VMCU=VDD=
+self-supply 1.8V~5V; The third is all self-powered, only detecting but not using USB power, USB products
+provide power VDD through self-powered mode, mainly VDD5=VIO=VMCU=VDD=self-supplied 5V or
+VDD5=V3=VIO=VMCU=VDD=self-supplied 3.3 V two kinds.
+When designing the PCB, pay attention to: the decoupling capacitors C1, C2 and C3 should be as close as
+possible to the connected pins of CH9102; The D+ and D- signal lines are placed close to the parallel wiring,
+and ground or copper should be provided on both sides to reduce signal interference from the other parts.
+CH9102 DataSheet                                   9
+
+
+
+
+7.2. USB to 9-wire RS232 converter configuration
+CH9102 provides common UART and MODEM signals, converts TTL to RS232 through level conversion
+chip U2. Port P2 is DB9 connector, the pins and their functions are the same as common PC DB9 connector,
+the chips similar with U2 have MAX213/ADM213/SP213/MAX211 etc.U2 in the image is uniformly
+powered by the USB bus through R4.
+
+
+
+
+7.3. USB to RS485 Converter Configuration
+CH9102 DataSheet                                    10
+
+
+
+
+In the figure, TNOW is the switch pin, the TNOW pin can be used to control DE (send enable, high active)
+and RE# (receive enable, low active) pin of RS485 transceiver. RS485 transceiver should use the same
+power supply as VIO.
+

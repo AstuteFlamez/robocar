@@ -1,0 +1,329 @@
+  Lesson 15 RRCLite-Host Computer
+ Communication Source Code Analysis
+1. Program Logic
+This section mainly analyzes the source code for receiving and processing
+communication between the RRCLite development board and the host
+computer.
+
+
+
+2. Hardware Connection
+The hardware connection diagram is as below:
+
+
+
+
+3. Program Download
+The example for this section is “RosRobotControllerLite_ros”.
+
+
+
+4. Program Outcome
+After porting the ROS package, you can control the car's LED lights on and off,
+activate the buzzer, rotate the encoder motors, rotate PWM servos, rotate bus
+
+                                        1
+servos, match RGB light color, and check system power by calling the host
+computer interface.
+
+
+
+5. PIN Info Configuration
+The development board's microcontroller uses UART1 serial port, which
+communicates with the host computer via a conversion circuit to USB signal. In
+STM32CubeMX software, you can view pin information. According to the
+diagram below, the corresponding chip pins are: PA9 and PA10.
+
+
+
+
+6. Source Code Analysis
+The program source code for this session is located in
+“RosRobotControllerLite_ros”. The program framework is designed according
+to the functionality, as shown in the diagram below.
+
+
+
+
+                                         2
+The messages sent by the host computer to control the development board
+are divided into seven categories: LED control messages, buzzer control
+messages, encoder motor control messages, PWM servo control messages,
+bus servo control messages, RGB light control messages, and power alarm
+threshold modification control messages.
+
+6.1 Reception of LED Control Messages
+The packet_led_handle() function in the Hiwonder/System/packet_handle.c
+file is the callback function for handling LED serial commands. Upon receiving
+LED control messages, it enters this callback function to execute LED control.
+The specific program is shown in the diagram below:
+
+
+
+
+The parameter frame of packet_led_handle() is a pointer parameter used to
+store the control information sent by the host computer. This data is strictly
+stored according to the LED control structure LedCommandTypeDef.
+Therefore, the data stored in the frame can be directly converted into the LED
+control structure to obtain the correct control parameters. The program flow is
+as follows:
+
+1    Convert the data into the LED control structure.
+2    Check if the LED ID number is correct:
+If correct, use the structure data to control the LED change.
+If incorrect, skip directly.
+The definition of the LED control structure LedCommandTypeDef is as follows:
+
+
+
+
+                                          3
+For specific parameter details, please refer to the LED control section in the
+'Lesson 13 RRCLite Communication Protocol with the Host Computer
+Analysis' document.
+
+
+
+6.2 Reception of Buzzer Control Messages
+The packet_buzzer_handle() function in the
+Hiwonder/System/packet_handle.c file is the callback function for handling
+buzzer serial commands. Upon receiving a buzzer control message, it enters
+this callback function to execute buzzer control. The specific program is shown
+in the diagram below:
+
+
+
+
+The parameter 'frame' is strictly stored according to the
+BuzzerCommandTypeDef buzzer control structure, so converting the data
+stored in 'frame' directly into the buzzer control structure retrieves the correct
+control parameters. The program flow is as follows:
+①：Convert the data into the buzzer control structure.
+②：Use the structure data to control the buzzer activation.
+The definition of the BuzzerCommandTypeDef buzzer control structure is as
+follows:
+
+
+
+
+                                           4
+For specific parameter details, please refer to the buzzer control section in the
+'Lesson 13 RRCLite Communication Protocol with the Host Computer
+Analysis' document.
+
+6.3 Reception of Encoder Motor Control Messages
+The packet_motor_handle() function in the Hiwonder/System/packet_handle.c
+file is the callback function for handling encoder motor serial commands. Upon
+receiving an encoder motor control message, it enters this callback function to
+execute encoder motor control. The specific program is shown in the diagram
+below:
+
+
+
+
+                                         5
+To streamline the control of encoder motors, the first control data represents
+the sub-command for motor control. There are a total of 5 sub-commands,
+each corresponding to a specific structure and functionality as follows:
+(MotorSingalCtrlCommandTypeDef) Single motor movement,
+(MotorMutilCtrlCommandTypeDef) Multiple motor movement,
+(MotorSingalStopCommandTypeDef) Single motor stop,
+(MotorMultiStopCommandTypeDef) Multiple motor stop,
+(MotorTypeCtlTypeDef) Motor type switching function.
+The parameter 'frame' is strictly stored according to the corresponding
+structure of encoder motor control based on each sub-command. Therefore,
+converting the data stored in 'frame' directly into the corresponding encoder
+motor control structure retrieves the correct control parameters. The program
+flow is as follows:
+①：Read the first data to determine which sub-function it corresponds to.
+②：Enter the specified sub-function section and convert the incoming data into
+the corresponding sub-function structure parameters.
+③：Use the structure parameters to control the movement of the encoder
+motor.
+The definitions of various structures for encoder motor control are as follows:
+
+
+
+                                         6
+For specific parameter details, please refer to the encoder motor control
+section in the 'Lesson 13 RRCLite Communication Protocol with the Host
+Computer Analysis' document.
+
+
+
+6.4 Reception of PWM Servo Control Messages
+The packet_serial_servo_handle() function in the
+Hiwonder/System/packet_handle.c file serves as the callback function for
+handling PWM servo serial commands. Upon receiving a PWM servo control
+message, the program enters this callback function to execute PWM servo
+control. The specific program is illustrated in the diagram below:
+
+
+
+
+                                         7
+Firstly, the program extracts the sub-command parameters stored in the
+parameter header element, and then enters the corresponding sub-code
+snippet after comparison.
+The parameter 'frame' is strictly stored according to the control structure
+corresponding to the PWM servo sub-function. By directly converting the data
+stored in 'frame' into the PWM servo control structure, the correct control
+parameters can be obtained. The program flow is as follows:
+1. Read the first data to determine which sub-function it corresponds to.
+2. Enter the specified sub-function section and convert the incoming data into
+the corresponding sub-function structure parameters.
+3. Use the structure parameters to control the movement of the PWM servo.
+The definition for each structure of PWM servo control is as follows:
+
+
+
+
+6.5 Reception of Power Alarm Threshold Modification Control
+
+Messages
+The packet_battery_limit_handle( ) function in the
+Hiwonder/System/packet_handle.c file serves as the callback function for
+handling bus servo serial commands. Upon receiving a bus servo control
+message, the program enters this callback function to execute bus servo
+
+                                          8
+control. The specific program is illustrated in the diagram below:
+
+
+
+
+The processing logic of this function is highly similar to the previous one.
+
+6.6 Reception of RGB Light Control Messages
+The packet_RGB_Ctl_handle( ) function in the
+Hiwonder/System/packet_handle.c file serves as the callback function for
+handling RGB light serial commands. Upon receiving a bus servo control
+message, the program enters this callback function to execute RGB light
+control. The specific program is illustrated in the diagram below:
+
+
+
+
+In the program, function codes 1 and 2 have the same effect. You can perform
+secondary development based on your own needs.
+
+                                          9
+Additionally, it is worth noting that unlike LED lights, the IDs of RGB lights start
+from 0.
+
+6.7 Reception of Bus Servo Control Messages
+The packet_serial_servo_handle() function in the
+Hiwonder/System/packet_handle.c file serves as the callback function for
+handling bus servo serial commands. Upon receiving a bus servo control
+message, the program enters this callback function to execute bus servo
+control. The specific program is illustrated in the diagram below:
+
+
+
+
+Bus servos have multiple sub-commands corresponding to different
+sub-functions, with the first control data representing the sub-command for
+motor control.
+The parameter 'frame' is strictly stored according to the control structure
+                                          10
+corresponding to the bus servo sub-function. If it's a sub-command for
+controlling motion, it's stored according to the
+SerialServoSetPositionCommandTypeDef structure to store control
+parameters. By directly converting the data stored in 'frame' into the bus servo
+control structure, the correct control parameters can be obtained. The program
+flow is as follows:
+1. Read the first data to determine which sub-function it corresponds to.
+2. Enter the specified sub-function section and convert the incoming data into
+the corresponding sub-function structure parameters.
+3. Use the structure parameters to control the movement of the bus servo.
+The definition of the bus servo control structure
+SerialServoSetPositionCommandTypeDef is as follows:
+
+
+
+
+For specific parameter details, please refer to the bus servo control section in
+the 'Lesson 13 RRCLite Communication Protocol with the Host Computer
+Analysis' document.
+
+6.8 Source Code Analysis of Serial Protocol Reception Task
+The packet_rx_task_entry() function in the Hiwonder/Porting/packet_porting.c
+file serves as the entry point for the serial protocol reception task. This task
+                                          11
+handles messages received from the serial port and executes control. The
+program logic is as follows:
+①：Initialize and clear the semaphore in the queue.
+
+② ： Register the callback function packet_uart_error_callblack() for handling serial port
+
+receive error events.
+
+③：Register callback functions corresponding to serial port message function codes with
+
+the message controller.
+
+④：Start the hardware reception of the serial port and register the message processing
+
+callback function.
+
+⑤：Loop for receiving and processing：
+
+（1）Wait to acquire the semaphore. When a message is received, a semaphore is sent in
+
+the interrupt, which can be obtained here.
+
+（2）Process the message and control the car functions.
+
+The reception task program is as below:
+
+
+
+
+Among them, the packet_uart_error_callback( ) function prevents serial port
+failure due to startup issues by restarting when a serial port error occurs. The
+function is defined as follows:
+
+
+
+
+The packet_handle_init() function registers the callback functions for the
+corresponding function codes. The function is defined as follows:
+
+
+
+
+                                             12
+The packet_start_recv() function starts the serial port reception hardware and
+registers the interrupt handling callback function. The function is defined as
+follows:
+
+
+
+
+The packet_dma_receive_event_callback() function is triggered during an
+interrupt. It pushes the received data into the data buffer and sends a
+semaphore to start the processing program in the reception task. The function
+is defined as follows:
+
+
+
+
+The received data is ultimately processed in the packet_recv() function within
+the reception task. The packet_recv() function handles the serial protocol by
+analyzing the received serial data. After parsing the correct data, it calls the
+callback function for the corresponding function code to process the control
+message in the data segment. The program code is as follows:
+
+
+
+
+                                          13
+In the checksum verification segment of the above program, the callback
+function for the corresponding function code is called, achieving the host
+computer control functionality. The code snippet is shown below:
+
+
+
+
+                                        14
+
