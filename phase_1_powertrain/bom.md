@@ -21,7 +21,7 @@
 | Inline **ATC/ATO fuse holders** (18 AWG) + **10 A / 7.5 A** blades | 2 (+5 A later) | $10 | Coordinated fusing: 10 A main at the battery, 7.5 A on the motor branch (selectivity — branch < main). Fuses protect the *wires*. | https://www.amazon.com/dp/B0DT4NCD5V | **buy** |
 | **22 mm latching mushroom e-stop, 1× NC** | 1 | $8 | Instant physical motor kill in series in the motor branch; **NC** = a broken wire also trips it (fail-safe). | https://www.amazon.com/dp/B00W947PS0 | **buy** |
 | Bulk electrolytics **470–1000 µF, ≥16 V**, low-ESR/105 °C | ~2 (of 4) | $8 | Absorb the millisecond di/dt when motors start/stall so the 7.4 V VM rail doesn't sag. (No Adafruit SKU meets ≥16 V at this capacitance — source from DigiKey/Mouser.) | https://www.digikey.com/en/products/filter/aluminum-electrolytic-capacitors/58 | **buy** |
-| **0.1 µF ceramic caps** | 4 (of 12) | $3 | Brush-noise suppression soldered across each motor body (prevents USB-link crashes later). | https://www.adafruit.com/product/753 | **buy** |
+| **0.1 µF ceramic caps** | 4 (of 12) | — | Brush-noise suppression soldered across each motor body (prevents USB-link crashes later). | https://www.adafruit.com/product/753 | **already have** |
 | **2S balance-port low-voltage alarm/buzzer** | 1 | $5 | Dumb hardware backstop against LiPo over-discharge; works even if firmware crashes. | https://hobbyking.com/en_us/cell-checker-with-low-voltage-alarm-2s-8s.html | **buy** |
 
 ## Wiring, tools & instrumentation
