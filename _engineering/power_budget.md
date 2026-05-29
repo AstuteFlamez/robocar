@@ -80,7 +80,7 @@ Worst case = "driving hard while a wheel jams and the Pi is doing SLAM with the 
 | Cruising (≤0.65 A each) | ~2.6 A |
 | All four stalled (≤1.4 A each) | **~5.6 A** (brief — fix it or the stall-timeout cuts it) |
 
-→ **7.5 A motor-branch fuse** rides above the 5.6 A all-stall transient without nuisance-tripping. Each motor's 1.4 A stall is well under the **TB6612's 3.2 A/channel peak**.
+→ **7.5 A motor-branch fuse** rides above the 5.6 A all-stall transient without nuisance-tripping. Each motor's 1.4 A stall is well under the **TB6612's 3.2 A/channel peak**. Use a **time-delay (slow-blow)** blade here: when all four motors start or reverse together they briefly draw their locked-rotor (≈ stall) current at once — ~5.6 A and up for a few ms, plus the bulk-cap charge spike — and that transient must ride under the fuse's i²t, not trip it. A fast-acting blade on this branch is a likely cause of mid-drive nuisance shutoffs. *(The vendor RRC Lite ships with no battery fuses at all, so this is robocar's own protection layer — size it for the inrush, not just the 5.6 A average.)*
 
 ### On the 5 V servo rail (UBEC → PCA9685 V+)
 
@@ -115,6 +115,7 @@ Converters aren't free — they trade voltage for current at ~90% efficiency. Th
 - **UBEC for servos:** must exceed 2× servo stall (~1.5 A) + inrush. 3 A with a bulk cap is comfortable.
 - **Main fuse:** just above total worst-case pack draw (~10 A), below the 18 AWG wire ampacity and pack rating. Round to a standard blade value (10 A).
 - **Branch fuses:** just above each branch's worst case (motor 5.6 A → 7.5 A; Pi 3.5 A → 5 A), and each **smaller than the main** for selectivity.
+- **Fuse character (fast vs slow-blow):** use **time-delay (slow-blow)** blades on the **motor branch and the main** so the brief simultaneous motor startup/reversal inrush (locked-rotor current + bulk-cap charge, a few ms) rides under the i²t instead of nuisance-tripping; a **fast-acting** blade is fine (and slightly safer) on the **Pi-buck branch**, which sees no inductive inrush. Standard ATC/ATO automotive blades come in both characters — specify slow-blow where it matters.
 - **Wire gauge:** motor/main power = **18 AWG** (good for ~10 A in short runs); signals = **22 AWG**. Breadboard spring contacts are ~1 A — **motor power never touches a breadboard.**
 - **Bulk capacitance:** ~470–1000 µF where big loads switch (motor VM, servo V+) to absorb the millisecond di/dt that fuses and average budgets ignore; 0.1 µF ceramics at each motor body for brush noise.
 

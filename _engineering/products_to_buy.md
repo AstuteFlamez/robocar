@@ -54,7 +54,7 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | **Hobbywing UBEC-3A** (2–6S → 5 V/3 A) | 1 | $10 | Dedicated servo rail; isolates 1.5 A servo stall from the Pi. | https://www.hobbywingdirect.com/products/ubec-3a-2-6s-lipo-input | 5 |
 | Pololu **#2815** MOSFET slide switch *(or rocker + #5381)* | 1 | $8 | Master disconnect **+ reverse-polarity protection** in one part. | https://www.pololu.com/product/2815 | 1 |
 | **22 mm latching mushroom e-stop, 1×NC** | 1 | $8 | Instant physical motor kill; NC = fail-safe. In the motor branch only. | https://www.amazon.com/dp/B00W947PS0 | 1 |
-| Inline **ATC/ATO blade fuse holders** (18 AWG) + blades **10 A / 7.5 A / 5 A** | 3 + asst | $10 | Coordinated fusing: main / motor branch / Pi branch. | https://www.amazon.com/dp/B0DT4NCD5V | 1 |
+| Inline **ATC/ATO blade fuse holders** (18 AWG) + blades **10 A / 7.5 A / 5 A** | 3 + asst | $10 | Coordinated fusing: main / motor branch / Pi branch. Use **time-delay (slow-blow)** blades on the main + motor branch (ride the motor startup/reversal inrush); fast-acting OK on the Pi branch. | https://www.amazon.com/dp/B0DT4NCD5V | 1 |
 | **INA219** current+voltage sensor (Adafruit #904) | 1 | $10 | Self-monitoring + low-voltage cutoff. **Set addr 0x41** (0x40 collides w/ PCA9685). | https://www.adafruit.com/product/904 | 4 |
 | **2S balance-port low-voltage alarm/buzzer** | 1 | $5 | Dumb hardware backstop against over-discharge. Remove between sessions. | https://hobbyking.com/en_us/cell-checker-with-low-voltage-alarm-2s-8s.html | 1 |
 | **XT60 connector pair** + pigtails | 1 set | $5 | Keyed, current-rated main battery connector. | https://www.amazon.com/s?k=xt60+connector+pigtail | 1 |

@@ -56,6 +56,7 @@ The PIO quadrature decoder reads **two consecutive GPIOs** starting from a base 
 - **Encoder VCC** (all 4) ← Pico **3V3(OUT)** (phys. pin 36). **Encoder GND** (all 4) → common ground.
 - Each encoder gets its **own PIO state machine** — 4 of the 12 available are used, 8 stay free.
 - 3.3 V supply keeps the Hall A/B outputs at a 3.3 V swing, inside the Pico's GPIO limit. (ADC pins GP26–29 are *never* 5 V tolerant, which is one more reason the encoders run at 3.3 V — RR's channels land on GP26/27.)
+- The 310 encoder is **datasheet-rated 3.3–5 V with built-in pull-up shaping** (Hiwonder/Yahboom spec), so 3.3 V is *in-spec* and the A/B HIGH is ~3.3 V — **no level-shifter needed.** **Optionally fit a 4.7 kΩ pull-up from each A and B to 3.3 V (never 5 V)** and enable the Pico's internal pull-ups + Schmitt inputs: harmless if push-pull, the defined HIGH if open-collector. Don't run the encoder at 5 V to mimic the vendor — the RP2350 isn't reliably 5 V-tolerant (and GP26/27 never are).
 
 ### Pico 2W — motor control (unchanged from Phase 1, shown for context)
 
@@ -121,6 +122,8 @@ A **PID controller** turns an *error* (commanded velocity minus measured velocit
 ## Software task list
 
 > Build firmware on the Pico. Keep your Phase 1 `Motor` class — the PID's output is just a signed speed in `[-1, +1]` you hand to `motor.set_speed()`.
+
+> **↪ Buildable C firmware (the "C from Phase 2" decision).** These tasks are also realized as compilable Pico-SDK C in [`../firmware/`](../firmware/): the PID is [`wheel_pid.c`](../firmware/src/wheel_pid.c) (positional form — the design below), the encoder→rad/s→PID→TB6612 loop is [`wheel_control.c`](../firmware/src/wheel_control.c), and the wrap-safe int64 PIO accumulator is [`quadrature_encoder.c`](../firmware/src/quadrature_encoder.c). The C was cross-validated against the working vendor controller. ⚠️ The skeletons below stay the teaching artifact and the firmware mirrors them; in the C, gains / `COUNTS_PER_REV` / deadband are **measured-placeholders** (never trust the literals), and PID gains are **positive** because robocar fixes encoder/PWM polarity at the driver — unlike the vendor's negative gains. See [`../firmware/README.md`](../firmware/README.md).
 
 ### 1. PIO quadrature decoder (don't write the PIO program from scratch)
 
@@ -224,7 +227,11 @@ Add a mode that streams CSV lines `t_ms, setpoint, measured, pwm` for one chosen
 
 ### 7. (Carry-forward) command-timeout watchdog — stub it now
 
-Per `safety.md`, the Pico must coast the motors if Pi comms drop. You wire the real serial link in Phase 3, but stub the watchdog now: if no setpoint update arrives for >0.5 s, zero all setpoints and call `motor.set_speed(0)`. Cheap insurance for a closed-loop bot that can run away.
+Per `safety.md`, the Pico must coast the motors if Pi comms drop. You wire the real serial link in Phase 3, but stub the watchdog now: if no setpoint update arrives for >0.5 s, **coast** every wheel — cut PWM and set the driver outputs high-Z (`IN1=IN2=0`), and reset the PID integrators so they don't wind up while disarmed. Do *not* run the PID toward a zero setpoint (that actively brakes). Cheap insurance for a closed-loop bot that can run away.
+
+### 8. Software stall detection (the safety layer `safety.md`/`engineering_decisions.md` promise)
+
+Implement the stall guard the design calls for: if a wheel is **commanded non-zero but its measured ω stays ~0** for N ticks (~0.5–1.0 s), force that wheel's PWM to 0 and **raise a fault flag** (the firmware drives the heartbeat LED's fast "fault" blink off it). The vendor controller has *no* stall check — this is robocar's own. Thresholds are bench-tuned placeholders (see [`../firmware/src/wheel_control.c`](../firmware/src/wheel_control.c)).
 
 ---
 
@@ -234,6 +241,7 @@ Do these **in order** — each assumes the previous passed. Wheels off the groun
 
 - [ ] **Continuity ritual first.** Battery disconnected, master switch off, e-stop pressed. Beep-test that each encoder VCC reads to the Pico **3V3(OUT)**, *never* to the 7.4 V motor rail. No beep between any V+ and any GND. (See `safety.md` continuity ritual.)
 - [ ] **Encoder power present.** Pico on USB only (motors unpowered). Measure **3.3 V** across each motor's encoder VCC↔GND with a multimeter. If any reads ~5 V or ~7.4 V, **stop** — you'll exceed the Pico's GPIO limit on the A/B lines.
+- [ ] **Scope the A/B edges at 3.3 V (load-bearing).** With Enc-VCC = 3.3 V, put the scope on one motor's Hall-A and Hall-B at the carrier: confirm a clean full-swing **0 → ~3.3 V** square wave and that HIGH never exceeds ~3.6 V. This is the one residual unknown — the vendor characterized this encoder at 5 V. If edges look weak / slow / rounded, fit (or lower) the A/B pull-up to 3.3 V (4.7 k, then 2.2 k) — **never raise Enc-VCC toward 5 V.**
 - [ ] **Each encoder counts by hand.** From the REPL, `enc["FL"].read()` then rotate the FL wheel by hand. The count must change. Repeat for RL, FR, RR with their own reads.
 - [ ] **Direction is correct.** Rotating a wheel in the *forward* drive direction makes its count go **up**; reverse makes it go **down**. If a wheel counts backward, swap its A/B at the carrier terminals (don't fix it in code).
 - [ ] **MEASURE `COUNTS_PER_REV` (Lab 1).** Mark the wheel, rotate exactly one output-shaft turn, read the delta. Record it per wheel; they should agree within a few counts. **Set `COUNTS_PER_REV` in firmware to this measured value** — do not leave 1040 hardcoded if your bench says otherwise.
@@ -243,7 +251,8 @@ Do these **in order** — each assumes the previous passed. Wheels off the groun
 - [ ] **Step-response plot looks healthy (Lab 3).** Stream the CSV, plot it. Rise time reasonable, overshoot modest (<~20%), settles without sustained oscillation. Tune from the plot, not the wheel.
 - [ ] **All four track together.** Command all wheels to 4.0 rad/s for 5 s; the four measured traces should overlap within encoder noise.
 - [ ] **Reverse tracks too.** Negative setpoints hold just as well.
-- [ ] **Watchdog coasts on comms loss.** Stop sending setpoints; within ~0.5 s all wheels should drop to zero.
+- [ ] **Watchdog coasts on comms loss.** Stop sending setpoints; within ~0.5 s all wheels should **coast** to a stop (PWM cut, driver outputs high-Z) — not actively brake.
+- [ ] **Stall detection cuts the held wheel (task 8).** Command all four to ~4 rad/s, then **hand-hold one wheel**. Within ~0.5–1.0 s *only the held wheel* should cut its PWM and raise the fault flag (heartbeat LED goes to the fast fault blink); the other three keep spinning.
 
 ---
 
@@ -252,7 +261,7 @@ Do these **in order** — each assumes the previous passed. Wheels off the groun
 - **Hardcoding 560 (or trusting 1040 without measuring).** Every downstream distance/velocity scales by `COUNTS_PER_REV`. The 13-line ring computes to **1040**, not the old guess of 560 — but you still *measure* it. This is the #1 silent error of the whole project.
 - **Encoder VCC on 5 V or 7.4 V.** Powering the encoder above 3.3 V raises the A/B output swing above the Pico's GPIO input limit. Some encoders "work" at 5 V for a while, then you've quietly stressed the pins. **3V3(OUT) only.** (And RR's channels are on GP26/27, which are ADC-capable pins that are *never* 5 V tolerant — doubly important here.)
 - **A and B swapped.** The count runs the wrong way. Fix it by swapping the two wires at the carrier, not in software — keeps the sign convention honest everywhere else.
-- **Noisy / jittery counts when motors run.** The Phase-1 0.1 µF caps at each motor body should handle brush noise. If counts still jitter under power, add a 100 nF cap from each A/B line to GND right at the motor, and keep encoder signal wires away from the 18 AWG motor-power pair.
+- **Noisy / jittery counts when motors run.** The Phase-1 0.1 µF caps at each motor body should handle brush noise. If counts still jitter under power, add a 100 nF cap from each A/B line to GND right at the motor, and keep encoder signal wires away from the 18 AWG motor-power pair. If counts are weak or marginal even with the motors *off*, the cause is usually a soft HIGH on the A/B line — add a 4.7 k (or 2.2 k) pull-up from each A/B to 3.3 V (never 5 V) and enable the Pico's internal pull-ups; the encoder is rated 3.3–5 V, so the fix is the pull-up, not raising the supply.
 - **PIO state-machine ID collision.** Reusing the same `(pio, sm)` for two encoders silently overwrites the first. Give each a unique pair; the RP2350's three PIO blocks (4 SMs each) leave plenty of room.
 - **Integral windup.** Commanding an unreachable speed pins PWM and winds the integral up; load drop → big overshoot. The conditional-integration guard above prevents it; if you still see overshoot, lower `ki`.
 - **Unsteady loop period.** PID math assumes a fixed `dt`. If your loop period wanders (because `time.sleep` drifts or work varies), `omega` and the I/D terms are computed against the wrong `dt` and tuning won't reproduce. Pin the loop to 50 Hz with a `ticks_diff` busy-wait (see task 2).

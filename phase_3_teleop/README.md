@@ -110,7 +110,7 @@ ping\n                 # liveness check
 t <ms> <fl> <rl> <fr> <rr>\n   # monotonic ms, then the 4 measured wheel ang. speeds (rad/s)
 o <vx> <vy> <wz>\n             # FORWARD-kinematics body twist computed from the 4 wheels (odometry)
 pong\n                         # reply to ping
-ok\n                          # ack of last command  (err <msg>\n on failure)
+ok\n                          # ack of last command  (err\n on parse failure)
 ```
 
 **Sign conventions (lock these down once, everywhere):** robot frame, **x forward, y to the robot's left, z up, ωz positive counter-clockwise** (the standard right-handed robotics convention). Pick it now and the kinematics signs, the IMU heading in Phase 4, and the SLAM map in Phase 7 all agree.
@@ -194,6 +194,8 @@ The retired power bank isn't trash — it's a fine **tethered bench supply** for
 ## Software task list
 
 > Repo layout suggestion: Pico firmware in `pico/` (`main.py`, `motor.py`, `encoder.py`, `pid.py`, `kinematics.py`); Pi code in `pi/` (`pico_link.py`, `kinematics.py`, `webserver.py`, `static/index.html`). The kinematics constants (`r`, `L`) live in one place each side and must agree.
+
+> **↪ Buildable C kinematics.** The inverse/forward maps below are realized as compilable Pico-SDK C in [`../firmware/src/mecanum_kinematics.c`](../firmware/src/mecanum_kinematics.c) — numerically verified **sign-for-sign identical** to the Python `inverse()`/`forward()` here. The `inverse()` sign matrix was additionally cross-validated against the working vendor controller's matrix; `forward()` has no vendor counterpart (the vendor firmware carries no odometry), so it is round-trip-verified against robocar's own `inverse()` instead. ⚠️ In the C, `L = lx + ly` uses **half** dimensions; the vendor's lumped lever is `2·(lx+ly)`, so copying its raw number would *double* the rotation gain. Measure `R` and `L` in the lab. See [`../firmware/README.md`](../firmware/README.md).
 
 ### A. Pico firmware — add kinematics + new protocol
 

@@ -39,12 +39,35 @@
 - **Role:** Hard-real-time motor brain. 20 kHz PWM to the drivers, quadrature decode of 4 encoders via **PIO**, per-wheel PID, command-timeout watchdog. Appears to the Pi as a USB serial device.
 - **Supply (V_in):** **5 V on VBUS from the Pi's USB** (this is how it's powered in this build). VSYS accepts 1.8–5.5 V. The onboard buck-boost makes the 3.3 V rail.
 - **I (run / peak):** tens of mA for itself. **3V3(OUT) pin can source ≤ ~300 mA** for external logic — enough for both driver logic rails + 4 encoder VCCs, nothing more.
-- **Logic level:** **3.3 V.** GPIO0–25 are 5 V-*input*-tolerant **only while the 3.3 V rail is powered** — do not rely on this; level-shift instead. ADC pins (GPIO26–29) are **never** 5 V tolerant.
-- **PWM / PIO:** 16 PWM channels (plenty for 4 motors + spare), **12 PIO state machines** (1 per encoder → 4 used, 8 free).
+- **Logic level:** **3.3 V.** Treat all GPIO as 3.3 V-only and **level-shift** anything 5 V — Raspberry Pi *withdrew* the RP2350's conditional-5 V-input-tolerance language from the datasheet (stepping-dependent), so don't rely on it. ADC pins (GPIO26–29) are **never** 5 V tolerant.
+- **PWM / PIO:** **24 PWM channels** (12 slices × 2 — 4 used for the motors, ample spare), **12 PIO state machines** (1 per encoder → 4 used, 8 free).
 - **Connector:** micro-USB (power + data + flashing), 40-pin 0.1″ header. Key pins: VBUS (40), VSYS (39), 3V3_EN (37), 3V3 OUT (36), GND throughout.
 - **Talks to:** Pi (USB serial), 2× TB6612FNG (PWM out + STBY + logic VCC), 4× encoders (PIO in + 3V3 + GND).
+- **Status I/O (firmware-driven, diagnostics only — *not* a safety device):** a **heartbeat** on a status LED (slow blink = idle/link-OK, fast = receiving commands, very fast = a latched stall fault) and an optional **~$1 passive piezo** on a free GPIO for a *beep-before-spin* on the first valid command plus a chirp when a watchdog fires. The on-board Pico 2W LED is on the CYW43 (needs `cyw43_arch`); a discrete LED on a free GPIO (e.g. GP15/GP22) avoids that dependency. The real safety backstops stay the **e-stop** and the **balance-port LVA buzzer**.
 - **⚠️ Footgun:** never back-feed the 7.4 V motor rail into VBUS/VSYS/3V3. Motor power and Pico power are separate rails joined **only at the common ground**.
 - **Source:** Pico 2W datasheet, RP2350 datasheet.
+
+---
+
+## Pi↔Pico serial protocol contract
+
+★ The two brains talk over **one USB-CDC serial link** using a deliberately **human-readable ASCII line protocol** (debuggable with `screen`/`cat`, visible on a logic analyzer). This is robocar's *own* protocol — it deliberately does **not** impersonate the vendor's binary CRC frames. This table is the single source of truth; every phase doc and the `firmware/` must match it.
+
+**Framing:** one message per line, `\n`-terminated, space-separated ASCII. **Canonical wheel order `FL, RL, FR, RR`** in every multi-wheel line. **Sign convention:** x forward (+), y left (+), ωz CCW (+) — the same right-handed frame the kinematics, the IMU heading (Phase 4), and the SLAM map (Phase 7) all share.
+
+| Dir | Line | Fields / units | Meaning |
+|---|---|---|---|
+| Pi→Pico | `v <vx> <vy> <wz>` | m/s, m/s, rad/s | Body-twist command → `mecanum_inverse()` → 4 PID setpoints; **pets the comms watchdog**. |
+| Pi→Pico | `s` | — | Stop: twist (0, 0, 0). |
+| Pi→Pico | `ping` | — | Link check. |
+| Pico→Pi | `t <ms> <wFL> <wRL> <wFR> <wRR>` | ms + rad/s ×4 | Monotonic-ms timestamp, then measured per-wheel angular speed (~20 Hz). |
+| Pico→Pi | `o <vx> <vy> <wz>` | m/s, m/s, rad/s | Forward-kinematics body twist (odometry, ~20 Hz). |
+| Pico→Pi | `ok` / `err` | — | Per-command ack / parse failure. |
+| Pico→Pi | `pong` | — | Reply to `ping`. |
+
+**Watchdog semantics:** if no `v` (or `s`) arrives within **0.5 s**, the Pico zeroes all setpoints and coasts (runaway prevention). A *hung* Pico is caught separately by the hardware watchdog (reboot + USB re-enumerate) — see `safety.md`.
+
+**Rates:** commands as needed (the Pi's teleop/autonomy loop); telemetry **~20 Hz** — one `t` + one `o` per cycle, never flooding the USB-CDC buffer. Implemented in [`../firmware/src/main.c`](../firmware/src/main.c) and mirrored by Phase 3's protocol section.
 
 ---
 
@@ -54,8 +77,8 @@
 - **Role:** The four Mecanum drive wheels. Closed-loop via encoder feedback.
 - **Supply (V_in, motor):** **7.4 V** nominal (runs on the 2S LiPo rail). Family range ~4.2–8.4 V.
 - **I (run / peak):** running **≤ 0.65 A**, **stall ≤ 1.4 A** @ 7.4 V. No-load ~0.05–0.1 A. *Size the driver/wire/fuse to the 1.4 A stall, not the 0.65 A average.*
-- **Encoder supply:** **3.3–5 V → use 3.3 V** (so the A/B outputs stay within the Pico's 3.3 V GPIO limit). **Never feed the encoder 7.4 V.**
-- **Encoder output:** AB-phase quadrature, Hall, **13 lines/rev on the motor shaft**, built-in shaping (read directly by an MCU).
+- **Encoder supply:** **3.3–5 V (datasheet-rated — Hiwonder/Yahboom 310 spec) → use 3.3 V.** A Hall output swings to its *own* Vcc, so 3.3 V keeps the A/B lines inside the Pico's 3.3 V GPIO limit — and 3.3 V is *in-spec*, not a compromise. **Never feed the encoder 7.4 V**, and **don't run it at 5 V to copy the vendor:** the RP2350 isn't reliably 5 V-tolerant (stepping-dependent; the claim was withdrawn from the datasheet) and RR's A/B sit on GP26/27, which are *never* 5 V-tolerant.
+- **Encoder output:** AB-phase quadrature, Hall, **13 lines/rev on the motor shaft**, with **built-in pull-up shaping** — an open-collector-style stage pulled to its own Vcc, so an MCU reads it directly. **Optionally fit a 4.7 kΩ pull-up from each Hall-A/Hall-B to 3.3 V (never 5 V) and enable the Pico's internal pull-ups + Schmitt inputs** — harmless if the output is push-pull, the defined HIGH if it's open-collector. *Scope a clean 0–3.3 V swing before trusting counts (the vendor characterized this encoder at 5 V).*
 - **★ Counts per *output-shaft* revolution = 13 × 4 (quadrature) × 20 (gearbox) = 1040.** (Or 260 if your firmware counts single-channel rising edges only.) **This is a *calculation*, not a printed spec — you MUST measure it empirically** (Phase 2). Every distance/velocity/SLAM number downstream is scaled by it.
 - **Gearbox / speed:** 1:20, output ~450 RPM no-load @ 7.4 V. Output shaft 3 mm D-shaped, eccentric.
 - **Connector:** **JST-PH 2.0 mm, 6-pin** carrying *both* motor power and the encoder (M+, M−, Enc-VCC, Enc-GND, Hall-A, Hall-B). **Keep this factory connector** — buy mating pigtails, don't cut it.
@@ -162,8 +185,8 @@
 - **Source:** Adafruit #904.
 
 ### Reverse-polarity + master switch, fuses, e-stop
-- **Reverse-polarity / master:** Pololu **#2815** MOSFET slide switch (~8 A, switch + reverse protection in one) **or** a rocker + Pololu **#5381** LM74500 protector (12 A).
-- **Fuses (coordinated):** **10 A main** (closest to LiPo +) · **7.5 A motor branch** · **5 A Pi-buck branch**. Inline ATC/ATO blade holders on 18 AWG.
+- **Reverse-polarity / master:** Pololu **#2815** MOSFET slide switch (~8 A, switch + reverse protection in one) **or** a rocker + Pololu **#5381** LM74500 protector (12 A). The ~8 A #2815 sits in series on the pack feed; robocar's draw is ~5.4 A continuous with a brief ~10 A all-stall + SLAM transient it tolerates. **Prefer #5381 (12 A)** if you want continuous headroom above the 10 A main fuse or a separate master switch.
+- **Fuses (coordinated):** **10 A main** (closest to LiPo +) · **7.5 A motor branch** · **5 A Pi-buck branch**. Inline ATC/ATO blade holders on 18 AWG. **Character: time-delay (slow-blow) on the main + motor branch** (rides the brief all-motor startup/reversal inrush — locked-rotor current + bulk-cap charge); **fast-acting OK on the Pi branch** (no inductive inrush).
 - **E-stop:** 22 mm **latching mushroom, normally-closed**, in series in the **motor power branch only** (kills wheels, keeps the brains alive). NC = a broken wire also trips it (fail-safe).
 - **Source:** Pololu #2815 / #5381; sizing in power_budget.md.
 
@@ -185,7 +208,7 @@ Every electrical interface in the finished robot, with the contract check. Read 
 | Pico GPx (PWM×6/board) | PWM | TB6612 IN1/IN2/PWM | 3.3 V | 3.3 V | jumper | Pico 3.3 V drives TB6612 3.3 V-compat inputs ✓ |
 | Pico GPx | high | TB6612 STBY ×2 | 3.3 V | 3.3 V | jumper | must be HIGH to enable ✓ |
 | TB6612 AO/BO | motor PWM | 310 motor M+/M− | 7.4 V | power | JST-PH 6P | 1.4 A stall < 3.2 A peak/ch ✓ |
-| 310 encoder A/B | quadrature | Pico PIO pins (adjacent pairs) | 3.3 V | 3.3 V | JST-PH 6P | enc VCC=3.3 V keeps A/B ≤ 3.3 V ✓ |
+| 310 encoder A/B | quadrature | Pico PIO pins (adjacent pairs) | 3.3 V | 3.3 V | JST-PH 6P | enc VCC=3.3 V keeps A/B ≤ 3.3 V ✓ · optional 4.7 k pull-up A/B→3.3 V (never 5 V) ✓ |
 | Pi USB-A | USB | Pico micro-USB | 5 V | USB | USB-A↔micro | powers + serial link ✓ |
 | Pi USB-A | USB | CP2102 adapter | 5 V | USB | USB-A | → `/dev/ttyUSB0` |
 | CP2102 (3.3 V) | UART RX | STL-19P Tx | 3.3 V | 3.3 V | JST-ZH 4P | lidar TX 3.3 V matches ✓; PWM pin→GND ✓ |
@@ -222,10 +245,33 @@ Every electrical interface in the finished robot, with the contract check. Read 
 | FR | GP20 | GP21 |
 | RR | GP26 | GP27 |
 
-- **Encoder VCC** (all 4) ← Pico **3V3(OUT)** · **Encoder GND** (all 4) → common ground. (3.3 V keeps the A/B outputs within the Pico's GPIO limit.)
+- **Encoder VCC** (all 4) ← Pico **3V3(OUT)** · **Encoder GND** (all 4) → common ground. (3.3 V keeps the A/B outputs within the Pico's GPIO limit.) *Optionally add a 4.7 kΩ pull-up from each Hall-A/Hall-B to 3.3 V (never 5 V) + enable the Pico internal pull-ups — robust whether the output is open-collector or push-pull; verify clean 0–3.3 V edges on a scope before trusting counts.*
 - Each encoder gets its **own PIO state machine** (4 used of 12). A/B on adjacent pins because the PIO decoder reads two consecutive GPIOs from a base pin.
 - Free Pico GPIO for later: GP0, GP1, GP15, GP22, GP28.
 - **Pico power:** VBUS ← Pi USB 5 V. **3V3(OUT)** feeds both TB6612 VCC rails + the 4 encoder VCCs (load ≪ 300 mA). Never feed 7.4 V into the Pico.
+
+### MCU resource budget (RP2350) — every on-board duty maps to a finite resource, with headroom
+
+| Duty | Resource | Used | RP2350 has | Note |
+|---|---|---|---|---|
+| 4× motor PWM (20 kHz) | PWM channels | 4 (GP4/7/10/13) | 24 ch / 12 slices | ⚠️ confirm GP4/7/10/13 land on **distinct slice+channel** pairs — two outputs on one slice are forced to equal duty (driving one wheel tugs another). Verify on the bench. |
+| 4× quadrature decode | PIO state machines | 4 (pio0 sm0–2, pio1 sm0) | 12 SMs (3 blocks × 4) | 8 free. A/B must be adjacent GPIOs. |
+| 8× motor dir (IN1/IN2) + STBY | GPIO | 9 | — | plain digital out |
+| Pi link | USB-CDC | 1 | native USB | the protocol contract above |
+| 3.3 V external loads | 3V3(OUT) | 2 driver rails + 4 enc VCC | ≤ ~300 mA | well under budget |
+| (optional) current shunt | ADC | 0 used | 3 ch (GP26/27 spent on RR enc!) | only **GP28** free — see stall-detection ADR |
+| Free for later | GPIO | — | GP0, GP1, GP15, GP22, GP28 | status LED / piezo / shunt |
+
+### Connector pinout — verify on YOUR cable (color codes vary by batch)
+
+The contracts above are the V/I/logic source of truth; this is the **physical-mating** layer. Meter each cable before first power-on (the factory JST-PH plug is *kept*, never cut):
+
+| Connector | Pins | Verify (meter it — don't trust color) |
+|---|---|---|
+| Motor JST-PH 2.0 **6-pin** | M+, M−, Enc-VCC, Enc-GND, Hall-A, Hall-B | Typical: Red=M+, White=M−, Blue=Enc-VCC, Black=Enc-GND, Yellow=Hall-A, Green=Hall-B — **confirm by continuity**, batches differ. Enc-VCC → 3.3 V only. |
+| Servo 3-pin | V+, GND, signal | V+ from the **UBEC**, never the Pi rail; signal from PCA9685. |
+| XT60 (pack) | + / − | Keyed; confirm polarity into the reverse-protection input before mating. |
+| Pi↔Pico | USB | stable `/dev/serial/by-id/…`, not `ttyACM*` (enumeration order varies). |
 
 ### Raspberry Pi 5 — buses & power (40-pin header)
 

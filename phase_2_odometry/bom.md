@@ -14,7 +14,7 @@
 
 | Item | Qty | Why it matters this phase | Status |
 |---|---|---|---|
-| "310" metal-gear motors **with Hall encoders** (JGA27-310 / MD310Z20) | 4 | The encoder is *built into the motor* — 13 lines/motor-shaft rev, AB-phase quadrature, ~1040 counts/output-rev (★ measure it, don't trust it). Its Enc-VCC runs at **3.3 V** (not the motor's 7.4 V) so the A/B Hall outputs stay inside the Pico's GPIO limit. | already have (kit) |
+| "310" metal-gear motors **with Hall encoders** (JGA27-310 / MD310Z20) | 4 | The encoder is *built into the motor* — 13 lines/motor-shaft rev, AB-phase quadrature, ~1040 counts/output-rev (★ measure it, don't trust it). Its Enc-VCC runs at **3.3 V** (not the motor's 7.4 V) so the A/B Hall outputs stay inside the Pico's GPIO limit — datasheet-rated 3.3–5 V with built-in pull-up shaping, so 3.3 V is in-spec. | already have (kit) |
 | **JST-PH 2.0 6-pin pigtail leads** | 4 | The encoder conductors (Hall-A, Hall-B, Enc-VCC, Enc-GND) ride in the **same factory 6-pin plug** as the motor's M+/M−. You bought these pigtails in Phase 1 and mated them then — this phase just un-parks the four encoder wires. **Don't cut the factory connector.** | already bought (Phase 1) |
 | Raspberry Pi Pico 2W (RP2350) | 1 | Decodes all four quadrature encoders in **PIO hardware** (4 of 12 state machines), runs the per-wheel PID. **3V3(OUT) (pin 36, ≤300 mA)** now also feeds the 4 encoder VCCs on top of the two TB6612 logic rails (total ≪ 300 mA). | already have (kit/shelf) |
 | 8-ch USB logic analyzer (sigrok/PulseView) | 1 | Lab 2: confirm **A leads B** forward and the lead/lag flips on reverse — *seeing* quadrature on a real capture. | already bought (Phase 1) |
@@ -31,6 +31,7 @@
 - **Carrier board fit:** confirm it's sized for the **Pico 2W** form factor (40-pin, same footprint as the original Pico) and breaks out the GPIOs you need this phase — **GP16/17, GP18/19, GP20/21, GP26/27** (encoder A/B), **3V3(OUT)**, and **GND** — plus the GP2–GP14 motor-control pins from Phase 1. Solder the Pico to it (or seat it, if socketed) so the terminals are *retained*.
 - **3.3 V, not 5 V or 7.4 V, for Enc-VCC.** This is the one number that protects the Pico's GPIO (and especially RR's A/B on the **ADC pins GP26/27, which are *never* 5 V tolerant**). Source it from the carrier's 3V3(OUT) rail. See [`../_engineering/device_contracts.md`](../_engineering/device_contracts.md).
 - **Measure `COUNTS_PER_REV`.** Calculated 1040 (13 × 4 × 20), but the bench is the authority — every downstream distance/velocity/SLAM scale rides on it (README Lab 1).
+- **Optional A/B pull-ups:** 8× **4.7 kΩ** ¼ W resistors to pull each Hall-A/Hall-B to **3.3 V** (never 5 V). Belt-and-suspenders for a defined HIGH — harmless if the output is push-pull, required if it's open-collector. ~$1 (or from the Phase-1 resistor assortment). Verify clean 0–3.3 V edges on a scope (README checklist).
 
 ---
 

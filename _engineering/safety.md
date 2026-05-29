@@ -23,7 +23,8 @@ No single thing keeps you safe — these stack, each catching what the others mi
 | **Main fuse (10 A)** | blade fuse at battery + | A dead short anywhere downstream → opens before wires overheat. |
 | **Branch fuses (7.5 A / 5 A)** | blade fuses per branch | A fault on one branch can't take down the others (selectivity). |
 | **E-stop (NC, motor branch)** | latching mushroom | Instant wheel kill; brains stay alive. Broken wire also trips it. |
-| **Software watchdog** | Pico firmware | Coasts motors if Pi comms drop >0.5 s (runaway prevention). |
+| **Comms watchdog (sw)** | Pico firmware | Coasts motors if Pi comms drop >0.5 s (runaway prevention). |
+| **Hardware watchdog** | Pico (RP2350) | Reboots + re-enumerates a *hung* Pico — the comms watchdog can't, since it assumes the main loop is still running. Two different failures, two layers. |
 | **Stall timeout** | Pico firmware | Cuts PWM if a wheel is commanded but not moving (protects driver). |
 | **Low-voltage cutoff** | INA219 + Pi | Graceful park/halt before the pack is over-discharged. |
 | **LVA buzzer** | balance-port alarm | Dumb backstop if the Pi or its code fails. |
@@ -43,11 +44,16 @@ Battery **disconnected**, switch **off**. Multimeter on the beep (continuity) se
 - [ ] Beep between every ground and the star point at LiPo (−). **No** ground daisy-chains.
 - [ ] **No** beep between any V+ rail and any ground (that would be a short — find it before powering).
 - [ ] Encoder VCC reads to **3.3 V** (Pico 3V3), never to the 7.4 V motor rail.
-- [ ] TB6612 **STBY** wired to 3.3 V; PCA9685 **VCC ≠ V+** (not cross-wired).
+- [ ] TB6612 **STBY** on **GP14**, driven HIGH by firmware at init (not hard-tied to 3.3 V — so firmware can also kill all motors); PCA9685 **VCC ≠ V+** (not cross-wired).
 - [ ] Motor power path is **soldered / screw-terminal 18 AWG** — never through a breadboard.
 - [ ] Fuses seated and correct (10 / 7.5 / 5 A). Reverse-protection oriented right.
 
 A 10-minute beep test before power-on prevents the 10-hour debugging session (or the smoke) after.
+
+---
+
+## First powered bring-up — on a current-limited supply
+Before the LiPo ever touches a freshly-wired board, do the **first power-up on a current-limited bench supply** set to ~0.1–0.5 A (borrow a lab supply if you don't own one — not a required purchase). Bring the rails up slowly and watch the current draw: a wiring slip then **trips the limit** instead of dumping the pack's ~22 A into a short before the 10 A fuse can even blow (the fuse protects *wiring*, not a sub-10 A part-level short). Confirm no rail-to-ground short and correct rail voltages, **then** switch to the LiPo. This is the cheapest possible insurance for "first light" on the hand-wired carrier.
 
 ---
 
@@ -63,6 +69,32 @@ A 10-minute beep test before power-on prevents the 10-hour debugging session (or
 - Strain-relieve the Pi↔Pico USB "spinal cord" — if it wiggles loose mid-drive you lose the whole drivetrain link.
 - The Pi 5 and motor drivers get warm; don't bury them in foam or hot glue. Airflow matters.
 - 905 nm lidar laser is **Class 1 (eye-safe)** — fine, but don't stare into optics out of habit.
+
+---
+
+## Board-level risk register
+
+One consolidated view of the controller-board failure modes scattered across the per-phase pitfalls — each with the guardrail that catches it and the phase that installs it. (Deferred items carry a *revisit-if* trigger.)
+
+| ID | Failure mode | Why it bites | Guardrail | Installed |
+|---|---|---|---|---|
+| R1 | Battery reversed | Instantly kills drivers/buck/Pi | Keyed XT60 + P-FET (#2815/#5381) reverse protection | Phase 1 |
+| R2 | Encoder fed >3.3 V | A/B exceed GPIO limit; GP26/27 (RR) are ADC pins, *never* 5 V-tolerant → damage | Enc-VCC = 3.3 V (in-spec); meter before power | Phase 2 |
+| R3 | Encoder A/B float (open-collector, no pull-up) | PIO miscounts → silent odometry corruption | 4.7 k pull-up A/B→3.3 V + scope clean 0–3.3 V edges | Phase 2 |
+| R4 | STBY not HIGH | TB6612 outputs disabled → "motor won't move" | GP14 driven HIGH by firmware at init | Phase 1 |
+| R5 | PWM-slice aliasing | Two motor PWMs on one slice → coupled duty (one wheel tugs another) | Verify GP4/7/10/13 on distinct slice+channel | Phase 1 |
+| R6 | Wheel-order / sign swap | `FL,RL,FR,RR` mismatch → strafe becomes spin; odometry wrong | One canonical order everywhere; pure-vx/vy/ωz lab | Phase 3 |
+| R7 | Motor stall / jam | Sustained stall heats driver + pack | Software stall-timeout (+ optional shunt) | Phase 2 |
+| R8 | Comms loss (Pi stops) | Last command latches → runaway | Comms watchdog: coast after 0.5 s | Phase 2/3 |
+| R9 | Pico firmware hang | Control loop frozen at last duty | Hardware watchdog: reboot + re-enumerate | Phase 2 |
+| R10 | Motor startup/reversal inrush | Brief ~5.6 A+ surge nuisance-trips a fast fuse | Time-delay (slow-blow) motor + main fuses | Phase 1 |
+| R11 | Servo brownout onto a shared rail | Servo inrush sags the rail → Pi/Pico reboot | Dedicated 5 V UBEC; common ground only at star | Phase 5 |
+| R12 | I²C address collision | PCA9685 and INA219 both answer | Distinct addresses (0x40 vs 0x41) | Phase 3/5 |
+
+**Deferred — revisit-if:**
+- **INA219 ~3.2 A ceiling** clips on stall (bus voltage stays accurate, so the low-voltage cutoff still works) → *revisit with INA226 + external shunt if seeing the full ~12 A transient becomes a goal.*
+- **Wheels confirmed Mecanum** (45° rollers) — the whole kinematics matrix assumes it → *human must confirm before trusting odometry/strafe* (Phase 3).
+- **`COUNTS_PER_REV`** calculated ~1040 → *measure empirically in Phase 2; never ship the hardcoded value.*
 
 ---
 
