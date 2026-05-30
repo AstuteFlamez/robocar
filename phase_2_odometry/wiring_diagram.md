@@ -67,7 +67,7 @@ The two rails are still completely separate and joined only at the common star g
 
    ═════════ MOTOR POWER PATH (7.4 V) — unchanged from Phase 1 (still on the stand) ═════════
    ┌──────────────┐
-   │ 2S LiPo 7.4V │  SM-2P male → SM-2P female pigtail → red(+) / black(−)
+   │ 2S LiPo 7.4V │  ferruled flying leads (NO connector → ⚠️ UNKEYED, meter red=+)
    │ 2200mAh 10C  │
    │ +protection  │  red(+) ─► ┌────────────────────┐ ──► Board A VM (7.4V)
    │  board       │            │  WAGO 221-413 (+)  │ ──► Board B VM (7.4V)
@@ -78,7 +78,7 @@ The two rails are still completely separate and joined only at the common star g
    │              │              └────────────────────┘   (this splice = the star node)
    └──────────────┘
         No fuse / master switch / e-stop yet — the LiPo's built-in protection board plus
-        unplug-SM-2P / `stop` / STBY-low cover a single-branch, wheels-in-air build.
+        pull-+-lead-from-WAGO / `stop` / STBY-low cover a single-branch, wheels-in-air build.
         The full protection tree (10 A main fuse, #2815 switch, branch fuses, NC e-stop)
         is introduced in Phase 3, when the Pi becomes a second branch.
 
@@ -193,4 +193,4 @@ Tick each box after the wire is placed **and** beep-tested. Format: `A --> B —
 
 > Devices in the canonical design **not yet present** (added in later phases): Raspberry Pi 5 + D24V50F5 buck and the Pi↔Pico serial protocol (Phase 3), BNO055 IMU + INA219 (Phase 4), Camera 3 + PCA9685 + UBEC + servos (Phase 5), STL-19P lidar + CP2102 (Phase 6). This phase only *energizes and reads* the encoder conductors that were already mated in Phase 1.
 >
-> **Power-protection parts still deferred** (like Phase 1): the **10 A main fuse, #2815 reverse-polarity master switch, and branch fuses** arrive in **Phase 3** (when the Pi adds a second branch and selectivity finally matters), and the **NC mushroom e-stop** with it (Phase 3 is also the first floor-driving phase). Phase 2 is still wheels-on-stand on the simplified SM-2P → WAGO motor path, protected by the LiPo's built-in board.
+> **Power-protection parts still deferred** (like Phase 1): the **10 A main fuse, #2815 reverse-polarity master switch, and branch fuses** arrive in **Phase 3** (when the Pi adds a second branch and selectivity finally matters), and the **NC mushroom e-stop** with it (Phase 3 is also the first floor-driving phase). Phase 2 is still wheels-on-stand on the simplified ferruled-leads → WAGO motor path, protected by the LiPo's built-in board.

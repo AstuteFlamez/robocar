@@ -43,24 +43,23 @@
                                           │
    ════════════════ MOTOR POWER PATH (7.4 V) — Phase 1 bench build ════════════════
                                           │
-   ┌──────────────┐                       │
-   │ 2S LiPo 7.4V │  SM-2P male output     │
-   │ 2200mAh 10C  │──►( SM-2P female ──► red(+) / black(−) )
-   │ +protection  │       pigtail          │
-   │  board       │                        │
-   │ (charge via  │   red(+) ─► ┌────────────────────┐ ──► Board A VM (7.4V)
-   │  DC5.5×2.5   │             │  WAGO 221-413 (+)  │ ──► Board B VM (7.4V)
-   │  barrel jack)│             └────────────────────┘
+   ┌──────────────┐
+   │ 2S LiPo 7.4V │   ferruled flying leads (NO connector → ⚠️ UNKEYED, meter red=+)
+   │ 2200mAh 10C  │
+   │ +protection  │   red(+) ─► ┌────────────────────┐ ──► Board A VM (7.4V)
+   │  board       │             │  WAGO 221-413 (+)  │ ──► Board B VM (7.4V)
+   │              │             └────────────────────┘
    │              │
    │              │   black(−) ─► ┌────────────────────┐ ──► Board A GND
    │              │               │  WAGO 221-413 (−)  │ ──► Board B GND
    │              │               └────────────────────┘
    │              │
-   │              │   (each board: power lands on SOLDERED 2.54 mm screw terminals)
+   │              │   (mark each WAGO +/− · ferrules drop straight in · land power on
+   │              │    each board's SOLDERED 2.54 mm screw terminals)
    │              │   ╪ 470–1000µF bulk cap across VM↔GND (one per board/rail)
    └──────────────┘
         No fuse / master switch / e-stop in the bench path — the LiPo's built-in
-        protection board covers short+overcurrent; kills = unplug SM-2P / `stop` / STBY-low.
+        protection board covers short+overcurrent; kills = pull + lead from WAGO / `stop` / STBY-low.
         (Coordinated fuses + #2815 switch arrive Phase 3; NC e-stop in the first mobile phase.)
 
    ───────────────────────── COMMON GROUND (single-point STAR at LiPo −) ─────────────
@@ -118,17 +117,17 @@ Tick each box after the wire is placed **and** beep-tested. Format: `A --> B —
 
 ### Motor power path — *7.4 V, soldered screw-terminal 18 AWG, NEVER breadboard*
 
-> Phase 1 bench build: SM-2P → WAGO splits → screw terminals on each driver. **No external fuse, master switch, or e-stop** (the LiPo's built-in protection board covers short/overcurrent; coordinated fuses + #2815 switch land in Phase 3, the NC e-stop in the first mobile phase). Each WAGO 221-413 joins *all three* inserted wires — there is no "in" vs "out".
+> Phase 1 bench build: LiPo ferruled leads → WAGO splits → screw terminals on each driver. **No external fuse, master switch, or e-stop** (the LiPo's built-in protection board covers short/overcurrent; coordinated fuses + #2815 switch land in Phase 3, the NC e-stop in the first mobile phase). Each WAGO 221-413 joins *all three* inserted wires — there is no "in" vs "out". ⚠️ The battery leads are **bare ferrules with no keying** — mark the WAGOs +/− and **meter polarity (red = +) before every power-up.**
 
-- [ ] `LiPo SM-2P male` --> `SM-2P female pigtail` — mate the battery's keyed output plug (don't cut it); breaks out to red (+) / black (−)
-- [ ] `Pigtail red (+)` --> `WAGO #1 port 1` — battery + into the (+) splice
+- [ ] **Meter the battery leads (red = +)** and mark each WAGO +/− — the no-keying safeguard, do it every power-up
+- [ ] `LiPo red (+) ferrule` --> `WAGO #1 port 1` — battery + into the (+) splice
 - [ ] `WAGO #1 port 2` --> `Board A VM` (screw terminal) — 7.4 V motor supply, Board A
 - [ ] `WAGO #1 port 3` --> `Board B VM` (screw terminal) — 7.4 V motor supply, Board B (parallel)
-- [ ] `Pigtail black (−)` --> `WAGO #2 port 1` — battery − into the (−) splice (this is the star node)
+- [ ] `LiPo black (−) ferrule` --> `WAGO #2 port 1` — battery − into the (−) splice (this is the star node)
 - [ ] `WAGO #2 port 2` --> `Board A GND` (screw terminal) — power-side ground, Board A
 - [ ] `WAGO #2 port 3` --> `Board B GND` (screw terminal) — power-side ground, Board B
 - [ ] `470–1000 µF bulk cap (+)` --> `VM`; `bulk cap (−)` --> `GND` — **one cap per driver board (×2)**, absorbs start/stall di/dt across the motor rail
-- [ ] *(optional)* `7.5 A inline blade fuse` in the red (+) lead between pigtail and WAGO #1 — belt-and-suspenders only; not required (battery protection board already covers it)
+- [ ] *(optional)* `7.5 A inline blade fuse` in the red (+) lead before WAGO #1 — belt-and-suspenders only; not required (battery protection board already covers it)
 
 ### Motor noise suppression — *soldered at each motor body*
 
@@ -139,7 +138,7 @@ Tick each box after the wire is placed **and** beep-tested. Format: `A --> B —
 
 ### Common ground — *single-point STAR at the WAGO (−) splice, separate leg each, NO daisy-chain*
 
-- [ ] `Pigtail black (−)` --> `WAGO #2` — the WAGO (−) splice *is* the single star node (at the battery negative)
+- [ ] `LiPo black (−) ferrule` --> `WAGO #2` — the WAGO (−) splice *is* the single star node (at the battery negative)
 - [ ] `WAGO #2` --> `Board A GND` (power side) — own leg, heavy 18 AWG (motor return)
 - [ ] `WAGO #2` --> `Board B GND` (power side) — own leg, heavy 18 AWG
 - [ ] `Pico GND` --> `WAGO #2` (or a board GND screw terminal) — own thin 22 AWG leg (logic reference); reaches via laptop USB ground this phase
@@ -189,11 +188,11 @@ Tick each box after the wire is placed **and** beep-tested. Format: `A --> B —
 1. **STBY must be HIGH.** Both TB6612 STBY pins tie to `Pico GP14`, driven high in firmware (`enable_drivers(True)`). Left low, every motor stays dead no matter how perfect the rest of the wiring is. *Contract: device_contracts.md — "★ STBY pin must be pulled HIGH or the outputs stay disabled."*
 2. **VCC ≠ VM.** TB6612 **VCC = 3.3 V logic** (Pico 3V3); **VM = 7.4 V motor** (LiPo). Cross-wiring 7.4 V into VCC destroys the logic side. Two different pins, two different rails — only ground is shared. *Contract: device_contracts.md — TB6612 "VCC (logic) = 3.3 V … VM (motor) = 7.4 V."*
 3. **Encoder VCC = 3.3 V, never 7.4 V — and parked this phase.** You mate the encoder conductors in the 6-pin plug but do **not** power or read them yet. When you do (Phase 2), Enc-VCC comes from Pico 3V3 so the Hall A/B outputs stay ≤ 3.3 V for the Pico's GPIO. *Contract: device_contracts.md — "Never feed the encoder 7.4 V."*
-4. **A WAGO has no "in" or "out" — and a half-seated wire browns out under load.** All three ports of a 221-413 are electrically joined; "in vs out" is just which wire comes from the battery. Strip ~11 mm, lift the lever, insert the bare copper *fully* (no stray strands), close, and tug-test each wire. Don't cut the LiPo's keyed SM-2P plug — mate the female pigtail to it (the key is what prevents reverse-mating, which is why Phase 1 needs no separate reverse-protection part). *Brief: Phase 1 power path — SM-2P → WAGO splits → screw terminals.* (The NC e-stop and coordinated fuses this footgun used to cover are deferred — see the closing note.)
+4. **⚠️ The battery leads are bare ferrules with NO keying — meter polarity every time.** Nothing physically stops you landing **+** in the **−** WAGO, and a reversed VM destroys both TB6612s instantly. So: **mark each WAGO +/−, meter the leads (red = +) before every power-up**, then insert + into the (+) WAGO and − into the (−) WAGO. A WAGO has no "in"/"out" — all three ports of a 221-413 are joined; the ferrules drop straight in (lift lever, insert fully so the ferrule bottoms out, close, tug-test). If a ferrule is too long/bulky to seat, snip it and use the bare strands. *Brief: Phase 1 power path — ferruled leads → WAGO splits → screw terminals.* (The NC e-stop and coordinated fuses this footgun used to cover are deferred — see the closing note. A hardware reverse-protection part, the #2815 P-FET, arrives in Phase 3.)
 5. **Motor power never on the breadboard.** All VM, LiPo, and motor-output wires are soldered/screw-terminal 18 AWG. Breadboard springs (~1 A) can't carry ~1.4 A/motor (~5.6 A all-stall). Breadboard is for the 3.3 V signal jumpers only. *power_budget.md — "Breadboard spring contacts are ~1 A — motor power never touches a breadboard."*
 6. **Star ground, not a daisy-chain.** Every ground gets its own leg back to one node at LiPo−. Don't chain LiPo− → BoardA → BoardB → Pico; the 20 kHz motor-return current would corrupt the logic ground reference. *power_budget.md — "Single-point STAR at LiPo (−) … No daisy-chaining."*
 7. **Don't back-feed the Pico.** The 7.4 V motor rail must never reach VBUS/VSYS/3V3. The Pico is powered from laptop USB this phase; motor power and Pico power are separate rails joined only at ground. *Contract: device_contracts.md — Pico "⚠️ Footgun: never back-feed the 7.4 V motor rail into VBUS/VSYS/3V3."*
 
 > Devices in the canonical design **not yet present** (added in later phases): Raspberry Pi 5 + D24V50F5 buck (Phase 3), BNO055 IMU + INA219 (Phase 4), Camera 3 + PCA9685 + UBEC + servos (Phase 5), STL-19P lidar + CP2102 (Phase 6). The encoder wiring of the already-mated 6-pin plugs is energized in Phase 2.
 >
-> **Power-protection parts deferred out of Phase 1** (explained in the README's Concepts, built when they pay off): the **coordinated fuse set (10 A main / 7.5 A motor / 5 A Pi)** and the **#2815 reverse-polarity master switch** arrive in **Phase 3**, when the Pi adds a second branch; the **22 mm NC mushroom e-stop** arrives in the first **mobile** phase. Phase 1's bench path relies on the LiPo's built-in protection board plus the unplug / `stop` / STBY-low kills.
+> **Power-protection parts deferred out of Phase 1** (explained in the README's Concepts, built when they pay off): the **coordinated fuse set (10 A main / 7.5 A motor / 5 A Pi)** and the **#2815 reverse-polarity master switch** arrive in **Phase 3**, when the Pi adds a second branch; the **22 mm NC mushroom e-stop** arrives in the first **mobile** phase. Phase 1's bench path relies on the LiPo's built-in protection board plus the pull-+-lead-from-WAGO / `stop` / STBY-low kills.
