@@ -10,8 +10,8 @@ Every connection traces to a contract in [`_engineering/device_contracts.md`](..
 
 ```
                           2S LiPo 7.4 V (8.4 V full → 6.0 V empty)
-                          2200 mAh · 10C ≈ 22 A capable
-                                   │  XT60
+                          2200 mAh · 10C ≈ 22 A · built-in protection board
+                                   │  SM-2P (keyed) → pigtail
                                    ▼
                           ┌─────────────────┐
                           │  10 A MAIN FUSE │   (closest to battery +)

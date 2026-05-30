@@ -21,7 +21,7 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | LDROBOT STL-19P 360° lidar | 1 | ⚠️ Comes wired to the RRC Lite, **not** as a USB stick → you buy a CP2102 adapter. |
 | LFD-01 servos + 2-DOF pan/tilt bracket | 2 + 1 | ⚠️ Confirm included. Else buy 2× MG90S (below). |
 | Nuwa-HP60C USB depth camera | 1 | ⚠️ Optional to use. Confirm included; **don't buy one** if absent. |
-| 2S LiPo 7.4 V 2200 mAh 10C (w/ protection board) | 1 | The single system battery. |
+| 2S LiPo 7.4 V 2200 mAh 10C (w/ built-in protection board) | 1 | The single system battery. Protection board cuts on overcharge / over-discharge / overcurrent / short. Output = keyed **SM-2P male** plug; charge via a separate **DC5.5×2.5 barrel** jack with the 8.4 V charger. (No XT60 — don't cut the factory plug; buy a mating SM-2P pigtail below.) |
 | 64 GB microSD card | 1 | For Raspberry Pi OS. |
 | 5 V/3 A USB power bank | 1 | **Demoted** — only as an optional tethered bench supply for early phases. Not the robot's supply. |
 | Balance LiPo charger | 1 | Non-negotiable for LiPo safety. (If you don't have one, add ~$30.) |
@@ -52,12 +52,14 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 |---|---|---|---|---|---|
 | Pololu **D24V50F5** 5 V/5 A buck regulator (#2851) | 1 | $25 | Powers the Pi 5 properly from the LiPo (6–38 V in, 5 V/5 A out, reverse-protect, soft-start). | https://www.pololu.com/product/2851 | 3 |
 | **Hobbywing UBEC-3A** (2–6S → 5 V/3 A) | 1 | $10 | Dedicated servo rail; isolates 1.5 A servo stall from the Pi. | https://www.hobbywingdirect.com/products/ubec-3a-2-6s-lipo-input | 5 |
-| Pololu **#2815** MOSFET slide switch *(or rocker + #5381)* | 1 | $8 | Master disconnect **+ reverse-polarity protection** in one part. | https://www.pololu.com/product/2815 | 1 |
-| **22 mm latching mushroom e-stop, 1×NC** | 1 | $8 | Instant physical motor kill; NC = fail-safe. In the motor branch only. | https://www.amazon.com/dp/B00W947PS0 | 1 |
-| Inline **ATC/ATO blade fuse holders** (18 AWG) + blades **10 A / 7.5 A / 5 A** | 3 + asst | $10 | Coordinated fusing: main / motor branch / Pi branch. Use **time-delay (slow-blow)** blades on the main + motor branch (ride the motor startup/reversal inrush); fast-acting OK on the Pi branch. | https://www.amazon.com/dp/B0DT4NCD5V | 1 |
+| Pololu **#2815** MOSFET slide switch *(or rocker + #5381)* | 1 | $8 | Master disconnect **+ reverse-polarity protection** in one part. *Deferred to Phase 3* — Phase 1's keyed SM-2P already prevents reverse-mating, and bench bring-up disconnects by unplugging it. | https://www.pololu.com/product/2815 | 3 |
+| **22 mm latching mushroom e-stop, 1×NC** | 1 | $8 | Instant physical motor kill; NC = fail-safe. In the motor branch only. *Added in Phase 3* (the first floor-driving phase) — wheels-in-the-air Phases 1–2 already have unplug / `stop` / STBY-low kills. | https://www.amazon.com/dp/B00W947PS0 | 3 |
+| Inline **ATC/ATO blade fuse holders** (18 AWG) + blades **10 A / 7.5 A / 5 A** | 3 + asst | $10 | Coordinated fusing: main / motor branch / Pi branch. Use **time-delay (slow-blow)** blades on the main + motor branch (ride the motor startup/reversal inrush); fast-acting OK on the Pi branch. *Starts in Phase 3* — selectivity only buys you something once the Pi adds a second branch; Phase 1 relies on the LiPo's built-in protection board (one optional 7.5 A inline blade is fine but not required). | https://www.amazon.com/dp/B0DT4NCD5V | 3 |
 | **INA219** current+voltage sensor (Adafruit #904) | 1 | $10 | Self-monitoring + low-voltage cutoff. **Set addr 0x41** (0x40 collides w/ PCA9685). | https://www.adafruit.com/product/904 | 4 |
 | **2S balance-port low-voltage alarm/buzzer** | 1 | $5 | Dumb hardware backstop against over-discharge. Remove between sessions. | https://hobbyking.com/en_us/cell-checker-with-low-voltage-alarm-2s-8s.html | 1 |
-| **XT60 connector pair** + pigtails | 1 set | $5 | Keyed, current-rated main battery connector. | https://www.amazon.com/s?k=xt60+connector+pigtail | 1 |
+| **SM-2P female pigtail** (mates the LiPo's factory output plug) | 1 | $4 | Breaks the battery's keyed SM-2P male output out to red (+) / black (−) leads. Keyed → can't mate reversed; **don't cut the factory plug.** Replaces the old XT60 assumption. | https://www.amazon.com/s?k=SM-2P+connector+pigtail | 1 |
+| **WAGO 221-413** lever-nut splice, 3-conductor | 2 | $6 | No-solder rail split: one joins LiPo + → both TB6612 VM, the other joins LiPo − → both GND. ~20 A / 600 V rated. All three ports are joined (no in/out). | https://www.amazon.com/s?k=WAGO+221-413 | 1 |
+| **0.1″ (2.54 mm) PCB screw-terminal blocks** (2P/3P/4P) | 1 pack | $9 | Soldered to each driver's power-edge pads (VM/GND/AO/BO) so power + motor wires land by screw. 150 V / 6 A. Solder to the board (not breadboard). Exact-fit alt: Pololu #2491. | https://www.amazon.com/kuosbiu-Terminal-Connector-Electronics-Projects/dp/B0CFYHDC7L | 1 |
 | Bulk electrolytics **470–1000 µF, ≥16 V, low-ESR/105 °C** | ~4 | $8 | Absorb motor/servo start & stall transients (di/dt) so rails don't sag. (No Adafruit SKU meets ≥16 V at this capacitance — source from DigiKey/Mouser, e.g. Nichicon UVZ-series 470 µF/25 V/105 °C.) | https://www.digikey.com/en/products/filter/aluminum-electrolytic-capacitors/58 | 1 |
 | **0.1 µF ceramic caps** | 12 | $3 | Brush-noise suppression at each motor body. | https://www.adafruit.com/product/753 | 1 |
 
@@ -108,10 +110,10 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | Bucket | Approx. |
 |---|---|
 | Core DIY brain & drivers | ~$75 (less ~$6 if reusing kit LFD-01 servos) |
-| Power & protection | ~$95 |
+| Power & protection | ~$105 (XT60 dropped for the LiPo's native SM-2P; +SM-2P pigtail, WAGO splices, screw-terminal blocks) |
 | Wiring, connectors, mechanical | ~$110 (one-time tools dominate: crimper, wire, standoffs) |
 | Instrumentation | ~$40 (logic analyzer + multimeter) |
-| **Subtotal (new parts)** | **~$320** |
+| **Subtotal (new parts)** | **~$330** |
 | Optional add-ons | +$20 |
 
 Most of the spend is **one-time tooling and safety** (crimper, logic analyzer, buck, reverse-protection, fuses) that you keep for every future project. The robot-specific electronics are ~$75–120. The original plan's ~$120–180 estimate omitted the power-tree and protection that make a LiPo-powered autonomous robot safe — that gap is the difference between "it ran once" and "it runs reliably and didn't catch fire."

@@ -24,7 +24,7 @@ Everything in this phase is **software running on the Pi 5.** No new hardware, n
 - **Phase 6 complete** — live 360° lidar scans flowing at 10 Hz on `/dev/ttyUSB0`.
 - **Phase 4 complete** — fused pose `(x, y, θ)` from BNO055 heading + Mecanum wheel odometry.
 - **Phase 3 complete** — the Pi↔Pico serial bridge and the **Mecanum inverse-kinematics function** `body_twist_to_wheels(vx, vy, ωz)` that you wrote and verified by commanding pure `vx`, pure `vy`, and pure `ωz` one at a time. **This phase calls that function unchanged** — if strafing was wrong in Phase 3, it is wrong here too.
-- **Phase 1 complete** — the power tree, e-stop, and the Pico-side comms watchdog + stall timeout are all live. Autonomy means the robot moves *without your hand on the joystick*, so every one of those hardware/firmware safety layers matters more now than ever.
+- **Phases 1–3 complete** — the full power tree (the motors' bench path from Phase 1, upgraded in Phase 3 with the coordinated fuses, #2815 master switch, and NC e-stop), plus the Pico-side comms watchdog + stall timeout, are all live. Autonomy means the robot moves *without your hand on the joystick*, so every one of those hardware/firmware safety layers matters more now than ever.
 
 ## New parts this phase
 **None.** This is a pure-software phase. (See `bom.md` — it confirms zero new purchases and points you back to the parts you already own.)

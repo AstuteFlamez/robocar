@@ -109,14 +109,17 @@ So the project **reuses the mechanical robot** (chassis, wheels, motors, lidar, 
 ### [MUST] Reverse-polarity protection + master switch
 - **Why:** There was *zero* protection against the most common fatal LiPo mistake — plugging the battery in backwards — which instantly destroys the drivers, the buck, and maybe the Pi. A **P-FET high-side switch (#2815)** is one part that does master-disconnect *and* reverse protection.
 - **What it teaches:** why a P-channel MOSFET high-side switch beats a series diode (no ~0.7 V drop, no heat) — a classic power-electronics lesson.
+- **Staged:** Phases 1–2 lean on the kit pack's **keyed SM-2P** output (it physically can't mate reversed) and simply unplug to disconnect; the **#2815 P-FET switch is added in Phase 3**, when a second branch (the Pi buck) makes a real master-disconnect worthwhile and lead-swapping becomes routine.
 
 ### [MUST] Coordinated fusing (10 A main / 7.5 A motor / 5 A Pi)
 - **Why:** The original's single 5 A fuse is below the realistic ~8–10 A total and would nuisance-trip — and a student who's sick of a nuisance-tripping fuse *removes* it (a safety regression). Right-size the main and add per-branch fuses so a motor short doesn't kill the Pi.
 - **What it teaches:** fuses protect *wires*, not batteries; and **selectivity** — branch fuses smaller than the main so faults isolate to one branch.
+- **Staged:** the coordinated set is **built in Phase 3**. Selectivity does nothing until there's more than one branch, and Phases 1–2 are a single motor branch fed by a LiPo whose **built-in protection board** already opens on a short/overcurrent — so the external fuses wait until the Pi buck adds the second branch. (A single optional 7.5 A inline blade in Phase 1 is fine but not required.)
 
 ### [MUST] Latching NC mushroom e-stop in the motor branch
 - **Why:** A moving closed-loop Mecanum robot needs an instant physical kill. Wiring it **normally-closed** in the **motor branch only** means a press (or a broken wire) coasts the wheels while the Pi/Pico stay alive to log the fault. Pairs with the Pico's software comms-watchdog (defense in depth).
 - **What it teaches:** fail-safe design (the safe state is the *default* state) — a core safety-engineering principle.
+- **Staged:** **added in Phase 3**, the first floor-driving phase. While the wheels are in the air on a stand (Phases 1–2) there's no runaway to chase, and three instant kills already exist (unplug the SM-2P, `stop` in the serial loop, drop STBY/GP14 low) — the physical mushroom earns its place once the robot can actually drive away.
 
 ### [SHOULD] INA219 self-monitoring (at 0x41) + balance-port LVA buzzer
 - **Why:** Two layers of over-discharge protection. The INA219 lets the Pi read pack V and I → a live dashboard and a graceful low-voltage park/halt (set its address to **0x41**, not the default 0x40 which collides with the PCA9685). The ~$5 balance-port buzzer is the dumb hardware backstop that works even if the Pi crashes.

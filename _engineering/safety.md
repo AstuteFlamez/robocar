@@ -78,7 +78,7 @@ One consolidated view of the controller-board failure modes scattered across the
 
 | ID | Failure mode | Why it bites | Guardrail | Installed |
 |---|---|---|---|---|
-| R1 | Battery reversed | Instantly kills drivers/buck/Pi | Keyed XT60 + P-FET (#2815/#5381) reverse protection | Phase 1 |
+| R1 | Battery reversed | Instantly kills drivers/buck/Pi | Keyed **SM-2P** plug (can't mate reversed) — Phase 1; P-FET (#2815/#5381) reverse protection added with the master switch — Phase 3 | Phase 1 (keying) / Phase 3 (P-FET) |
 | R2 | Encoder fed >3.3 V | A/B exceed GPIO limit; GP26/27 (RR) are ADC pins, *never* 5 V-tolerant → damage | Enc-VCC = 3.3 V (in-spec); meter before power | Phase 2 |
 | R3 | Encoder A/B float (open-collector, no pull-up) | PIO miscounts → silent odometry corruption | 4.7 k pull-up A/B→3.3 V + scope clean 0–3.3 V edges | Phase 2 |
 | R4 | STBY not HIGH | TB6612 outputs disabled → "motor won't move" | GP14 driven HIGH by firmware at init | Phase 1 |
@@ -87,7 +87,7 @@ One consolidated view of the controller-board failure modes scattered across the
 | R7 | Motor stall / jam | Sustained stall heats driver + pack | Software stall-timeout (+ optional shunt) | Phase 2 |
 | R8 | Comms loss (Pi stops) | Last command latches → runaway | Comms watchdog: coast after 0.5 s | Phase 2/3 |
 | R9 | Pico firmware hang | Control loop frozen at last duty | Hardware watchdog: reboot + re-enumerate | Phase 2 |
-| R10 | Motor startup/reversal inrush | Brief ~5.6 A+ surge nuisance-trips a fast fuse | Time-delay (slow-blow) motor + main fuses | Phase 1 |
+| R10 | Motor startup/reversal inrush | Brief ~5.6 A+ surge nuisance-trips a fast fuse | Time-delay (slow-blow) motor + main fuses (Phase 1 bench build has no external fuse — relies on the LiPo protection board) | Phase 3 |
 | R11 | Servo brownout onto a shared rail | Servo inrush sags the rail → Pi/Pico reboot | Dedicated 5 V UBEC; common ground only at star | Phase 5 |
 | R12 | I²C address collision | PCA9685 and INA219 both answer | Distinct addresses (0x40 vs 0x41) | Phase 3/5 |
 

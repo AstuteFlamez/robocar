@@ -7,8 +7,8 @@ Every connection here traces to `_engineering/device_contracts.md` (the contract
 ## Block schematic
 
 ```
-                      2S LiPo 7.4V (8.4V full -> 6.0V empty), 2200mAh 10C (~22A capable)
-                                      |  XT60
+                      2S LiPo 7.4V (8.4V full -> 6.0V empty), 2200mAh 10C (~22A), built-in protection board
+                                      |  SM-2P (keyed) -> pigtail
                                       v
                               [ 10 A MAIN FUSE ]            (closest to battery +)
                                       |

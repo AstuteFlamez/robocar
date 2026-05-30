@@ -13,7 +13,8 @@
 ```
                           2S LiPo 7.4V (8.4V full → 6.0V empty)
                           2200 mAh · 10C ≈ 22 A capable
-                                   │  XT60
+                          built-in protection board (short/OC/OV/UV cut-off)
+                                   │  SM-2P (keyed) → female pigtail
                                    ▼
                           ┌─────────────────┐
                           │  10 A MAIN FUSE │   (closest to battery +)
@@ -53,6 +54,8 @@
 ```
 
 **Read the tree as a hierarchy of promises.** The LiPo promises ≤22 A. The main fuse promises to open before the *wiring* overheats. Reverse protection promises a backwards battery does nothing. Each branch fuse promises a short on *its* branch won't take down the others. Each converter promises a clean, regulated rail regardless of what the battery sags to. The e-stop promises the wheels stop the instant you hit it, while the brains stay alive to tell you why.
+
+> **This is the *complete* tree, built up over several phases — not what you wire on day one.** **Phase 1** builds only the leftmost branch, and a deliberately minimal version of it: LiPo **SM-2P** output → female pigtail → a **WAGO 221-413** lever-nut splitting + and − → both **TB6612 VM/GND** on soldered screw terminals. There is **no main fuse, reverse-polarity switch, branch fuse, or e-stop yet** — with a single branch, a self-protecting battery (built-in protection board), and the wheels in the air on a stand, those parts are belt-and-suspenders. They earn their place as the system grows: the **main fuse, #2815 reverse-polarity master switch, and branch fuses** come online in **Phase 3**, when the D24V50F5 buck makes the Pi a second branch and selectivity finally means something; the **NC e-stop** is added in the first **mobile** phase, when a runaway robot becomes possible. The reasoning for each lives in `phase_1_powertrain/README.md` → "Concepts."
 
 ---
 

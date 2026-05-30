@@ -65,26 +65,24 @@ The two rails are still completely separate and joined only at the common star g
         │  Enc-GND ──► star ground (own thin 22 AWG legs)
         │  Hall-A / Hall-B ──► Pico PIO base / base+1 (per wheel)
 
-   ════════════════════ MOTOR POWER TREE (7.4 V) — unchanged from Phase 1 ═══════════
+   ═════════ MOTOR POWER PATH (7.4 V) — unchanged from Phase 1 (still on the stand) ═════════
    ┌──────────────┐
-   │ 2S LiPo 7.4V │ + ──XT60──►[ 10A MAIN FUSE ]──►┌──────────────────────┐
-   │ 2200mAh 10C  │                                 │  #2815 P-FET slide   │
-   │              │                                 │  switch (MASTER +    │
-   │              │                                 │  reverse-polarity)   │
-   │              │                                 └──────────┬───────────┘
-   │              │                                  protected 7.4V bus
-   │              │                                  [ 7.5A MOTOR FUSE ]
-   │              │                                            │
-   │              │                                  [ E-STOP (NC) ]  ← motor branch only
-   │              │                                            │
-   │              │                          ┌─────────────────┴─────────────────┐
-   │              │                          ▼                                   ▼
-   │              │                   Board A VM (7.4V)                  Board B VM (7.4V)
-   │              │                   ╪ 470–1000µF bulk cap across VM↔GND (one per rail)
-   │              │ − ──────────────────────────────────────────────────────────────┐
-   └──────────────┘                                                                  │
-                                                                                     ▼
-   ───────────────────── COMMON GROUND (single-point STAR at LiPo −) ──────────────────
+   │ 2S LiPo 7.4V │  SM-2P male → SM-2P female pigtail → red(+) / black(−)
+   │ 2200mAh 10C  │
+   │ +protection  │  red(+) ─► ┌────────────────────┐ ──► Board A VM (7.4V)
+   │  board       │            │  WAGO 221-413 (+)  │ ──► Board B VM (7.4V)
+   │              │            └────────────────────┘   ╪ 470–1000µF bulk cap per rail
+   │              │
+   │              │  black(−) ─► ┌────────────────────┐ ──► Board A GND
+   │              │              │  WAGO 221-413 (−)  │ ──► Board B GND
+   │              │              └────────────────────┘   (this splice = the star node)
+   └──────────────┘
+        No fuse / master switch / e-stop yet — the LiPo's built-in protection board plus
+        unplug-SM-2P / `stop` / STBY-low cover a single-branch, wheels-in-air build.
+        The full protection tree (10 A main fuse, #2815 switch, branch fuses, NC e-stop)
+        is introduced in Phase 3, when the Pi becomes a second branch.
+
+   ───────────────── COMMON GROUND (single-point STAR at the WAGO − splice) ─────────────────
      separate legs to: Board A GND · Board B GND · Pico GND (via laptop USB this phase)
      · 4× Enc-GND (thin 22 AWG) · heavy 18 AWG for motor return · NO daisy-chaining
 ```
@@ -194,3 +192,5 @@ Tick each box after the wire is placed **and** beep-tested. Format: `A --> B —
 7. **Don't back-feed the Pico (carry-forward).** The 7.4 V motor rail must never reach VBUS/VSYS/3V3 — including via a mis-landed M+ wire on the carrier next to the 3.3 V rail. Motor power and Pico/encoder power are separate rails joined only at ground. *device_contracts.md — Pico footgun.*
 
 > Devices in the canonical design **not yet present** (added in later phases): Raspberry Pi 5 + D24V50F5 buck and the Pi↔Pico serial protocol (Phase 3), BNO055 IMU + INA219 (Phase 4), Camera 3 + PCA9685 + UBEC + servos (Phase 5), STL-19P lidar + CP2102 (Phase 6). This phase only *energizes and reads* the encoder conductors that were already mated in Phase 1.
+>
+> **Power-protection parts still deferred** (like Phase 1): the **10 A main fuse, #2815 reverse-polarity master switch, and branch fuses** arrive in **Phase 3** (when the Pi adds a second branch and selectivity finally matters), and the **NC mushroom e-stop** with it (Phase 3 is also the first floor-driving phase). Phase 2 is still wheels-on-stand on the simplified SM-2P → WAGO motor path, protected by the LiPo's built-in board.

@@ -166,8 +166,9 @@
 ### 2S LiPo, 7.4 V 2200 mAh 10C (from kit) — *the one and only energy source*
 - **Output:** 7.4 V nominal (8.4 V full → 6.0 V empty). **10C × 2.2 Ah ≈ 22 A** continuous capability — far above our ~5–10 A worst case.
 - **★ Never discharge below ~3.0 V/cell (6.0 V pack).** Balance-charge only. Store at storage charge in a LiPo bag.
-- **Connector:** XT60 recommended for the main lead.
-- **Feeds:** (1) motor rail → 2× TB6612FNG VM; (2) D24V50F5 buck → Pi; (3) UBEC → servos. Through fuse + reverse-protection + switch + e-stop as below.
+- **★ Built-in protection board:** this pack ships with an integrated protection PCB (overcharge / over-discharge / overcurrent / short-circuit cut-off). It is a first line of defense, *not* a substitute for the downstream branch fuses once the system has multiple branches.
+- **Connector:** keyed **SM-2P male** output plug (mate with an SM-2P female pigtail — *do not cut it*); the keying prevents reverse-mating. Charging is via a **separate DC5.5×2.5 female barrel jack** with the 8.4 V charger — never charge through the SM-2P output. (Earlier drafts assumed an XT60; the actual kit pack uses SM-2P.)
+- **Feeds:** (1) motor rail → 2× TB6612FNG VM; (2) D24V50F5 buck → Pi; (3) UBEC → servos. Through fuse + reverse-protection + switch + e-stop as below — though **Phase 1's single-branch bench build adds none of those** (battery protection board + unplug/`stop`/STBY-low suffice); the coordinated fuses + #2815 switch come online in Phase 3, the e-stop in the first mobile phase.
 
 ### Pololu D24V50F5 — *5 V / 5 A buck for the Pi*
 - **In:** 6–38 V (the 7.4 V pack is in range, holds 5 V even at 6.0 V empty). **Out: 5 V / 5 A.** ~90% efficient → draws ~3.5–3.9 A from the pack at full Pi load. Integrated reverse-voltage protection + soft-start.
@@ -198,7 +199,7 @@ Every electrical interface in the finished robot, with the contract check. Read 
 
 | From | Signal / rail | To | V | Logic | Connector | Contract check |
 |---|---|---|---|---|---|---|
-| LiPo + | 7.4 V | Fuse → revpol/switch → e-stop → rails | 7.4 V | power | XT60 | Fuse 10 A < wire/pack rating ✓ |
+| LiPo + | 7.4 V | (Ph1) SM-2P pigtail → WAGO split → VM ×2 · (Ph3+) → fuse → revpol/switch → e-stop → rails | 7.4 V | power | SM-2P (keyed) | Ph1: battery protection board + keyed plug ✓ · Ph3+: 10 A main fuse < wire/pack rating ✓ |
 | Motor rail | 7.4 V | TB6612 VM ×2 | 7.4 V | power | screw/header | 7.4 V in 2.5–13.5 V range ✓; 7.5 A branch fuse ✓ |
 | LiPo branch | 7.4 V | D24V50F5 in | 7.4 V | power | header | 7.4 V in 6–38 V ✓; 5 A branch fuse ✓ |
 | D24V50F5 out | 5 V/5 A | Pi USB-C | 5 V | power | USB-C | Meets Pi's 5 A want ✓; `usb_max_current_enable=1` |
@@ -270,7 +271,8 @@ The contracts above are the V/I/logic source of truth; this is the **physical-ma
 |---|---|---|
 | Motor JST-PH 2.0 **6-pin** | M+, M−, Enc-VCC, Enc-GND, Hall-A, Hall-B | Typical: Red=M+, White=M−, Blue=Enc-VCC, Black=Enc-GND, Yellow=Hall-A, Green=Hall-B — **confirm by continuity**, batches differ. Enc-VCC → 3.3 V only. |
 | Servo 3-pin | V+, GND, signal | V+ from the **UBEC**, never the Pi rail; signal from PCA9685. |
-| XT60 (pack) | + / − | Keyed; confirm polarity into the reverse-protection input before mating. |
+| LiPo **SM-2P** (pack output) | + / − | Keyed male plug — mate the SM-2P female pigtail; can't mate reversed. Confirm red=+ with a meter before plugging in. **Don't cut it.** |
+| LiPo **DC5.5×2.5** (pack charge port) | + / − | Charging only, via the 8.4 V charger. Never draw robot power from here; never charge through the SM-2P output. |
 | Pi↔Pico | USB | stable `/dev/serial/by-id/…`, not `ttyACM*` (enumeration order varies). |
 
 ### Raspberry Pi 5 — buses & power (40-pin header)

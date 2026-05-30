@@ -21,7 +21,7 @@
                          │            2S LiPo  7.4 V  2200 mAh 10C        │
                          │         (8.4 V full → 6.0 V empty, ~22 A)      │
                          └───────────────────────┬──────────────────────┘
-                                                 │ XT60
+                                                 │ SM-2P (keyed) → pigtail
                                           ┌──────▼──────┐
                                           │ 10 A MAIN   │  (closest to LiPo +)
                                           │ FUSE        │
