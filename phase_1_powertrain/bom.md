@@ -27,13 +27,7 @@
 
 | Item | Qty | ~$ | Why (electrical reason) | Link | Status |
 |---|---|---|---|---|---|
-| **Silicone stranded wire**, 18 AWG (power) + 22 AWG (signal) | 1 set | $12 | 18 AWG safely carries the ~5.6 A all-stall motor current in short runs; 22 AWG for logic. | https://www.amazon.com/s?k=silicone+wire+18+awg+22+awg+kit | **buy** |
-| **Ferrule kit + ratcheting ferrule crimp tool** (IWISS HSC8-class) | 1 | $25 | Solid, low-resistance terminations (bare stranded wire works loose; solder cold-flows under clamp). | https://www.amazon.com/s?k=wire+ferrule+crimping+tool+kit+ratcheting | **buy** |
-| **Dupont jumper wires** (M/M #758; + M/F #826, F/F #266 as needed) | 1 | $8 | Short 3.3 V *signal* jumps only (Pico → driver inputs). Never motor power. #758 is Male/Male; add M/F or F/F packs to match your headers. | https://www.adafruit.com/product/758 | **buy** |
-| **Full-size breadboard** | 1 | $5 | Phase-1/2 *signal* bring-up only. Motor power never touches it. | https://www.adafruit.com/product/239 | **buy** |
 | **M2.5 nylon standoff kit** | 1 | $10 | Pi/Pico/breakouts are M2.5 (not M3); nylon = non-conductive + keeps ferrous mass off the (later) magnetometer. | https://www.cytron.io/p-nylon-m2p5-pcb-standoff-kit-for-raspberry-pi-200pcs | **buy** |
-| **Heat-shrink tubing** + **wire labels** | 1 | $8 | Insulate the parked encoder conductors; label FL/RL/FR/RR motor + battery leads. | https://www.amazon.com/s?k=heat+shrink+tubing+assortment | **buy** |
 | **8-ch 24 MHz USB logic analyzer** (sigrok/PulseView) | 1 | $13 | See the 20 kHz PWM duty change with command — the Measurement Lab for this phase. | https://www.amazon.com/dp/B0BQ7S16H7 | **buy** (recommended) |
-| **Digital multimeter** (continuity + DC volts) | 1 | $25 | Every wire gets a beep test before power-on; measure VM = 7.4 V. Skip if you own one. | https://www.amazon.com/s?k=digital+multimeter | **buy** (if needed) |
 
 > Quantities like "2 of 4" mean this phase uses part of a multi-pack you buy once (the other caps land in later phases). Deferred out of Phase 1: the **coordinated fuse set (10 A main / 7.5 A motor / 5 A Pi)** and **#2815 reverse-polarity master switch** arrive in **Phase 3** (when the Pi becomes a second branch), and the **22 mm NC mushroom e-stop** in the first **mobile** phase — see those BOMs. The **USB-A→micro-USB cable**, **D24V50F5 buck**, **UBEC**, IMU, PCA9685, camera, and lidar adapter are likewise introduced in their own later-phase BOMs.
