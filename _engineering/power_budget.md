@@ -57,6 +57,8 @@
 
 > **This is the *complete* tree, built up over several phases — not what you wire on day one.** **Phase 1** builds only the leftmost branch, and a deliberately minimal version of it: LiPo **SM-2P** output → female pigtail → a **WAGO 221-413** lever-nut splitting + and − → both **TB6612 VM/GND** on soldered screw terminals. There is **no main fuse, reverse-polarity switch, branch fuse, or e-stop yet** — with a single branch, a self-protecting battery (built-in protection board), and the wheels in the air on a stand, those parts are belt-and-suspenders. They earn their place as the system grows: the **main fuse, #2815 reverse-polarity master switch, and branch fuses** come online in **Phase 3**, when the D24V50F5 buck makes the Pi a second branch and selectivity finally means something; the **NC e-stop** is added in the first **mobile** phase, when a runaway robot becomes possible. The reasoning for each lives in `phase_1_powertrain/README.md` → "Concepts."
 
+> ⚠️ **Connector ampacity — the SM-2P is a Phase-1-only current path.** The kit LiPo's factory **SM-2P** output is rated only **~3 A per contact** (JST SM series). That covers the Phase-1 *motor-branch* cruise (~2.6 A, wheels in the air) but is already exceeded by a four-motor stall (~5.6 A) and is **far** below the **~10 A whole-robot worst case** (motors + Pi-buck + servo-UBEC) once Phase 3 adds the second and third branches. The power wiring is also 18 AWG — outside the SM contact's 22 AWG max. **Before Phase 3, replace the battery output with an XT30 (~30 A) / XT60 (~60 A), or terminate the SM-2P immediately into a fused distribution block and pull the Pi/servo branches from that block** — so the ~3 A SM contacts never carry whole-system current. ("Don't cut the factory plug" is a Phase-1 convenience, not a permanent constraint.)
+
 ---
 
 ## Current budget
@@ -120,6 +122,7 @@ Converters aren't free — they trade voltage for current at ~90% efficiency. Th
 - **Branch fuses:** just above each branch's worst case (motor 5.6 A → 7.5 A; Pi 3.5 A → 5 A), and each **smaller than the main** for selectivity.
 - **Fuse character (fast vs slow-blow):** use **time-delay (slow-blow)** blades on the **motor branch and the main** so the brief simultaneous motor startup/reversal inrush (locked-rotor current + bulk-cap charge, a few ms) rides under the i²t instead of nuisance-tripping; a **fast-acting** blade is fine (and slightly safer) on the **Pi-buck branch**, which sees no inductive inrush. Standard ATC/ATO automotive blades come in both characters — specify slow-blow where it matters.
 - **Wire gauge:** motor/main power = **18 AWG** (good for ~10 A in short runs); signals = **22 AWG**. Breadboard spring contacts are ~1 A — **motor power never touches a breadboard.**
+- **Connector ampacity:** size connectors to the *worst-case branch current*, like wires and fuses — not the average. The LiPo's factory **SM-2P (~3 A/contact)** is adequate for the Phase-1 motor branch only; the whole-robot ~10 A path needs an **XT30/XT60 or a fused distribution block** (see the ⚠️ note under the power tree).
 - **Bulk capacitance:** ~470–1000 µF where big loads switch (motor VM, servo V+) to absorb the millisecond di/dt that fuses and average budgets ignore; 0.1 µF ceramics at each motor body for brush noise.
 
 ---

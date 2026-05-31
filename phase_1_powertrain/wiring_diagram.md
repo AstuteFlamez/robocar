@@ -68,7 +68,7 @@
      Pico GND (via laptop USB this phase) · heavy 18 AWG motor return · NO daisy-chaining
 ```
 
-> **\* The 0.1 µF motor cap is optional.** The 310 motors are connectorized (factory JST-PH 6-pin) — no bare tabs to solder across — and these encoder motors often already carry a factory noise cap on the rear board. Build without it; add only if you see noise, and add it **at the driver outputs**, not the motor. See "Motor noise suppression" below.
+> **\* Fit a 0.1 µF cap across each driver's motor outputs** — inspect each motor's rear PCB first; it *may* carry a factory cap, but there's no evidence the 310s do, so default to fitting. The motors are connectorized (factory JST-PH 6-pin), no bare tabs, so the cap goes **at the driver outputs**, not the motor. See "Motor noise suppression" below.
 
 **Two rails, joined only at ground.** The **3.3 V logic rail** (Pico 3V3 → driver VCC) and the **7.4 V motor rail** (LiPo → driver VM) are completely separate. They meet at *exactly one place*: the common star ground (the WAGO − splice). Never let the 7.4 V rail back-feed into the Pico's 3.3 V / VBUS / VSYS.
 
@@ -134,12 +134,12 @@ Tick each box after the wire is placed **and** beep-tested. Format: `A --> B —
 
 ### Motor noise suppression — *optional; check for a factory cap first, else add at the driver*
 
-> ⚠️ The 310 motors are **connectorized** (factory JST-PH 6-pin) — there are **no bare motor tabs** to solder a cap across, and we don't cut the factory plug. These encoder motors also **often already carry a factory noise cap** on the rear board. So treat this as **optional / add-only-if-noisy**: build and run *without* it first. If the USB serial link drops mid-drive, or (Phase 2) encoder counts jitter once the motor rail is live, add a **0.1 µF ceramic across each channel's two driver outputs** — no polarity, no motor surgery. (Closer-to-motor alternative: solder it across M+/M− at the pigtail.)
+> ⚠️ The 310 motors are **connectorized** (factory JST-PH 6-pin) — there are **no bare motor tabs** to solder a cap across, and we don't cut the factory plug. **Inspect each motor's rear PCB**: it *might* carry a factory noise cap, but there's **no manufacturer evidence the 310s do**, so **default to fitting one** — add a **0.1 µF ceramic across each channel's two driver outputs** (no polarity, no motor surgery). Cheap insurance against brush noise dropping the USB serial link mid-drive or jittering Phase-2 encoder counts. (Closer-to-motor alternative: solder it across M+/M− at the pigtail.)
 
-- [ ] *(if needed)* `0.1 µF ceramic` across `Board A AO1 ↔ AO2` — FL brush-noise suppression, at the driver
-- [ ] *(if needed)* `0.1 µF ceramic` across `Board A BO1 ↔ BO2` — RL
-- [ ] *(if needed)* `0.1 µF ceramic` across `Board B AO1 ↔ AO2` — FR
-- [ ] *(if needed)* `0.1 µF ceramic` across `Board B BO1 ↔ BO2` — RR
+- [ ] `0.1 µF ceramic` across `Board A AO1 ↔ AO2` — FL brush-noise suppression, at the driver
+- [ ] `0.1 µF ceramic` across `Board A BO1 ↔ BO2` — RL
+- [ ] `0.1 µF ceramic` across `Board B AO1 ↔ AO2` — FR
+- [ ] `0.1 µF ceramic` across `Board B BO1 ↔ BO2` — RR
 
 ### Common ground — *single-point STAR at the WAGO (−) splice, separate leg each, NO daisy-chain*
 
@@ -193,7 +193,7 @@ Tick each box after the wire is placed **and** beep-tested. Format: `A --> B —
 1. **STBY must be HIGH.** Both TB6612 STBY pins tie to `Pico GP14`, driven high in firmware (`enable_drivers(True)`). Left low, every motor stays dead no matter how perfect the rest of the wiring is. *Contract: device_contracts.md — "★ STBY pin must be pulled HIGH or the outputs stay disabled."*
 2. **VCC ≠ VM.** TB6612 **VCC = 3.3 V logic** (Pico 3V3); **VM = 7.4 V motor** (LiPo). Cross-wiring 7.4 V into VCC destroys the logic side. Two different pins, two different rails — only ground is shared. *Contract: device_contracts.md — TB6612 "VCC (logic) = 3.3 V … VM (motor) = 7.4 V."*
 3. **Encoder VCC = 3.3 V, never 7.4 V — and parked this phase.** You mate the encoder conductors in the 6-pin plug but do **not** power or read them yet. When you do (Phase 2), Enc-VCC comes from Pico 3V3 so the Hall A/B outputs stay ≤ 3.3 V for the Pico's GPIO. *Contract: device_contracts.md — "Never feed the encoder 7.4 V."*
-4. **A WAGO has no "in" or "out" — and a half-seated wire browns out under load.** All three ports of a 221-413 are electrically joined; "in vs out" is just which wire comes from the battery. Strip ~11 mm, lift the lever, insert the bare copper *fully* (no stray strands), close, and tug-test each wire. Don't cut the LiPo's keyed SM-2P plug — mate the female pigtail to it (the key is what prevents reverse-mating, which is why Phase 1 needs no separate reverse-protection part). *Brief: Phase 1 power path — SM-2P → WAGO splits → screw terminals.* (The NC e-stop and coordinated fuses this footgun used to cover are deferred — see the closing note.)
+4. **A WAGO has no "in" or "out" — and a half-seated wire browns out under load.** All three ports of a 221-413 are electrically joined; "in vs out" is just which wire comes from the battery. Strip ~11 mm, lift the lever, insert the bare copper *fully* (no stray strands), close, and tug-test each wire. Don't cut the LiPo's keyed SM-2P plug — mate the female pigtail to it (the key prevents reverse-mating, which is why Phase 1 *defers* a separate reverse-protection part). ⚠️ **Keying only protects the battery mate — the WAGO and screw-terminal wiring downstream is unkeyed**, so meter each driver's VM↔GND for correct polarity (+7.4 V, red = +) before connecting; a reversed lead at a WAGO destroys the TB6612 and there's no #2815 to catch it yet. *Brief: Phase 1 power path — SM-2P → WAGO splits → screw terminals.* (The NC e-stop and coordinated fuses this footgun used to cover are deferred — see the closing note.)
 5. **Motor power never on the breadboard.** All VM, LiPo, and motor-output wires are soldered/screw-terminal 18 AWG. Breadboard springs (~1 A) can't carry ~1.4 A/motor (~5.6 A all-stall). Breadboard is for the 3.3 V signal jumpers only. *power_budget.md — "Breadboard spring contacts are ~1 A — motor power never touches a breadboard."*
 6. **Star ground, not a daisy-chain.** Every ground gets its own leg back to one node at LiPo−. Don't chain LiPo− → BoardA → BoardB → Pico; the 20 kHz motor-return current would corrupt the logic ground reference. *power_budget.md — "Single-point STAR at LiPo (−) … No daisy-chaining."*
 7. **Don't back-feed the Pico.** The 7.4 V motor rail must never reach VBUS/VSYS/3V3. The Pico is powered from laptop USB this phase; motor power and Pico power are separate rails joined only at ground. *Contract: device_contracts.md — Pico "⚠️ Footgun: never back-feed the 7.4 V motor rail into VBUS/VSYS/3V3."*

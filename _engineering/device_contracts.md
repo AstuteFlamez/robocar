@@ -167,7 +167,7 @@
 - **Output:** 7.4 V nominal (8.4 V full → 6.0 V empty). **10C × 2.2 Ah ≈ 22 A** continuous capability — far above our ~5–10 A worst case.
 - **★ Never discharge below ~3.0 V/cell (6.0 V pack).** Balance-charge only. Store at storage charge in a LiPo bag.
 - **★ Built-in protection board:** this pack ships with an integrated protection PCB (overcharge / over-discharge / overcurrent / short-circuit cut-off). It is a first line of defense, *not* a substitute for the downstream branch fuses once the system has multiple branches.
-- **Connector:** keyed **SM-2P male** output plug (mate with an SM-2P female pigtail — *do not cut it*); the keying prevents reverse-mating. Charging is via a **separate DC5.5×2.5 female barrel jack** with the 8.4 V charger — never charge through the SM-2P output. (Earlier drafts assumed an XT60; the actual kit pack uses SM-2P.)
+- **Connector:** keyed **SM-2P male** output plug (mate with an SM-2P female pigtail — *do not cut it*); the keying prevents reverse-mating. Charging is via a **separate DC5.5×2.5 female barrel jack** with the 8.4 V charger — never charge through the SM-2P output. (Earlier drafts assumed an XT60; the actual kit pack uses SM-2P.) **★ The SM-2P contacts are rated only ~3 A** (JST SM series) — fine for the Phase-1 motor branch, but **not** the ~10 A whole-robot load; upgrade to XT30/XT60 or a fused distribution block before Phase 3 (see power_budget.md). The "do not cut it" rule is a Phase-1 convenience.
 - **Feeds:** (1) motor rail → 2× TB6612FNG VM; (2) D24V50F5 buck → Pi; (3) UBEC → servos. Through fuse + reverse-protection + switch + e-stop as below — though **Phase 1's single-branch bench build adds none of those** (battery protection board + unplug/`stop`/STBY-low suffice); the coordinated fuses + #2815 switch come online in Phase 3, the e-stop in the first mobile phase.
 
 ### Pololu D24V50F5 — *5 V / 5 A buck for the Pi*
@@ -199,7 +199,7 @@ Every electrical interface in the finished robot, with the contract check. Read 
 
 | From | Signal / rail | To | V | Logic | Connector | Contract check |
 |---|---|---|---|---|---|---|
-| LiPo + | 7.4 V | (Ph1) SM-2P pigtail → WAGO split → VM ×2 · (Ph3+) → fuse → revpol/switch → e-stop → rails | 7.4 V | power | SM-2P (keyed) | Ph1: battery protection board + keyed plug ✓ · Ph3+: 10 A main fuse < wire/pack rating ✓ |
+| LiPo + | 7.4 V | (Ph1) SM-2P pigtail → WAGO split → VM ×2 · (Ph3+) → fuse → revpol/switch → e-stop → rails | 7.4 V | power | SM-2P (keyed, **~3 A** ⚠️) | Ph1: protection board + keyed plug ✓ (motor branch ≤3 A cruise) · Ph3+: ⚠️ SM-2P ~3 A < ~10 A whole-robot — **upgrade to XT30/XT60 or fused bus**; 10 A main fuse < wire/pack rating ✓ |
 | Motor rail | 7.4 V | TB6612 VM ×2 | 7.4 V | power | screw/header | 7.4 V in 2.5–13.5 V range ✓; 7.5 A branch fuse ✓ |
 | LiPo branch | 7.4 V | D24V50F5 in | 7.4 V | power | header | 7.4 V in 6–38 V ✓; 5 A branch fuse ✓ |
 | D24V50F5 out | 5 V/5 A | Pi USB-C | 5 V | power | USB-C | Meets Pi's 5 A want ✓; `usb_max_current_enable=1` |

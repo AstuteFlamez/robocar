@@ -23,6 +23,7 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | Nuwa-HP60C USB depth camera | 1 | ⚠️ Optional to use. Confirm included; **don't buy one** if absent. |
 | 2S LiPo 7.4 V 2200 mAh 10C (w/ built-in protection board) | 1 | The single system battery. Protection board cuts on overcharge / over-discharge / overcurrent / short. Output = keyed **SM-2P male** plug; charge via a separate **DC5.5×2.5 barrel** jack with the 8.4 V charger. (No XT60 — don't cut the factory plug; buy a mating SM-2P pigtail below.) |
 | 64 GB microSD card | 1 | For Raspberry Pi OS. |
+| Bulk electrolytics 470–1000 µF, ≥16 V, low-ESR/105 °C | ~4 | On hand. One across each driver VM↔GND to absorb motor di/dt; **≥16 V is the load-bearing spec** (no Adafruit SKU qualifies). |
 | 5 V/3 A USB power bank | 1 | **Demoted** — only as an optional tethered bench supply for early phases. Not the robot's supply. |
 | Balance LiPo charger | 1 | Non-negotiable for LiPo safety. (If you don't have one, add ~$30.) |
 
@@ -34,7 +35,7 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 
 | Item | Qty | ~$ | Why (contract) | Link | Phase |
 |---|---|---|---|---|---|
-| Pololu **TB6612FNG** dual motor driver carrier (#713) | 2 | $10 | 1.2 A cont / **3.2 A peak** per channel → real headroom over the 310's 1.4 A stall; one motor/channel enables Mecanum. *Replaces the original DRV8833.* | https://www.pololu.com/product/713 | 1 |
+| Pololu **TB6612FNG** dual motor driver carrier (#713) | 2 | $4.95 | 1.2 A cont / **3.2 A peak** per channel → real headroom over the 310's 1.4 A stall; one motor/channel enables Mecanum. *Replaces the original DRV8833.* | https://www.pololu.com/product/713 | 1 |
 | **BNO055** 9-axis IMU breakout (Adafruit #4646 or clone) | 1 | $20 | On-chip fusion → drift-free heading. Wired in **UART** mode to dodge the Pi I²C clock-stretch bug. | https://www.adafruit.com/product/4646 | 4 |
 | **PCA9685** 16-ch PWM driver (Adafruit #815 or generic) | 1 | $6 | Hardware servo PWM over I²C, off the real-time loop. V+ from UBEC, addr 0x40. | https://www.adafruit.com/product/815 | 5 |
 | **Raspberry Pi Camera Module 3** | 1 | $25 | Gimbal FPV + vision. | https://www.raspberrypi.com/products/camera-module-3/ | 5 |
@@ -56,12 +57,11 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | **22 mm latching mushroom e-stop, 1×NC** | 1 | $8 | Instant physical motor kill; NC = fail-safe. In the motor branch only. *Added in Phase 3* (the first floor-driving phase) — wheels-in-the-air Phases 1–2 already have unplug / `stop` / STBY-low kills. | https://www.amazon.com/dp/B00W947PS0 | 3 |
 | Inline **ATC/ATO blade fuse holders** (18 AWG) + blades **10 A / 7.5 A / 5 A** | 3 + asst | $10 | Coordinated fusing: main / motor branch / Pi branch. Use **time-delay (slow-blow)** blades on the main + motor branch (ride the motor startup/reversal inrush); fast-acting OK on the Pi branch. *Starts in Phase 3* — selectivity only buys you something once the Pi adds a second branch; Phase 1 relies on the LiPo's built-in protection board (one optional 7.5 A inline blade is fine but not required). | https://www.amazon.com/dp/B0DT4NCD5V | 3 |
 | **INA219** current+voltage sensor (Adafruit #904) | 1 | $10 | Self-monitoring + low-voltage cutoff. **Set addr 0x41** (0x40 collides w/ PCA9685). | https://www.adafruit.com/product/904 | 4 |
-| **2S balance-port low-voltage alarm/buzzer** | 1 | $5 | Dumb hardware backstop against over-discharge. Remove between sessions. | https://hobbyking.com/en_us/cell-checker-with-low-voltage-alarm-2s-8s.html | 1 |
+| **2S balance-port low-voltage alarm/buzzer** | 1 | $5 | Dumb hardware backstop against over-discharge. *Deferred out of Phase 1 — the LiPo's built-in protection board covers over-discharge there; this audible early-warning joins in Phase 3 when the bot runs untethered.* Remove between sessions. | https://hobbyking.com/en_us/cell-checker-with-low-voltage-alarm-2s-8s.html | 3 |
 | **SM-2P female pigtail** (mates the LiPo's factory output plug) | 1 | $4 | Breaks the battery's keyed SM-2P male output out to red (+) / black (−) leads. Keyed → can't mate reversed; **don't cut the factory plug.** Replaces the old XT60 assumption. | https://www.amazon.com/Connector-VANDESAIL-Female-Adapter-Electrical/dp/B076HLQ4FX | 1 |
-| **WAGO 221-413** lever-nut splice, 3-conductor | 2 | $6 | No-solder rail split: one joins LiPo + → both TB6612 VM, the other joins LiPo − → both GND. ~20 A / 600 V rated. All three ports are joined (no in/out). | https://www.amazon.com/s?k=WAGO+221-413 | 1 |
-| **Screw Terminal Block: 6-Pin, 0.1″ pitch, side entry** (Pololu #2495) | 2 | $5 | One 6-wide block lands each driver's six power-edge pins (AO1/AO2/BO2/BO1/VMOT/GND, positions 3–8) in one solder op; the top GND/VCC pins sit outside it and take a male header for the Pico logic jumpers. 150 V / 6 A, 26–18 AWG. Side-entry, short pins — soldered to the board, not a breadboard. One per TB6612, two drivers. | https://www.pololu.com/product/2495 | 1 |
-| Bulk electrolytics **470–1000 µF, ≥16 V, low-ESR/105 °C** | ~4 | $8 | Absorb motor/servo start & stall transients (di/dt) so rails don't sag. (No Adafruit SKU meets ≥16 V at this capacitance — source from DigiKey/Mouser, e.g. Nichicon UVZ-series 470 µF/25 V/105 °C.) | https://www.digikey.com/en/products/filter/aluminum-electrolytic-capacitors/58 | 1 |
-| **0.1 µF ceramic caps** | 12 | $3 | Brush-noise suppression at each motor body. | https://www.adafruit.com/product/753 | 1 |
+| **WAGO 221-413** lever-nut splice, 3-conductor | 2 | $8.97 | No-solder rail split: one joins LiPo + → both TB6612 VM, the other joins LiPo − → both GND. ~20 A / 600 V rated. All three ports are joined (no in/out). | Home Depot (In-Person) | 1 |
+| **Screw Terminal Block: 6-Pin, 0.1″ pitch, side entry** (Pololu #2495) | 2 | $5.42 | One 6-wide block lands each driver's six power-edge pins (AO1/AO2/BO2/BO1/VMOT/GND, positions 3–8) in one solder op; the top GND/VCC pins sit outside it and take a male header for the Pico logic jumpers. 150 V / 6 A, 26–18 AWG. Side-entry, short pins — soldered to the board, not a breadboard. One per TB6612, two drivers. | https://www.pololu.com/product/2495 | 1 |
+| **0.1 µF (100 nF) ceramic caps** — BOJACK ceramic assortment kit | 4 (of kit) | ~$13 | Brush-noise suppression. **Inspect each motor's rear PCB first; if no factory cap is visible, fit a 0.1 µF across each driver channel's AO/BO outputs** — there's no evidence the 310s ship with one, so default to fitting (no polarity, no motor surgery). Kit also covers later decoupling values; confirm ≥16 V (kits are typically 50 V). | https://www.amazon.com/dp/B085RDTCCV | 1 |
 
 ---
 
@@ -72,7 +72,7 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 | Item | Qty | ~$ | Why | Link | Phase |
 |---|---|---|---|---|---|
 | **Pi Pico screw-terminal carrier board** | 1 | $13 | Move motor/encoder interconnect off the breadboard onto retained terminals. **Never run motor power through a breadboard.** | https://czh-labs.com/products/screw-terminal-block-breakout-module-board-for-raspberry-pi-pico | 2 |
-| **JST-PH 2.0 6-pin pigtail leads** (mate the motors' factory connector) | 4 | $6 | Keyed motor+encoder connection; don't cut the factory plug. | https://www.amazon.com/s?k=jst+ph+2.0+6+pin+pigtail | 1 |
+| **JST-PH 2.0 6-pin pigtail leads** (mate the motors' factory connector) | 4 | $8.39 | Keyed motor+encoder connection; don't cut the factory plug. | https://www.amazon.com/dp/B09JP1YJWL | 1 |
 | **Ferrule kit + ratcheting ferrule crimp tool** (IWISS HSC8-class, ~23–10 AWG) | 1 | $25 | Solid, low-resistance ferrule terminations on the screw-terminal carrier (bare stranded wire works loose; solder cold-flows under a clamp). *A ferrule crimper does not crimp JST/Dupont pins — those use the pre-made pigtails above.* | https://www.amazon.com/s?k=wire+ferrule+crimping+tool+kit+ratcheting | 1 |
 | **Silicone stranded wire**, 18 AWG (motor/power) + 22 AWG (signal) | 1 set | $12 | 18 AWG carries the ~5.6 A all-stall motor current safely. | https://www.amazon.com/s?k=silicone+wire+18+awg+22+awg+kit | 1 |
 | **Dupont jumper wires** — M/M (#758) + M/F (#826) + F/F (#266) | 1 set | $8 | Short signal jumps only (I²C/UART), never motor power. Adafruit #758 is **Male/Male only**; add the M/F (#826) and F/F (#266) packs to match your headers. | https://www.adafruit.com/product/758 | 1 |
@@ -109,11 +109,11 @@ You do **not** buy these. Confirm them physically before ordering anything else 
 
 | Bucket | Approx. |
 |---|---|
-| Core DIY brain & drivers | ~$75 (less ~$6 if reusing kit LFD-01 servos) |
-| Power & protection | ~$101 (XT60 dropped for the LiPo's native SM-2P; +SM-2P pigtail, WAGO splices, two #2495 6-pin screw-terminal blocks) |
+| Core DIY brain & drivers | ~$70 (less ~$6 if reusing kit LFD-01 servos; TB6612 now $4.95 ea) |
+| Power & protection | ~$105 (XT60 dropped for the LiPo's native SM-2P; +SM-2P pigtail, WAGO splices, two #2495 6-pin screw-terminal blocks; bulk electrolytics now on-hand; 0.1 µF is a ~$13 MLCC kit) |
 | Wiring, connectors, mechanical | ~$110 (one-time tools dominate: crimper, wire, standoffs) |
 | Instrumentation | ~$40 (logic analyzer + multimeter) |
-| **Subtotal (new parts)** | **~$326** |
+| **Subtotal (new parts)** | **~$320** |
 | Optional add-ons | +$20 |
 
 Most of the spend is **one-time tooling and safety** (crimper, logic analyzer, buck, reverse-protection, fuses) that you keep for every future project. The robot-specific electronics are ~$75–120. The original plan's ~$120–180 estimate omitted the power-tree and protection that make a LiPo-powered autonomous robot safe — that gap is the difference between "it ran once" and "it runs reliably and didn't catch fire."
