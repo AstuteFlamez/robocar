@@ -33,7 +33,7 @@
         ▼     ▼       ▼    ▼              │                   ▼     ▼       ▼    ▼
      ┌────────────┐ ┌────────────┐        │                ┌────────────┐ ┌────────────┐
      │  FL motor  │ │  RL motor  │        │                │  FR motor  │ │  RR motor  │
-     │ +0.1µF cap │ │ +0.1µF cap │        │                │ +0.1µF cap │ │ +0.1µF cap │
+     │ opt 0.1µF* │ │ opt 0.1µF* │        │                │ opt 0.1µF* │ │ opt 0.1µF* │
      │ (enc PARKED)│ │(enc PARKED)│       │                │(enc PARKED)│ │(enc PARKED)│
      └────────────┘ └────────────┘        │                └────────────┘ └────────────┘
         ▲ via JST-PH 2.0 6-pin            │                   ▲ via JST-PH 2.0 6-pin
@@ -67,6 +67,8 @@
      star node = the WAGO (−) splice; separate legs to: Board A GND · Board B GND ·
      Pico GND (via laptop USB this phase) · heavy 18 AWG motor return · NO daisy-chaining
 ```
+
+> **\* The 0.1 µF motor cap is optional.** The 310 motors are connectorized (factory JST-PH 6-pin) — no bare tabs to solder across — and these encoder motors often already carry a factory noise cap on the rear board. Build without it; add only if you see noise, and add it **at the driver outputs**, not the motor. See "Motor noise suppression" below.
 
 **Two rails, joined only at ground.** The **3.3 V logic rail** (Pico 3V3 → driver VCC) and the **7.4 V motor rail** (LiPo → driver VM) are completely separate. They meet at *exactly one place*: the common star ground (the WAGO − splice). Never let the 7.4 V rail back-feed into the Pico's 3.3 V / VBUS / VSYS.
 
@@ -130,12 +132,14 @@ Tick each box after the wire is placed **and** beep-tested. Format: `A --> B —
 - [ ] `470–1000 µF bulk cap (+)` --> `VM`; `bulk cap (−)` --> `GND` — **one cap per driver board (×2)**, absorbs start/stall di/dt across the motor rail
 - [ ] *(optional)* `7.5 A inline blade fuse` in the red (+) lead between pigtail and WAGO #1 — belt-and-suspenders only; not required (battery protection board already covers it)
 
-### Motor noise suppression — *soldered at each motor body*
+### Motor noise suppression — *optional; check for a factory cap first, else add at the driver*
 
-- [ ] `0.1 µF ceramic` across `FL motor M+ ↔ M−` — brush-noise suppression at the can
-- [ ] `0.1 µF ceramic` across `RL motor M+ ↔ M−` — brush-noise suppression
-- [ ] `0.1 µF ceramic` across `FR motor M+ ↔ M−` — brush-noise suppression
-- [ ] `0.1 µF ceramic` across `RR motor M+ ↔ M−` — brush-noise suppression
+> ⚠️ The 310 motors are **connectorized** (factory JST-PH 6-pin) — there are **no bare motor tabs** to solder a cap across, and we don't cut the factory plug. These encoder motors also **often already carry a factory noise cap** on the rear board. So treat this as **optional / add-only-if-noisy**: build and run *without* it first. If the USB serial link drops mid-drive, or (Phase 2) encoder counts jitter once the motor rail is live, add a **0.1 µF ceramic across each channel's two driver outputs** — no polarity, no motor surgery. (Closer-to-motor alternative: solder it across M+/M− at the pigtail.)
+
+- [ ] *(if needed)* `0.1 µF ceramic` across `Board A AO1 ↔ AO2` — FL brush-noise suppression, at the driver
+- [ ] *(if needed)* `0.1 µF ceramic` across `Board A BO1 ↔ BO2` — RL
+- [ ] *(if needed)* `0.1 µF ceramic` across `Board B AO1 ↔ AO2` — FR
+- [ ] *(if needed)* `0.1 µF ceramic` across `Board B BO1 ↔ BO2` — RR
 
 ### Common ground — *single-point STAR at the WAGO (−) splice, separate leg each, NO daisy-chain*
 
