@@ -26,6 +26,7 @@
 
 | Item | Qty | ~$ | Why (electrical reason) | Link | Status |
 |---|---|---|---|---|---|
+| **18 AWG silicone stranded wire** (red + black, 2-conductor parallel, 5 ft) | 1 | ~$6 | The **7.4 V motor-power loop**: battery → WAGO and WAGO → each driver **VM/GND** (~2.8 A/leg, ~5.6 A all-stall), plus the **motor-return legs**. 18 AWG (~16 A) ≫ the load; silicone = flexible + heat-tolerant. ⚠️ **Power path only — never the kit's thin Dupont jumpers** (those are ~1–2 A, signal-only). Peel the bonded pair apart at the ends to land in the #2495 screw terminals. *(5 ft suits Phases 1–2; the Phase-3 protection chain may want a longer length.)* | https://www.amazon.com/BNTECHGO-Silicone-Flexible-Strands-Stranded/dp/B08PBVM4K5 | **buy** |
 | **8-ch 24 MHz USB logic analyzer** (sigrok/PulseView) | 1 | $13 | See the 20 kHz PWM duty change with command — the Measurement Lab for this phase. | https://www.amazon.com/dp/B0BQ7S16H7 | **buy** (recommended) |
 
 > Quantities like "2 of 4" mean this phase uses part of a multi-pack you buy once (the other caps land in later phases). Deferred out of Phase 1: the **coordinated fuse set (10 A main / 7.5 A motor / 5 A Pi)** and **#2815 reverse-polarity master switch** arrive in **Phase 3** (when the Pi becomes a second branch), and the **22 mm NC mushroom e-stop** in the first **mobile** phase — see those BOMs. The **USB-A→micro-USB cable**, **D24V50F5 buck**, **UBEC**, IMU, PCA9685, camera, and lidar adapter are likewise introduced in their own later-phase BOMs.
