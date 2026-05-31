@@ -78,7 +78,7 @@ One consolidated view of the controller-board failure modes scattered across the
 
 | ID | Failure mode | Why it bites | Guardrail | Installed |
 |---|---|---|---|---|
-| R1 | Battery reversed | Instantly kills drivers/buck/Pi | Keyed **SM-2P** plug (can't mate reversed) — Phase 1; P-FET (#2815/#5381) reverse protection added with the master switch — Phase 3 | Phase 1 (keying) / Phase 3 (P-FET) |
+| R1 | Battery reversed | Instantly kills drivers/buck/Pi | Keyed **SM-2P** plug (Ph1–2 kit pack) / keyed **Deans T-plug** (Ph3+ URGENEX pack) — both can't mate reversed; **#2815/#5381 P-FET** reverse protection added with the master switch — Phase 3 | Phase 1 (keying) / Phase 3 (P-FET) |
 | R2 | Encoder fed >3.3 V | A/B exceed GPIO limit; GP26/27 (RR) are ADC pins, *never* 5 V-tolerant → damage | Enc-VCC = 3.3 V (in-spec); meter before power | Phase 2 |
 | R3 | Encoder A/B float (open-collector, no pull-up) | PIO miscounts → silent odometry corruption | 4.7 k pull-up A/B→3.3 V + scope clean 0–3.3 V edges | Phase 2 |
 | R4 | STBY not HIGH | TB6612 outputs disabled → "motor won't move" | GP14 driven HIGH by firmware at init | Phase 1 |

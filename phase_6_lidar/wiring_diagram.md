@@ -14,8 +14,8 @@ each interface) and the canonical pin map therein.
 ## Full block schematic (end of Phase 6)
 
 ```
-                          2S LiPo 7.4V  (8.4V full → 6.0V empty, 10C ≈ 22A, built-in protection board)
-                                   │  SM-2P (keyed) → pigtail
+                          2S LiPo 7.4V  (8.4V full → 6.0V empty, URGENEX 2×1800mAh 35C ≈ 63A, no PCB)
+                                   │  Deans T-plug (keyed) → pigtail
                                    ▼
                           [ 10 A MAIN FUSE ]
                                    ▼

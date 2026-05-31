@@ -163,11 +163,11 @@
 
 > Full sizing, the power-tree diagram, and the current budget live in [power_budget.md](./power_budget.md). Contracts only here.
 
-### 2S LiPo, 7.4 V 2200 mAh 10C (from kit) — *the one and only energy source*
-- **Output:** 7.4 V nominal (8.4 V full → 6.0 V empty). **10C × 2.2 Ah ≈ 22 A** continuous capability — far above our ~5–10 A worst case.
+### 2S LiPo 7.4 V — *the one and only energy source (staged: kit pack for Ph1–2 → URGENEX pack from Ph3)*
+- **Output:** 7.4 V nominal (8.4 V full → 6.0 V empty). Both packs' cell capability is **far above our ~5–10 A worst case**.
 - **★ Never discharge below ~3.0 V/cell (6.0 V pack).** Balance-charge only. Store at storage charge in a LiPo bag.
-- **★ Built-in protection board:** this pack ships with an integrated protection PCB (overcharge / over-discharge / overcurrent / short-circuit cut-off). It is a first line of defense, *not* a substitute for the downstream branch fuses once the system has multiple branches.
-- **Connector:** keyed **SM-2P male** output plug (mate with an SM-2P female pigtail — *do not cut it*); the keying prevents reverse-mating. Charging is via a **separate DC5.5×2.5 female barrel jack** with the 8.4 V charger — never charge through the SM-2P output. (Earlier drafts assumed an XT60; the actual kit pack uses SM-2P.)
+- **Phases 1–2 — kit pack (2200 mAh 10C, ~22 A capable):** has a **built-in protection PCB** (overcharge / over-discharge / overcurrent / short cut-off) and a keyed **SM-2P male** output (mate an SM-2P female pigtail — *don't cut it*); charge via its **separate DC5.5×2.5 barrel jack** with the 8.4 V charger. The motors-only bench load (~2.6 A) sits under the SM-2P's ~3 A, so it's fine here. (Earlier drafts assumed an XT60; the kit pack is SM-2P.)
+- **★ Phase 3+ — URGENEX pack (2× 1800 mAh 35C, USB charger included):** once the Pi-buck + servos join the motors the full draw is **~5.4 A cruise / ~10 A worst**, *over* the SM-2P's ~3 A — so the battery is swapped to a pack with a **Deans T-plug** output (~60 A, keyed, can't reverse-mate) mated by a T-plug female pigtail. ⚠️ It's a **bare RC pack with no protection PCB**, so that role is taken over by the **10 A main fuse + #2815 reverse-protect** (Phase 3) and the **2S low-voltage alarm + INA219 cutoff** (Phase 4). Phases 1–2 keep the kit pack.
 - **Feeds:** (1) motor rail → 2× TB6612FNG VM; (2) D24V50F5 buck → Pi; (3) UBEC → servos. Through fuse + reverse-protection + switch + e-stop as below — though **Phase 1's single-branch bench build adds none of those** (battery protection board + unplug/`stop`/STBY-low suffice); the coordinated fuses + #2815 switch come online in Phase 3, the e-stop in the first mobile phase.
 
 ### Pololu D24V50F5 — *5 V / 5 A buck for the Pi*
@@ -199,7 +199,7 @@ Every electrical interface in the finished robot, with the contract check. Read 
 
 | From | Signal / rail | To | V | Logic | Connector | Contract check |
 |---|---|---|---|---|---|---|
-| LiPo + | 7.4 V | (Ph1) SM-2P pigtail → WAGO split → VM ×2 · (Ph3+) → fuse → revpol/switch → e-stop → rails | 7.4 V | power | SM-2P (keyed) | Ph1: battery protection board + keyed plug ✓ · Ph3+: 10 A main fuse < wire/pack rating ✓ |
+| LiPo + | 7.4 V | (Ph1–2) SM-2P pigtail → WAGO split → VM ×2 · (Ph3+) T-plug pigtail → fuse → revpol/switch → e-stop → rails | 7.4 V | power | SM-2P Ph1–2 / **T-plug** Ph3+ (both keyed) | Ph1–2: kit pack protection board + keyed plug ✓ · Ph3+: 10 A main fuse < T-plug/wire/pack rating ✓ |
 | Motor rail | 7.4 V | TB6612 VM ×2 | 7.4 V | power | screw/header | 7.4 V in 2.5–13.5 V range ✓; 7.5 A branch fuse ✓ |
 | LiPo branch | 7.4 V | D24V50F5 in | 7.4 V | power | header | 7.4 V in 6–38 V ✓; 5 A branch fuse ✓ |
 | D24V50F5 out | 5 V/5 A | Pi USB-C | 5 V | power | USB-C | Meets Pi's 5 A want ✓; `usb_max_current_enable=1` |
@@ -271,8 +271,9 @@ The contracts above are the V/I/logic source of truth; this is the **physical-ma
 |---|---|---|
 | Motor JST-PH 2.0 **6-pin** | M+, M−, Enc-VCC, Enc-GND, Hall-A, Hall-B | Typical: Red=M+, White=M−, Blue=Enc-VCC, Black=Enc-GND, Yellow=Hall-A, Green=Hall-B — **confirm by continuity**, batches differ. Enc-VCC → 3.3 V only. |
 | Servo 3-pin | V+, GND, signal | V+ from the **UBEC**, never the Pi rail; signal from PCA9685. |
-| LiPo **SM-2P** (pack output) | + / − | Keyed male plug — mate the SM-2P female pigtail; can't mate reversed. Confirm red=+ with a meter before plugging in. **Don't cut it.** |
-| LiPo **DC5.5×2.5** (pack charge port) | + / − | Charging only, via the 8.4 V charger. Never draw robot power from here; never charge through the SM-2P output. |
+| **Ph1–2** kit LiPo **SM-2P** (pack output) | + / − | Keyed male plug — mate the SM-2P female pigtail; can't mate reversed. Confirm red=+ with a meter before plugging in. **Don't cut it.** |
+| **Ph1–2** kit LiPo **DC5.5×2.5** (pack charge port) | + / − | Charging only, via the 8.4 V charger. Never draw robot power from here; never charge through the SM-2P output. |
+| **Ph3+** URGENEX LiPo **Deans T-plug** (pack output) | + / − | Keyed (polarized) — mate the T-plug female pigtail; can't reverse-mate. ~60 A rated → clears the full ~10 A system. Charge via the **included USB charger** (balances to 8.4 V). Bare pack, no PCB. |
 | Pi↔Pico | USB | stable `/dev/serial/by-id/…`, not `ttyACM*` (enumeration order varies). |
 
 ### Raspberry Pi 5 — buses & power (40-pin header)

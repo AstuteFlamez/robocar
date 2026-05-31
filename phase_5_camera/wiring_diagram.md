@@ -7,8 +7,8 @@ Every connection here traces to `_engineering/device_contracts.md` (the contract
 ## Block schematic
 
 ```
-                      2S LiPo 7.4V (8.4V full -> 6.0V empty), 2200mAh 10C (~22A), built-in protection board
-                                      |  SM-2P (keyed) -> pigtail
+                      2S LiPo 7.4V (8.4V full -> 6.0V empty), URGENEX 2x1800mAh 35C (~63A), no PCB (protected by main fuse + #2815)
+                                      |  Deans T-plug (keyed) -> pigtail
                                       v
                               [ 10 A MAIN FUSE ]            (closest to battery +)
                                       |

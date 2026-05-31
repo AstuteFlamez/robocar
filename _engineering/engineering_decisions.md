@@ -109,7 +109,7 @@ So the project **reuses the mechanical robot** (chassis, wheels, motors, lidar, 
 ### [MUST] Reverse-polarity protection + master switch
 - **Why:** There was *zero* protection against the most common fatal LiPo mistake — plugging the battery in backwards — which instantly destroys the drivers, the buck, and maybe the Pi. A **P-FET high-side switch (#2815)** is one part that does master-disconnect *and* reverse protection.
 - **What it teaches:** why a P-channel MOSFET high-side switch beats a series diode (no ~0.7 V drop, no heat) — a classic power-electronics lesson.
-- **Staged:** Phases 1–2 lean on the kit pack's **keyed SM-2P** output (it physically can't mate reversed) and simply unplug to disconnect; the **#2815 P-FET switch is added in Phase 3**, when a second branch (the Pi buck) makes a real master-disconnect worthwhile and lead-swapping becomes routine.
+- **Staged:** Phases 1–2 lean on the kit pack's **keyed SM-2P** output (it physically can't mate reversed) and simply unplug to disconnect; the **#2815 P-FET switch is added in Phase 3**, when a second branch (the Pi buck) makes a real master-disconnect worthwhile and lead-swapping becomes routine. (Phase 3 also swaps in the higher-current **URGENEX pack**, whose keyed **Deans T-plug** likewise can't reverse-mate — so the P-FET backs up the keying, it doesn't replace it.)
 
 ### [MUST] Coordinated fusing (10 A main / 7.5 A motor / 5 A Pi)
 - **Why:** The original's single 5 A fuse is below the realistic ~8–10 A total and would nuisance-trip — and a student who's sick of a nuisance-tripping fuse *removes* it (a safety regression). Right-size the main and add per-branch fuses so a motor short doesn't kill the Pi.

@@ -30,7 +30,7 @@ When this works you have a low-budget FPV (first-person-view) robot: drive it in
 
 Here's the whole robot as it stands the moment Phase 5 is done.
 
-A single **2S LiPo (7.4 V, 2200 mAh, 10C ≈ 22 A capable)** is the only energy source. Its positive lead runs through a **10 A main fuse**, then a **reverse-polarity + master switch** (Pololu #2815), onto a protected 7.4 V bus. From that bus, **three branches** fan out, each separately fused:
+A single **2S LiPo (7.4 V — the URGENEX 1800 mAh 35C pack swapped in at Phase 3, ≈ 63 A capable, no PCB)** is the only energy source. Its positive lead runs through its **Deans T-plug pigtail** into a **10 A main fuse**, then a **reverse-polarity + master switch** (Pololu #2815), onto a protected 7.4 V bus. From that bus, **three branches** fan out, each separately fused:
 
 1. **Motor branch (7.5 A fuse → NC e-stop):** feeds the two **TB6612FNG** dual motor drivers' **VM** inputs at 7.4 V. Each board drives two of the four 310 metal-gear Mecanum motors — *one motor per channel*, which is exactly what Mecanum needs. The **Pico 2W** generates 20 kHz PWM on three logic pins per channel (IN1/IN2 set direction, PWM sets speed), holds **STBY high** to enable the drivers, and reads all four quadrature encoders in hardware using its **PIO** state machines. The Pico runs a per-wheel PID loop and a command-timeout watchdog. Its logic rail (3V3 OUT) powers both drivers' VCC and all four encoder VCCs at **3.3 V** (never 7.4 V — that would push the encoder A/B outputs past the Pico's 3.3 V GPIO limit).
 
