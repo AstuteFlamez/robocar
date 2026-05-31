@@ -1,6 +1,6 @@
 # Phase 3 — Wiring Diagram (cumulative, end of phase)
 
-> This is the **full system state at the end of Phase 3.** Phases 1–2 ran the motor + encoder wiring off a deliberately minimal bench power path (LiPo **ferruled flying leads** → **WAGO** splits → both drivers' VM/GND, with polarity metered by hand since the leads aren't keyed). This phase is where the robot grows up: the Pi 5 joins as a **second power branch**, and with more than one branch to protect — and the bot now driving on the floor under teleop — the **full protection tree gets built for the first time**: the **10 A main fuse**, the **#2815 reverse-polarity master switch**, the **7.5 A motor-branch fuse**, the **5 A Pi-branch fuse**, and the **NC e-stop**, alongside the D24V50F5 buck and the single Pi↔Pico USB bridge. The diagram below shows *everything* so you can wire and verify the whole bot against one picture. Every connection traces to a contract in [`_engineering/device_contracts.md`](../_engineering/device_contracts.md); power sizing is in [`_engineering/power_budget.md`](../_engineering/power_budget.md).
+> This is the **full system state at the end of Phase 3.** Phases 1–2 ran the motor + encoder wiring off a deliberately minimal bench power path (LiPo **SM-2P** → female pigtail → **WAGO** splits → both drivers' VM/GND). This phase is where the robot grows up: the Pi 5 joins as a **second power branch**, and with more than one branch to protect — and the bot now driving on the floor under teleop — the **full protection tree gets built for the first time**: the **10 A main fuse**, the **#2815 reverse-polarity master switch**, the **7.5 A motor-branch fuse**, the **5 A Pi-branch fuse**, and the **NC e-stop**, alongside the D24V50F5 buck and the single Pi↔Pico USB bridge. The diagram below shows *everything* so you can wire and verify the whole bot against one picture. Every connection traces to a contract in [`_engineering/device_contracts.md`](../_engineering/device_contracts.md); power sizing is in [`_engineering/power_budget.md`](../_engineering/power_budget.md).
 >
 > **NEW this phase is marked `◀── NEW`.**
 
@@ -11,7 +11,7 @@
 ```
                           2S LiPo 7.4V (8.4V full → 6.0V empty) · 10C ≈ 22A
                           built-in protection board
-                                       │  ferruled leads (unkeyed; #2815 below now gives reverse protection)
+                                       │  SM-2P (keyed) → female pigtail
                                        ▼
                               ┌──────────────────┐
                               │ 10A MAIN FUSE ◀NEW│   (closest to battery +)
@@ -62,7 +62,7 @@
    Pi↔Pico grounds are also tied through the USB bridge cable. Motor-return leg = heavy 18 AWG.
 ```
 
-**What changed from the end of Phase 2:** two things, not one. (1) The **full protection tree** is inserted between the LiPo's ferruled leads and the motor rail for the first time — **10 A main fuse → #2815 reverse-polarity master switch → 7.5 A motor-branch fuse → NC e-stop → both TB6612 VM** — replacing Phases 1–2's bare ferruled-leads → WAGO path. **The #2815 finally gives hardware reverse-polarity protection**, so the bare-lead/meter-every-time risk from Phases 1–2 goes away here. (Use **time-delay/slow-blow** blades on the main + motor branch to ride the motor startup/reversal inrush.) (2) The **Pi 5 and its branch** are new: a **5 A Pi-branch fuse → D24V50F5 buck → Pi USB‑C**, plus the **Pi↔Pico USB bridge**. The motors, encoders, drivers, STBY, and the Pico's 3V3-fed logic are otherwise unchanged from Phases 1–2. The 5 V/3 A power bank is **removed** from the robot (bench-only now). *Why now and not Phase 1? Selectivity (branch fuses smaller than the main) only does anything once there's a second branch, and a fail-safe e-stop only earns its keep once the wheels can actually run away — both become true exactly here.*
+**What changed from the end of Phase 2:** two things, not one. (1) The **full protection tree** is inserted between the LiPo's SM-2P plug and the motor rail for the first time — **10 A main fuse → #2815 reverse-polarity master switch → 7.5 A motor-branch fuse → NC e-stop → both TB6612 VM** — replacing Phases 1–2's bare SM-2P → WAGO path. (Use **time-delay/slow-blow** blades on the main + motor branch to ride the motor startup/reversal inrush.) (2) The **Pi 5 and its branch** are new: a **5 A Pi-branch fuse → D24V50F5 buck → Pi USB‑C**, plus the **Pi↔Pico USB bridge**. The motors, encoders, drivers, STBY, and the Pico's 3V3-fed logic are otherwise unchanged from Phases 1–2. The 5 V/3 A power bank is **removed** from the robot (bench-only now). *Why now and not Phase 1? Selectivity (branch fuses smaller than the main) only does anything once there's a second branch, and a fail-safe e-stop only earns its keep once the wheels can actually run away — both become true exactly here.*
 
 ---
 
@@ -72,14 +72,14 @@ Tick each box after a multimeter beep test (continuity) and, for the power path,
 
 ### Motor protection tree — NEW this phase (the Phase 1/2 bench path grows into the full tree)
 
-> In Phases 1–2 the LiPo's ferruled leads fed the WAGO splits *directly*. Now you insert the protection chain between the leads and the motor rail. Build it dry, meter every junction, and seat the battery leads **last** (still meter red = + before they go in — the #2815 protects you, but verify anyway). Use **time-delay (slow-blow)** blades on the main + motor fuses to ride the motor startup/reversal inrush.
+> In Phases 1–2 the LiPo's SM-2P pigtail fed the WAGO splits *directly*. Now you insert the protection chain between the pigtail and the motor rail. Build it dry, meter every junction, and plug in the SM-2P **last**. Use **time-delay (slow-blow)** blades on the main + motor fuses to ride the motor startup/reversal inrush.
 
-- [ ] `LiPo red (+) ferrule` ──► `10 A MAIN fuse` (in) — main protection, closest to the battery + (replaces the bare leads→WAGO link)
+- [ ] `LiPo SM-2P pigtail (+)` ──► `10 A MAIN fuse` (in) — main protection, closest to the battery + (replaces the bare pigtail→WAGO link)
 - [ ] `10 A MAIN fuse` (out) ──► `#2815 master switch` (in) — master ON/OFF **+** reverse-polarity protection
 - [ ] `#2815 switch` (out = protected 7.4 V bus) ──► `7.5 A MOTOR-branch fuse` (in) — selectivity: smaller than the 10 A main
 - [ ] `7.5 A MOTOR fuse` (out) ──► `E-STOP NC` (in) — fail-safe motor kill, in series, **motor branch only**
 - [ ] `E-STOP NC` (out) ──► `WAGO 221-413 (+)` ──► both `TB6612 VM` — the WAGO still fans the (now protected) motor rail to both boards
-- [ ] `LiPo black (−) ferrule` ──► `WAGO 221-413 (−)` ──► both `TB6612 GND` + star node — unchanged from Phase 1
+- [ ] `LiPo SM-2P pigtail (−)` ──► `WAGO 221-413 (−)` ──► both `TB6612 GND` + star node — unchanged from Phase 1
 
 ### Pi 5 power branch (LiPo → buck → Pi)
 
